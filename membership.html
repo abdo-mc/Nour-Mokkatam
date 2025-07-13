@@ -1,317 +1,351 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>العضويات</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo&display=swap">
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/456/456212.png" type="image/png" />
-  <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      margin: 0;
-      padding: 0;
-      direction: rtl;
-      background: #f0f4f8;
-      color: #333;
-      display: flex;
-      min-height: 100vh;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>العضويات</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+  body {
+    font-family: 'Cairo', sans-serif;
+    margin: 0; padding: 0;
+    background: #f9fafc;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    background-color: #00529b;
+    color: white;
+    padding: 15px 20px;
+    font-size: 1.9rem;
+    font-weight: 700;
+    text-align: center;
+    position: relative;
+  }
+  header button.home-btn {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.3s ease;
+  }
+  header button.home-btn:hover {
+    color: #ffdc00;
+  }
+  header button.home-btn svg {
+    width: 22px; height: 22px;
+    fill: #ffdc00;
+  }
 
-    header {
-      width: 100%;
-      background-color: #004080;
-      color: white;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 1.4rem;
-      font-weight: 700;
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+  main {
+    flex: 1;
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+  }
+  aside.filters {
+    width: 210px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    user-select: none;
+  }
+  aside.filters h3 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #00529b;
+    border-bottom: 2px solid #00529b;
+    padding-bottom: 5px;
+  }
+  aside.filters button {
+    background: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  aside.filters button:hover,
+  aside.filters button.active {
+    background: #004a8b;
+  }
 
-    .home-btn {
-      display: flex;
-      align-items: center;
-      background-color: transparent;
-      border: none;
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
+  section.search-area {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgb(0 0 0 / 0.07);
+    padding: 20px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
 
-    .home-btn img {
-      width: 24px;
-      height: 24px;
-      margin-left: 8px;
-    }
+  .search-box {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-box input {
+    flex: 1;
+    font-size: 1.1rem;
+    padding: 12px 15px;
+    border: 2px solid #00529b;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  .search-box input:focus {
+    border-color: #007bff;
+  }
 
-    .page-title {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 1.5rem;
-    }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 1.1rem;
+    margin-top: 15px;
+  }
+  thead {
+    background-color: #00529b;
+    color: white;
+    font-weight: 700;
+  }
+  th, td {
+    padding: 11px 10px;
+    border: 1px solid #ddd;
+  }
+  tbody tr:hover {
+    background-color: #f0f5ff;
+    cursor: pointer;
+  }
+  tbody tr td.name-cell a {
+    color: #00529b;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  tbody tr td.name-cell a:hover {
+    color: #007bff;
+    text-decoration: underline;
+  }
 
-    nav {
-      width: 200px;
-      background-color: #004080;
-      padding: 90px 15px 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    }
+  td.img-cell img {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #00529b;
+  }
 
-    nav button {
-      background: #0074d9;
-      border: none;
-      color: white;
-      padding: 12px 14px;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+  .error-msg {
+    color: #cc0000;
+    font-weight: 600;
+    margin-top: 15px;
+    user-select: none;
+  }
 
-    nav button:hover {
-      background-color: #005bb5;
-    }
-
+  @media(max-width: 900px) {
     main {
-      flex-grow: 1;
-      padding: 100px 30px 30px;
-    }
-
-    .search-area {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-
-    .search-area input {
-      flex: 1;
-      min-width: 220px;
+      flex-direction: column;
       padding: 10px 15px;
-      font-size: 1rem;
-      border: 2px solid #004080;
-      border-radius: 30px;
-      outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-
-    .search-area input:focus {
-      border-color: #0080ff;
-      box-shadow: 0 0 5px rgba(0, 128, 255, 0.5);
-    }
-
-    .search-area button {
-      padding: 10px 20px;
-      background-color: #004080;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .search-area button:hover {
-      background-color: #002f66;
-    }
-
-    table {
+    aside.filters {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 1rem;
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
     }
-
-    th, td {
-      border: 1px solid #004080;
-      padding: 12px 8px;
-      text-align: center;
+    aside.filters button {
+      flex: 1 1 130px;
     }
-
-    thead {
-      background-color: #004080;
-      color: white;
-    }
-
-    tbody tr:hover {
-      background-color: #d0e6ff;
-    }
-
-    td img {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-
-    td a {
-      color: #004080;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    td a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-      nav {
-        display: none;
-      }
-
-      .search-area {
-        flex-direction: column;
-      }
-
-      .page-title {
-        position: static;
-        transform: none;
-        text-align: center;
-        margin-top: 10px;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
 
 <header>
-  <button class="home-btn" onclick="location.href='Home.html'">
-    <img src="https://cdn-icons-png.flaticon.com/512/456/456212.png" alt="Home" />
+  <button class="home-btn" onclick="goHome()" aria-label="الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
     الصفحة الرئيسية
   </button>
-  <div class="page-title">العضويات</div>
+  العضويات
 </header>
 
-<nav>
-  <button onclick="setFilter('membershipType', '')">📋 الكل</button>
-  <button onclick="setFilter('membershipType', 'عاملة')">💼 العضوية العاملة</button>
-  <button onclick="setFilter('membershipType', 'منتسبة')">👥 العضوية المنتسبة</button>
-  <button onclick="setFilter('membershipType', 'مؤسس')">🏛️ العضوية المؤسسة</button>
-  <hr />
-  <button onclick="setFilter('gender', '')">👤 الكل</button>
-  <button onclick="setFilter('gender', 'male')">🧔 الذكور</button>
-  <button onclick="setFilter('gender', 'female')">👩 الإناث</button>
-  <hr />
-  <button onclick="setFilter('assemblyRight', '')">👥 الكل</button>
-  <button onclick="setFilter('assemblyRight', 'yes')">🏛️ الجمعية العمومية</button>
-</nav>
-
 <main>
-  <div class="search-area">
-    <input type="text" id="searchById" placeholder="🔍 ابحث برقم العضوية..." />
-    <input type="text" id="searchByName" placeholder="🔍 ابحث بالاسم الأول..." />
-    <button onclick="applyAllFilters()">بحث</button>
-  </div>
 
-  <div id="tableContainer">البيانات ستظهر هنا</div>
+  <aside class="filters" aria-label="فلاتر العضويات">
+    <h3>نوع العضوية</h3>
+    <button data-filter-type="membershipType" data-filter-value="الكل" class="active">الكل</button>
+    <button data-filter-type="membershipType" data-filter-value="عاملة">عاملة</button>
+    <button data-filter-type="membershipType" data-filter-value="منتسبة">منتسبة</button>
+    <button data-filter-type="membershipType" data-filter-value="مؤسس">مؤسس</button>
+
+    <h3>النوع</h3>
+    <button data-filter-type="gender" data-filter-value="الكل" class="active">الكل</button>
+    <button data-filter-type="gender" data-filter-value="ذكر">ذكر</button>
+    <button data-filter-type="gender" data-filter-value="أنثى">أنثى</button>
+
+    <h3>التجديد</h3>
+    <button data-filter-type="renewal" data-filter-value="الكل" class="active">الكل</button>
+    <button data-filter-type="renewal" data-filter-value="مجدد">مجدد</button>
+    <button data-filter-type="renewal" data-filter-value="غير مجدد">غير مجدد</button>
+
+    <h3>الجمعية العمومية</h3>
+    <button data-filter-type="assembly" data-filter-value="الكل" class="active">الكل</button>
+    <button data-filter-type="assembly" data-filter-value="نعم">نعم</button>
+    <button data-filter-type="assembly" data-filter-value="لا">لا</button>
+  </aside>
+
+  <section class="search-area" role="main" aria-live="polite" aria-atomic="true">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="ابحث برقم العضوية أو الاسم الأول" aria-label="بحث برقم العضوية أو الاسم" autocomplete="off" />
+    </div>
+    <div id="result"></div>
+  </section>
+
 </main>
 
 <script>
-  let allMembers = [];
-  let filters = {
-    membershipType: '',
-    gender: '',
-    assemblyRight: ''
+  const apiUrl = "https://script.google.com/macros/s/AKfycbxDDJbGBBfrG1374mYSGU0giEL5kxE5hy4TNA8g_JVlM6bw6DCSGzDH5FfA5dK2onMkhg/exec";
+
+  const filters = {
+    membershipType: "الكل",
+    gender: "الكل",
+    renewal: "الكل",
+    assembly: "الكل"
   };
 
-  function setFilter(type, value) {
-    filters[type] = value;
-    applyAllFilters();
+  const filterButtons = document.querySelectorAll("aside.filters button");
+  const searchInput = document.getElementById("searchInput");
+  const resultDiv = document.getElementById("result");
+
+  // تفعيل زرار الصفحة الرئيسية
+  function goHome() {
+    window.location.href = "home.html"; // غيّر الرابط حسب اسم الصفحة الرئيسية عندك
   }
 
-  function applyAllFilters() {
-    let filtered = allMembers;
+  // تحديث الزرار المختار
+  filterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const type = btn.getAttribute("data-filter-type");
+      const value = btn.getAttribute("data-filter-value");
 
-    if (filters.membershipType)
-      filtered = filtered.filter(m => m.membership_type === filters.membershipType);
+      // إزالة الكلاس active من كل أزرار نفس النوع
+      document.querySelectorAll(`button[data-filter-type="${type}"]`).forEach(b => b.classList.remove("active"));
 
-    if (filters.gender) {
-      filtered = filtered.filter(m => {
-        if (!m.gender) return false;
-        if (filters.gender === 'male') return m.gender.includes('ذكر');
-        if (filters.gender === 'female') return m.gender.includes('أنثى');
-        return true;
-      });
+      btn.classList.add("active");
+      filters[type] = value;
+
+      loadData();
+    });
+  });
+
+  // تحميل البيانات حسب البحث والفلاتر
+  function loadData() {
+    resultDiv.innerHTML = "جاري التحميل...";
+    let params = new URLSearchParams();
+
+    const searchVal = searchInput.value.trim();
+
+    // إذا الرقم كله أرقام نبحث برقم العضوية، وإلا بالاسم الأول
+    if (searchVal !== "") {
+      if (/^\d+$/.test(searchVal)) {
+        params.append("id", searchVal);
+      } else {
+        params.append("name", searchVal);
+      }
     }
 
-    if (filters.assemblyRight === 'yes')
-      filtered = filtered.filter(m => m.assembly_right === 'نعم');
+    Object.keys(filters).forEach(key => {
+      if (filters[key] && filters[key] !== "الكل") {
+        params.append(key, filters[key]);
+      }
+    });
 
-    const idValue = document.getElementById('searchById').value.trim();
-    if (idValue)
-      filtered = filtered.filter(m => m.id && m.id.toString().startsWith(idValue));
-
-    const nameValue = document.getElementById('searchByName').value.trim().toLowerCase();
-    if (nameValue)
-      filtered = filtered.filter(m => {
-        if (!m.name) return false;
-        return m.name.split(" ")[0].toLowerCase().startsWith(nameValue);
+    fetch(apiUrl + "?" + params.toString())
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          resultDiv.innerHTML = `<div class="error-msg">❌ حدث خطأ: ${data.error}</div>`;
+          return;
+        }
+        renderResults(data.results || (data.id ? [data] : []));
+      })
+      .catch(() => {
+        resultDiv.innerHTML = `<div class="error-msg">❌ حدث خطأ أثناء تحميل البيانات.</div>`;
       });
-
-    renderTable(filtered);
   }
 
-  function renderTable(data) {
-    if (!data || data.length === 0) {
-      document.getElementById('tableContainer').innerHTML = "<p style='color:#d00;font-weight:600;'>لا توجد نتائج</p>";
+  // رسم نتائج البحث في جدول
+  function renderResults(members) {
+    if (!members || members.length === 0) {
+      resultDiv.innerHTML = "<p>لا توجد نتائج.</p>";
       return;
     }
-
-    let table = `
-      <table>
-        <thead>
-          <tr>
-            <th>رقم العضوية</th>
-            <th>الاسم</th>
-            <th>نوع العضوية</th>
-            <th>النوع</th>
-            <th>التجديد</th>
-            <th>الجمعية العمومية</th>
-            <th>الصورة</th>
-          </tr>
-        </thead>
-        <tbody>`;
-
-    data.forEach(member => {
-      table += `
+    let html = `<table aria-label="جدول نتائج البحث">
+      <thead>
         <tr>
-          <td>${member.id || ''}</td>
-          <td><a href="member.html?id=${member.id || ''}" target="_blank">${member.name || ''}</a></td>
-          <td>${member.membership_type || ''}</td>
-          <td>${member.gender || ''}</td>
-          <td>${member.renewed || ''}</td>
-          <td>${member.assembly_right || ''}</td>
-          <td><img src="${member.photo || ''}" alt="صورة" /></td>
-        </tr>`;
+          <th>رقم العضوية</th>
+          <th>الاسم</th>
+          <th>نوع العضوية</th>
+          <th>النوع</th>
+          <th>التجديد</th>
+          <th>حق حضور الجمعية العمومية</th>
+          <th>صورة العضو</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    members.forEach(m => {
+      html += `<tr>
+        <td>${m["رقم العضوية"] || ""}</td>
+        <td class="name-cell"><a href="member-details.html?id=${encodeURIComponent(m["رقم العضوية"])}" target="_blank" rel="noopener noreferrer">${m["الاسم"] || ""}</a></td>
+        <td>${m["نوع العضوية"] || ""}</td>
+        <td>${m["النوع"] || ""}</td>
+        <td>${m["التجديد"] || ""}</td>
+        <td>${m["الجمعية العمومية"] || ""}</td>
+        <td class="img-cell">${m["صورة العضو"] ? `<img src="${m["صورة العضو"]}" alt="صورة ${m["الاسم"]}">` : ""}</td>
+      </tr>`;
     });
 
-    table += `</tbody></table>`;
-    document.getElementById('tableContainer').innerHTML = table;
+    html += "</tbody></table>";
+    resultDiv.innerHTML = html;
   }
 
-  // تحميل البيانات
-  fetch("https://script.google.com/macros/s/AKfycbxDDJbGBBfrG1374mYSGU0giEL5kxE5hy4TNA8g_JVlM6bw6DCSGzDH5FfA5dK2onMkhg/exec")
-    .then(res => res.json())
-    .then(data => {
-      allMembers = data.results || [];
-      applyAllFilters();
-    })
-    .catch(() => {
-      document.getElementById('tableContainer').textContent = "حدث خطأ أثناء تحميل البيانات.";
-    });
+  // استدعاء البيانات أول مرة
+  loadData();
+
+  // استماع تغييرات البحث مع debounce
+  let debounceTimer;
+  searchInput.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      loadData();
+    }, 400);
+  });
 </script>
 
 </body>
