@@ -77,9 +77,25 @@
       cursor: pointer;
       font-weight: 700;
       transition: background-color 0.3s ease;
+      margin-bottom: 12px;
     }
     button.login-btn:hover {
       background-color: #005bb5;
+    }
+    button.home-btn {
+      width: 100%;
+      background-color: #6c757d;
+      border: none;
+      color: white;
+      padding: 12px 0;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+    }
+    button.home-btn:hover {
+      background-color: #495057;
     }
     .forgot {
       margin-top: 18px;
@@ -115,6 +131,10 @@
       <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="username" />
       <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password" />
       <button class="login-btn" onclick="login()">تسجيل دخول</button>
+      
+      <!-- زرار الصفحة الرئيسية -->
+      <button class="home-btn" onclick="goHome()">العودة إلى الصفحة الرئيسية</button>
+
       <div class="forgot" onclick="forgotPassword()">نسيت كلمة المرور؟</div>
       <div id="msgSuccess" class="message"></div>
       <div id="msgError" class="error-message"></div>
@@ -175,6 +195,11 @@
       const contact = "01012287881";
       const message = encodeURIComponent("مرحبًا، أحتاج لاستعادة كلمة المرور في موقع مركز شباب نور المقطم.");
       window.open(`https://wa.me/${contact}?text=${message}`, '_blank');
+    }
+
+    // دالة الزرار للعودة للصفحة الرئيسية
+    function goHome() {
+      window.location.href = "Main.html"; // غيّر الرابط لو الصفحة الرئيسية باسم مختلف
     }
   </script>
 </body>
