@@ -18,19 +18,29 @@
     }
 
     header {
+      position: relative;
       background-color: #004080;
       color: white;
       padding: 15px 20px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
       font-size: 1.3rem;
       font-weight: 600;
+      justify-content: space-between;
+    }
+
+    .header-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: 700;
+      font-size: 1.4rem;
+      white-space: nowrap;
     }
 
     /* زر تسجيل الخروج */
     .logout-btn {
-      background-color: #dc3545; /* أحمر */
+      background-color: #dc3545; /* لون أحمر Bootstrap */
       border: none;
       color: white;
       padding: 8px 16px;
@@ -39,18 +49,20 @@
       border-radius: 6px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      order: 1; /* ليكون أول عنصر من جهة الشمال */
     }
 
     .logout-btn:hover {
-      background-color: #b02a37;
+      background-color: #b02a37; /* لون أحمر أغمق عند التحويم */
     }
 
     /* الترحيب */
     .welcome {
+      order: 3; /* آخر عنصر على اليمين */
       font-weight: 600;
       font-size: 1rem;
       color: #ffffffcc;
-      text-align: right; /* الترحيب على اليمين */
+      text-align: right;
       flex-grow: 1;
     }
 
@@ -88,6 +100,7 @@
       border-bottom: 2px solid #004080;
     }
 
+    /* لجعل الروابط مناسبة للعرض في الشاشات الصغيرة */
     @media (max-width: 480px) {
       .sections-nav {
         gap: 20px;
@@ -100,9 +113,9 @@
 </head>
 <body>
   <header>
-    <div class="welcome" id="welcomeUser">مرحبا بك يا ...</div>
-    <div>الصفحة الرئيسية</div>
     <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+    <div class="header-center">الصفحة الرئيسية</div>
+    <div class="welcome" id="welcomeUser">مرحبا بك يا ...</div>
   </header>
 
   <main>
@@ -115,21 +128,13 @@
   </main>
 
   <script>
-    // تحقق من تسجيل الدخول
-    const username = sessionStorage.getItem('username');
-    const name = sessionStorage.getItem('name');
-
-    if (!username) {
-      // لو مش مسجل دخول رجّع على Main
-      window.location.href = 'Main.html';
-    } else {
-      // عرض الترحيب بالاسم
-      document.getElementById('welcomeUser').textContent = `مرحبا بك يا ${name}`;
-    }
+    // جلب اسم المستخدم من الجلسة
+    const username = sessionStorage.getItem('name') || '...';
+    document.getElementById('welcomeUser').textContent = `مرحبا بك يا ${username}`;
 
     function logout() {
       sessionStorage.clear();
-      window.location.href = 'Main.html';
+      window.location.href = 'Main.html'; // غيّر للرابط الصحيح للصفحة الرئيسية
     }
   </script>
 </body>
