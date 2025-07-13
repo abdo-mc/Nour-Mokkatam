@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>العضويات</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo&display=swap">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/456/456212.png" type="image/png" />
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      background: #f0f4f8;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      background-color: #004080;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .home-btn {
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .home-btn img {
+      width: 24px;
+      height: 24px;
+      margin-left: 8px;
+    }
+
+    .page-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+    }
+
+    nav {
+      width: 200px;
+      background-color: #004080;
+      padding: 90px 15px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    nav button {
+      background: #0074d9;
+      border: none;
+      color: white;
+      padding: 12px 14px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    nav button:hover {
+      background-color: #005bb5;
+    }
+
+    main {
+      flex-grow: 1;
+      padding: 100px 30px 30px;
+    }
+
+    .search-area {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .search-area input {
+      flex: 1;
+      min-width: 220px;
+      padding: 10px 15px;
+      font-size: 1rem;
+      border: 2px solid #004080;
+      border-radius: 30px;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .search-area input:focus {
+      border-color: #0080ff;
+      box-shadow: 0 0 5px rgba(0, 128, 255, 0.5);
+    }
+
+    .search-area button {
+      padding: 10px 20px;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .search-area button:hover {
+      background-color: #002f66;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+
+    th, td {
+      border: 1px solid #004080;
+      padding: 12px 8px;
+      text-align: center;
+    }
+
+    thead {
+      background-color: #004080;
+      color: white;
+    }
+
+    tbody tr:hover {
+      background-color: #d0e6ff;
+    }
+
+    td img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    td a {
+      color: #004080;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    td a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+      }
+
+      .search-area {
+        flex-direction: column;
+      }
+
+      .page-title {
+        position: static;
+        transform: none;
+        text-align: center;
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <button class="home-btn" onclick="location.href='Home.html'">
+    <img src="https://cdn-icons-png.flaticon.com/512/456/456212.png" alt="Home" />
+    الصفحة الرئيسية
+  </button>
+  <div class="page-title">العضويات</div>
+</header>
+
+<nav>
+  <button onclick="setFilter('membershipType', '')">📋 الكل</button>
+  <button onclick="setFilter('membershipType', 'عاملة')">💼 العضوية العاملة</button>
+  <button onclick="setFilter('membershipType', 'منتسبة')">👥 العضوية المنتسبة</button>
+  <button onclick="setFilter('membershipType', 'مؤسس')">🏛️ العضوية المؤسسة</button>
+  <hr />
+  <button onclick="setFilter('gender', '')">👤 الكل</button>
+  <button onclick="setFilter('gender', 'male')">🧔 الذكور</button>
+  <button onclick="setFilter('gender', 'female')">👩 الإناث</button>
+  <hr />
+  <button onclick="setFilter('assemblyRight', '')">👥 الكل</button>
+  <button onclick="setFilter('assemblyRight', 'yes')">🏛️ الجمعية العمومية</button>
+</nav>
+
+<main>
+  <div class="search-area">
+    <input type="text" id="searchById" placeholder="🔍 ابحث برقم العضوية..." />
+    <input type="text" id="searchByName" placeholder="🔍 ابحث بالاسم الأول..." />
+    <button onclick="applyAllFilters()">بحث</button>
+  </div>
+
+  <div id="tableContainer">البيانات ستظهر هنا</div>
+</main>
+
+<script>
+  let allMembers = [];
+  let filters = {
+    membershipType: '',
+    gender: '',
+    assemblyRight: ''
+  };
+
+  function setFilter(type, value) {
+    filters[type] = value;
+    applyAllFilters();
+  }
+
+  function applyAllFilters() {
+    let filtered = allMembers;
+
+    if (filters.membershipType)
+      filtered = filtered.filter(m => m.membership_type === filters.membershipType);
+
+    if (filters.gender) {
+      filtered = filtered.filter(m => {
+        if (!m.gender) return false;
+        if (filters.gender === 'male') return m.gender.includes('ذكر');
+        if (filters.gender === 'female') return m.gender.includes('أنثى');
+        return true;
+      });
+    }
+
+    if (filters.assemblyRight === 'yes')
+      filtered = filtered.filter(m => m.assembly_right === 'نعم');
+
+    const idValue = document.getElementById('searchById').value.trim();
+    if (idValue)
+      filtered = filtered.filter(m => m.id && m.id.toString().startsWith(idValue));
+
+    const nameValue = document.getElementById('searchByName').value.trim().toLowerCase();
+    if (nameValue)
+      filtered = filtered.filter(m => {
+        if (!m.name) return false;
+        return m.name.split(" ")[0].toLowerCase().startsWith(nameValue);
+      });
+
+    renderTable(filtered);
+  }
+
+  function renderTable(data) {
+    if (!data || data.length === 0) {
+      document.getElementById('tableContainer').innerHTML = "<p style='color:#d00;font-weight:600;'>لا توجد نتائج</p>";
+      return;
+    }
+
+    let table = `
+      <table>
+        <thead>
+          <tr>
+            <th>رقم العضوية</th>
+            <th>الاسم</th>
+            <th>نوع العضوية</th>
+            <th>النوع</th>
+            <th>التجديد</th>
+            <th>الجمعية العمومية</th>
+            <th>الصورة</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+    data.forEach(member => {
+      table += `
+        <tr>
+          <td>${member.id || ''}</td>
+          <td><a href="member.html?id=${member.id || ''}" target="_blank">${member.name || ''}</a></td>
+          <td>${member.membership_type || ''}</td>
+          <td>${member.gender || ''}</td>
+          <td>${member.renewed || ''}</td>
+          <td>${member.assembly_right || ''}</td>
+          <td><img src="${member.photo || ''}" alt="صورة" /></td>
+        </tr>`;
+    });
+
+    table += `</tbody></table>`;
+    document.getElementById('tableContainer').innerHTML = table;
+  }
+
+  // تحميل البيانات
+  fetch("YOUR_API_URL_HERE")
+    .then(res => res.json())
+    .then(data => {
+      allMembers = data.results || [];
+      applyAllFilters();
+    })
+    .catch(() => {
+      document.getElementById('tableContainer').textContent = "حدث خطأ أثناء تحميل البيانات.";
+    });
+</script>
+
+</body>
+</html>
