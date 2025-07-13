@@ -176,8 +176,26 @@
       gap: 10px;
       padding: 10px;
     }
-    aside.filters button {
-      flex: 1 1 130px;
+    aside.filters h3 {
+      width: 100%;
+      font-size: 1.1rem;
+      text-align: center;
+      border-bottom: none;
+      margin-top: 10px;
+      color: #00529b;
+    }
+    section.search-area {
+      padding: 15px 10px;
+    }
+    table {
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 8px 5px;
+    }
+    .search-box {
+      flex-direction: column;
+      align-items: stretch;
     }
   }
 </style>
@@ -223,6 +241,12 @@
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="ابحث برقم العضوية أو الاسم الأول" aria-label="بحث برقم العضوية أو الاسم" autocomplete="off" />
     </div>
+
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <button onclick="printResults()" style="padding: 10px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer;">🖨️ طباعة النتائج</button>
+      <button onclick="downloadExcel()" style="padding: 10px; background: #17a2b8; color: white; border: none; border-radius: 6px; cursor: pointer;">📥 تحميل Excel</button>
+    </div>
+
     <div id="result"></div>
   </section>
 
@@ -243,7 +267,7 @@
   const resultDiv = document.getElementById("result");
 
   function goHome() {
-    window.location.href = "home.html"; // عدل حسب اسم الصفحة الرئيسية عندك
+    window.location.href = "home.html";
   }
 
   filterButtons.forEach(btn => {
@@ -268,6 +292,11 @@
   function loadData() {
     const searchVal = searchInput.value.trim();
     const hasFilter = Object.values(filters).some(v => v !== "الكل");
+
+    if (searchVal !== "" && searchVal.length < 3 && !/^\d+$/.test(searchVal)) {
+      resultDiv.innerHTML = "<p>اكتب على الأقل 3 حروف للبحث بالاسم.</p>";
+      return;
+    }
 
     if (searchVal === "" && !hasFilter) {
       resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر.</p>";
@@ -299,7 +328,6 @@
           resultDiv.innerHTML = `<div class="error-msg">❌ حدث خطأ: ${data.error}</div>`;
           return;
         }
-        // إذا ما فيش نتائج، خليها رسالة بسيطة بدل الخطأ
         if ((!data.results || data.results.length === 0) && !data.id) {
           resultDiv.innerHTML = "<p>لا توجد نتائج.</p>";
           return;
@@ -316,6 +344,7 @@
       resultDiv.innerHTML = "<p>لا توجد نتائج.</p>";
       return;
     }
+
     let html = `<table aria-label="جدول نتائج البحث">
       <thead>
         <tr>
@@ -343,10 +372,59 @@
     });
 
     html += "</tbody></table>";
-    resultDiv.innerHTML = html;
+    resultDiv.innerHTML = `<p>عدد النتائج: ${members.length}</p>` + html;
   }
 
-  // حَمِّل بيانات أولية عند فتح الصفحة لكن مش ببحث تلقائي عشان مايطلعش خطأ
+  function printResults() {
+    const content = resultDiv.innerHTML;
+    const printWindow = window.open('', '', 'width=900,height=700');
+    printWindow.document.write(`
+      <html dir="rtl" lang="ar">
+      <head>
+        <title>طباعة النتائج</title>
+        <style>
+          body { font-family: 'Cairo', sans-serif; padding: 20px; }
+          table { width: 100%; border-collapse: collapse; }
+          th, td { border: 1px solid #333; padding: 8px; text-align: center; }
+          thead { background-color: #00529b; color: white; }
+        </style>
+      </head>
+      <body>${content}</body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  }
+
+  function downloadExcel() {
+    const table = resultDiv.querySelector("table");
+    if (!table) {
+      alert("لا توجد بيانات لتحميلها.");
+      return;
+    }
+
+    let tableHTML = table.outerHTML.replace(/ /g, '%20');
+
+    const filename = 'العضويات.xls';
+    const dataType = 'application/vnd.ms-excel';
+
+    const downloadLink = document.createElement("a");
+    document.body.appendChild(downloadLink);
+
+    if (navigator.msSaveOrOpenBlob) {
+      const blob = new Blob(['\ufeff', tableHTML], { type: dataType });
+      navigator.msSaveOrOpenBlob(blob, filename);
+    } else {
+      downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+      downloadLink.download = filename;
+      downloadLink.click();
+    }
+
+    document.body.removeChild(downloadLink);
+  }
+
   resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر.</p>";
 </script>
 
