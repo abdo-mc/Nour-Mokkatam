@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>تسجيل دخول</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      background-color: #004080;
+      color: white;
+      padding: 30px 20px;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+    main {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 20px;
+    }
+    .login-box {
+      background: white;
+      padding: 35px 40px;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      width: 350px;
+      max-width: 90vw;
+      text-align: center;
+    }
+    .login-box h2 {
+      margin-bottom: 25px;
+      color: #004080;
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 12px 0 18px 0;
+      border: 3px solid #004080;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      outline: none;
+      box-sizing: border-box;
+      text-align: center;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #007bff;
+    }
+    button.login-btn {
+      width: 100%;
+      background-color: #0080ff;
+      border: none;
+      color: white;
+      padding: 12px 0;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+    }
+    button.login-btn:hover {
+      background-color: #005bb5;
+    }
+    .forgot {
+      margin-top: 18px;
+      font-size: 0.9rem;
+      color: #004080;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .forgot:hover {
+      color: #002c66;
+    }
+  </style>
+</head>
+<body>
+  <header>مركز شباب نور المقطم</header>
+  <main>
+    <div class="login-box">
+      <h2>تسجيل دخول</h2>
+      <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="username" />
+      <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password" />
+      <button class="login-btn" onclick="login()">تسجيل دخول</button>
+      <div class="forgot" onclick="forgotPassword()">نسيت كلمة المرور؟</div>
+    </div>
+  </main>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbySD2R9nbJs1CJVFjgd5Pcqog2mdiCigMtwcSg9Xi3t3t3d4fB-6sVJagCj78pFXWNApg/exec";
+
+    function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!username || !password) {
+        alert("يرجى إدخال اسم المستخدم وكلمة المرور");
+        return;
+      }
+
+      fetch(`${apiUrl}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert(`مرحبًا ${data.name}، تم تسجيل الدخول بنجاح`);
+            // ممكن تحفظ بيانات الجلسة أو توجه المستخدم حسب الدور
+            if (data.role === 'admin') {
+              window.location.href = "admin.html"; // صفحة الأدمن
+            } else {
+              window.location.href = "bus.html"; // صفحة المستخدم العادي
+            }
+          } else {
+            alert(data.error);
+          }
+        })
+        .catch(() => {
+          alert("حدث خطأ في الاتصال. حاول مرة أخرى.");
+        });
+    }
+
+    function forgotPassword() {
+      const contact = "01012287881";
+      alert(`لإستعادة كلمة المرور، يرجى التواصل مع المشرف عبر واتساب: ${contact}`);
+      // ممكن تضيف هنا رابط مباشر للواتساب لو حبيت:
+      // window.open(`https://wa.me/${contact}`, '_blank');
+    }
+  </script>
+</body>
+</html>
