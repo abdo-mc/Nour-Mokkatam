@@ -116,19 +116,6 @@
   .search-box input:focus {
     border-color: #007bff;
   }
-  .search-box button {
-    background: #00529b;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  .search-box button:hover {
-    background: #003d75;
-  }
 
   table {
     width: 100%;
@@ -235,7 +222,6 @@
   <section class="search-area" role="main" aria-live="polite" aria-atomic="true">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="ابحث برقم العضوية أو الاسم الأول" aria-label="بحث برقم العضوية أو الاسم" autocomplete="off" />
-      <button id="searchBtn" aria-label="بحث">بحث</button>
     </div>
     <div id="result"></div>
   </section>
@@ -254,43 +240,42 @@
 
   const filterButtons = document.querySelectorAll("aside.filters button");
   const searchInput = document.getElementById("searchInput");
-  const searchBtn = document.getElementById("searchBtn");
   const resultDiv = document.getElementById("result");
 
-  // تفعيل زرار الصفحة الرئيسية
   function goHome() {
-    window.location.href = "home.html"; // غيّر الرابط حسب اسم الصفحة الرئيسية عندك
+    window.location.href = "home.html"; // عدل حسب اسم الصفحة الرئيسية عندك
   }
 
-  // تحديث الزرار المختار
   filterButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       const type = btn.getAttribute("data-filter-type");
       const value = btn.getAttribute("data-filter-value");
-
-      // إزالة الكلاس active من كل أزرار نفس النوع
       document.querySelectorAll(`button[data-filter-type="${type}"]`).forEach(b => b.classList.remove("active"));
-
       btn.classList.add("active");
       filters[type] = value;
+      loadData();
     });
   });
 
-  // دالة تحميل البيانات
+  let debounceTimer;
+  searchInput.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      loadData();
+    }, 600);
+  });
+
   function loadData() {
-    resultDiv.innerHTML = "جاري التحميل...";
-    let params = new URLSearchParams();
-
     const searchVal = searchInput.value.trim();
-
-    // فقط ابعت طلب إذا في بحث أو فلتر مختلف عن الكل
     const hasFilter = Object.values(filters).some(v => v !== "الكل");
+
     if (searchVal === "" && !hasFilter) {
-      resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم أو اختر فلتر.</p>";
+      resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر.</p>";
       return;
     }
 
-    // لو الرقم كله أرقام نبحث برقم العضوية، وإلا بالاسم الأول
+    let params = new URLSearchParams();
+
     if (searchVal !== "") {
       if (/^\d+$/.test(searchVal)) {
         params.append("id", searchVal);
@@ -305,11 +290,18 @@
       }
     });
 
+    resultDiv.innerHTML = "جاري التحميل...";
+
     fetch(apiUrl + "?" + params.toString())
       .then(res => res.json())
       .then(data => {
         if (data.error) {
           resultDiv.innerHTML = `<div class="error-msg">❌ حدث خطأ: ${data.error}</div>`;
+          return;
+        }
+        // إذا ما فيش نتائج، خليها رسالة بسيطة بدل الخطأ
+        if ((!data.results || data.results.length === 0) && !data.id) {
+          resultDiv.innerHTML = "<p>لا توجد نتائج.</p>";
           return;
         }
         renderResults(data.results || (data.id ? [data] : []));
@@ -319,7 +311,6 @@
       });
   }
 
-  // رسم نتائج البحث في جدول
   function renderResults(members) {
     if (!members || members.length === 0) {
       resultDiv.innerHTML = "<p>لا توجد نتائج.</p>";
@@ -341,13 +332,13 @@
 
     members.forEach(m => {
       html += `<tr>
-        <td>${m["رقم العضوية"] || ""}</td>
-        <td class="name-cell"><a href="member-details.html?id=${encodeURIComponent(m["رقم العضوية"])}" target="_blank" rel="noopener noreferrer">${m["الاسم"] || ""}</a></td>
-        <td>${m["نوع العضوية"] || ""}</td>
-        <td>${m["النوع"] || ""}</td>
-        <td>${m["التجديد"] || ""}</td>
-        <td>${m["الجمعية العمومية"] || ""}</td>
-        <td class="img-cell">${m["صورة العضو"] ? `<img src="${m["صورة العضو"]}" alt="صورة ${m["الاسم"]}">` : ""}</td>
+        <td>${m["رقم العضوية"] || "-"}</td>
+        <td class="name-cell"><a href="member-details.html?id=${encodeURIComponent(m["رقم العضوية"])}" target="_blank" rel="noopener noreferrer">${m["الاسم"] || "-"}</a></td>
+        <td>${m["نوع العضوية"] || "-"}</td>
+        <td>${m["النوع"] || "-"}</td>
+        <td>${m["التجديد"] || "-"}</td>
+        <td>${m["حق حضور الجمعية العمومية"] || "-"}</td>
+        <td class="img-cell"><img src="${m["صورة العضو"] || 'https://via.placeholder.com/55'}" alt="صورة ${m["الاسم"] || 'عضو'}" loading="lazy"/></td>
       </tr>`;
     });
 
@@ -355,20 +346,8 @@
     resultDiv.innerHTML = html;
   }
 
-  // تحميل البيانات عند الضغط على زر البحث
-  searchBtn.addEventListener("click", () => {
-    loadData();
-  });
-
-  // يمكن كمان اضف استماع Enter في مربع البحث لتشغيل البحث عند الضغط على Enter
-  searchInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      loadData();
-    }
-  });
-
-  // استدعاء أولي للصفحة بدون تحميل بيانات تلقائي (يطلب إدخال أولاً)
-  resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر ثم اضغط بحث.</p>";
+  // حَمِّل بيانات أولية عند فتح الصفحة لكن مش ببحث تلقائي عشان مايطلعش خطأ
+  resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر.</p>";
 </script>
 
 </body>
