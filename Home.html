@@ -30,7 +30,7 @@
 
     /* زر تسجيل الخروج */
     .logout-btn {
-      background-color: #dc3545; /* لون أحمر Bootstrap */
+      background-color: #dc3545; /* أحمر */
       border: none;
       color: white;
       padding: 8px 16px;
@@ -42,7 +42,7 @@
     }
 
     .logout-btn:hover {
-      background-color: #b02a37; /* لون أحمر أغمق عند التحويم */
+      background-color: #b02a37;
     }
 
     /* الترحيب */
@@ -50,9 +50,8 @@
       font-weight: 600;
       font-size: 1rem;
       color: #ffffffcc;
-      text-align: right;
-      flex: 1;
-      padding-left: 20px;
+      text-align: right; /* الترحيب على اليمين */
+      flex-grow: 1;
     }
 
     main {
@@ -89,7 +88,6 @@
       border-bottom: 2px solid #004080;
     }
 
-    /* لجعل الروابط مناسبة للعرض في الشاشات الصغيرة */
     @media (max-width: 480px) {
       .sections-nav {
         gap: 20px;
@@ -119,19 +117,19 @@
   <script>
     // تحقق من تسجيل الدخول
     const username = sessionStorage.getItem('username');
-    const name = sessionStorage.getItem('name') || '...';
+    const name = sessionStorage.getItem('name');
 
     if (!username) {
-      // لو مفيش مستخدم مسجل دخول ارجع للصفحة الرئيسية أو تسجيل الدخول
-      window.location.href = 'login.html'; // عدّل الرابط حسب مسار صفحة الدخول عندك
+      // لو مش مسجل دخول رجّع على Main
+      window.location.href = 'Main.html';
     } else {
-      // عرض الترحيب باسم المستخدم
+      // عرض الترحيب بالاسم
       document.getElementById('welcomeUser').textContent = `مرحبا بك يا ${name}`;
     }
 
     function logout() {
       sessionStorage.clear();
-      window.location.href = 'Main.html'; // عدّل حسب رابط الصفحة الرئيسية عندك
+      window.location.href = 'Main.html';
     }
   </script>
 </body>
