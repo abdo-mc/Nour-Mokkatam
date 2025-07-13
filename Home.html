@@ -29,27 +29,30 @@
     }
 
     /* زر تسجيل الخروج */
-   .logout-btn {
-  background-color: #dc3545; /* لون أحمر Bootstrap */
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  font-size: 1rem;
-  font-weight: 700;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+    .logout-btn {
+      background-color: #dc3545; /* لون أحمر Bootstrap */
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-.logout-btn:hover {
-  background-color: #b02a37; /* لون أحمر أغمق عند التحويم */
-}
+    .logout-btn:hover {
+      background-color: #b02a37; /* لون أحمر أغمق عند التحويم */
+    }
 
     /* الترحيب */
     .welcome {
       font-weight: 600;
       font-size: 1rem;
       color: #ffffffcc;
+      text-align: right;
+      flex: 1;
+      padding-left: 20px;
     }
 
     main {
@@ -99,9 +102,9 @@
 </head>
 <body>
   <header>
-    <div class="welcome" id="welcomeUser"></div>
-    <div>الصفحة الرئيسية</div>
     <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+    <div class="welcome" id="welcomeUser">مرحبا بك يا ...</div>
+    <div>الصفحة الرئيسية</div>
   </header>
 
   <main>
@@ -114,13 +117,21 @@
   </main>
 
   <script>
-    // جلب اسم المستخدم من الجلسة
-    const username = sessionStorage.getItem('name') || '...';
-    document.getElementById('welcomeUser').textContent = `مرحبا بك يا ${username}`;
+    // تحقق من تسجيل الدخول
+    const username = sessionStorage.getItem('username');
+    const name = sessionStorage.getItem('name') || '...';
+
+    if (!username) {
+      // لو مفيش مستخدم مسجل دخول ارجع للصفحة الرئيسية أو تسجيل الدخول
+      window.location.href = 'login.html'; // عدّل الرابط حسب مسار صفحة الدخول عندك
+    } else {
+      // عرض الترحيب باسم المستخدم
+      document.getElementById('welcomeUser').textContent = `مرحبا بك يا ${name}`;
+    }
 
     function logout() {
       sessionStorage.clear();
-      window.location.href = 'Main.html'; // غيّر للرابط الصحيح للصفحة الرئيسية
+      window.location.href = 'Main.html'; // عدّل حسب رابط الصفحة الرئيسية عندك
     }
   </script>
 </body>
