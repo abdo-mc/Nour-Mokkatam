@@ -116,6 +116,19 @@
   .search-box input:focus {
     border-color: #007bff;
   }
+  .search-box button {
+    background: #00529b;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .search-box button:hover {
+    background: #003d75;
+  }
 
   table {
     width: 100%;
@@ -222,6 +235,7 @@
   <section class="search-area" role="main" aria-live="polite" aria-atomic="true">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="ابحث برقم العضوية أو الاسم الأول" aria-label="بحث برقم العضوية أو الاسم" autocomplete="off" />
+      <button id="searchBtn" aria-label="بحث">بحث</button>
     </div>
     <div id="result"></div>
   </section>
@@ -240,6 +254,7 @@
 
   const filterButtons = document.querySelectorAll("aside.filters button");
   const searchInput = document.getElementById("searchInput");
+  const searchBtn = document.getElementById("searchBtn");
   const resultDiv = document.getElementById("result");
 
   // تفعيل زرار الصفحة الرئيسية
@@ -258,19 +273,24 @@
 
       btn.classList.add("active");
       filters[type] = value;
-
-      loadData();
     });
   });
 
-  // تحميل البيانات حسب البحث والفلاتر
+  // دالة تحميل البيانات
   function loadData() {
     resultDiv.innerHTML = "جاري التحميل...";
     let params = new URLSearchParams();
 
     const searchVal = searchInput.value.trim();
 
-    // إذا الرقم كله أرقام نبحث برقم العضوية، وإلا بالاسم الأول
+    // فقط ابعت طلب إذا في بحث أو فلتر مختلف عن الكل
+    const hasFilter = Object.values(filters).some(v => v !== "الكل");
+    if (searchVal === "" && !hasFilter) {
+      resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم أو اختر فلتر.</p>";
+      return;
+    }
+
+    // لو الرقم كله أرقام نبحث برقم العضوية، وإلا بالاسم الأول
     if (searchVal !== "") {
       if (/^\d+$/.test(searchVal)) {
         params.append("id", searchVal);
@@ -335,17 +355,20 @@
     resultDiv.innerHTML = html;
   }
 
-  // استدعاء البيانات أول مرة
-  loadData();
-
-  // استماع تغييرات البحث مع debounce
-  let debounceTimer;
-  searchInput.addEventListener("input", () => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      loadData();
-    }, 400);
+  // تحميل البيانات عند الضغط على زر البحث
+  searchBtn.addEventListener("click", () => {
+    loadData();
   });
+
+  // يمكن كمان اضف استماع Enter في مربع البحث لتشغيل البحث عند الضغط على Enter
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      loadData();
+    }
+  });
+
+  // استدعاء أولي للصفحة بدون تحميل بيانات تلقائي (يطلب إدخال أولاً)
+  resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر ثم اضغط بحث.</p>";
 </script>
 
 </body>
