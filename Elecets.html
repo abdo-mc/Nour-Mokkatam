@@ -171,8 +171,8 @@
   <header>استعلام انتخابات مركز شباب نور المقطم</header>
 
   <div class="search-box">
-    <h3>🔍 ابحث برقم العضوية أو الاسم</h3>
-    <input type="text" id="searchInput" placeholder="ادخل رقم العضوية أو الاسم" />
+    <h3>🔍 ابحث برقم العضوية</h3>
+    <input type="text" id="searchInput" placeholder="ادخل رقم العضوية" />
     <br />
     <button class="search-btn" onclick="search()">بحث</button>
   </div>
@@ -195,26 +195,27 @@
   function search() {
     const value = document.getElementById('searchInput').value.trim();
     if (!value) {
-      showError("من فضلك أدخل رقم العضوية أو الاسم");
+      showError("من فضلك أدخل رقم العضوية");
       return;
     }
 
     document.getElementById('result').textContent = "جاري البحث...";
-    fetch(`${apiBase}?search=${encodeURIComponent(value)}`)
+
+    // ابعت باراميتر id للسكريبت
+    fetch(`${apiBase}?id=${encodeURIComponent(value)}`)
       .then(res => res.json())
       .then(data => {
-        if (data.error || !data.result) {
-          showError(data.error || "لا توجد بيانات مطابقة");
+        if (data.error) {
+          showError(data.error);
         } else {
-          const d = data.result;
           document.getElementById('result').innerHTML = `
             <h3>بيانات العضو</h3>
             <table>
-              <tr><th>الاسم</th><td>${d.name}</td></tr>
-              <tr><th>رقم العضوية</th><td>${d.id}</td></tr>
-              <tr><th>اللجنة</th><td>${d.committee}</td></tr>
-              <tr><th>الرقم في الكشف</th><td>${d.order}</td></tr>
-              <tr><th>تاريخ الميلاد</th><td>${d.birth}</td></tr>
+              <tr><th>الاسم</th><td>${data.name}</td></tr>
+              <tr><th>رقم العضوية</th><td>${data.id}</td></tr>
+              <tr><th>اللجنة</th><td>${data.committee}</td></tr>
+              <tr><th>الرقم في الكشف</th><td>${data.order}</td></tr>
+              <tr><th>تاريخ الميلاد</th><td>${data.birthDate}</td></tr>
             </table>
           `;
         }
@@ -236,7 +237,7 @@
               <td>${row.id}</td>
               <td>${row.committee}</td>
               <td>${row.order}</td>
-              <td>${row.birth}</td>
+              <td>${row.birthDate}</td>
             </tr>
           `).join('');
 
