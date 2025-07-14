@@ -7,9 +7,6 @@
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    integrity="sha512-papbkp2bLZvVgx1jhMg8Dl58zjmoCQlLBHjrFVf5LjX3RZFLxE2Zo0qh8/c1n0eL+8PMPZ3PVcEaO37pXwYB1w=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
   />
   <style>
     * {
@@ -18,7 +15,7 @@
     body {
       font-family: 'Cairo', sans-serif;
       margin: 0;
-      padding: 20px 0 40px;
+      padding: 0;
       direction: rtl;
       background: #f0f4f8;
       min-height: 100vh;
@@ -27,6 +24,7 @@
       align-items: center;
       color: #004080;
     }
+    /* حذف الهيدر حسب طلبك */
     .container {
       background: white;
       padding: 40px 60px 50px;
@@ -35,7 +33,7 @@
       text-align: center;
       width: 900px;
       max-width: 95vw;
-      margin-bottom: 40px;
+      margin: 40px 0;
     }
     .title-container {
       display: flex;
@@ -64,7 +62,6 @@
       overflow-y: auto;
       text-align: right;
       direction: rtl;
-      min-height: 150px;
     }
     .training-card {
       border: 2px solid #005bb5;
@@ -106,14 +103,11 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      text-decoration: none;
     }
     .btn-back:hover {
       background: linear-gradient(90deg, #005bb5, #003d7a);
       box-shadow: 0 8px 25px rgba(0, 74, 179, 0.7);
       transform: translateY(-3px);
-      text-decoration: none;
-      color: #fff;
     }
     .btn-back:active {
       transform: translateY(-1px);
@@ -134,9 +128,9 @@
       <div class="subtitle">جميع الألعاب المتاحة</div>
     </div>
 
-    <a href="Main.html" class="btn-back">
+    <button class="btn-back" onclick="location.href='Main.html'">
       <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للصفحة الرئيسية
-    </a>
+    </button>
 
     <div class="training-list" id="trainingList">
       <p>جاري تحميل البيانات...</p>
@@ -166,10 +160,9 @@
       try {
         const res = await fetch(API_URL);
         if (!res.ok) throw new Error('حدث خطأ في جلب البيانات');
-
         const data = await res.json();
 
-        if (!Array.isArray(data) || data.length === 0) {
+        if (!data.length) {
           trainingList.innerHTML = "<p>لا توجد بيانات لعرضها حالياً.</p>";
           return;
         }
@@ -177,7 +170,6 @@
         const trainingsMap = new Map();
 
         data.forEach(item => {
-          // استخدم أسماء الأعمدة حسب شيتك بالضبط
           const key = item["اللعبة"] + "||" + item["الأكاديمية"];
           if (!trainingsMap.has(key)) {
             trainingsMap.set(key, {
@@ -191,7 +183,7 @@
           trainingsMap.get(key).days.push({
             day: item["اليوم"],
             from: item["من"],
-            to: item["الي"]
+            to: item["إلى"]
           });
         });
 
@@ -206,6 +198,5 @@
 
     fetchTrainings();
   </script>
-
 </body>
 </html>
