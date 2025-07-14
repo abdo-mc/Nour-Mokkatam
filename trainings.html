@@ -28,39 +28,34 @@
       color: #004080;
     }
     .container {
-      background: white;
-      padding: 40px 60px 50px;
-      border-radius: 20px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
       width: 900px;
       max-width: 95vw;
+      padding: 40px 60px 50px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
       margin-top: 20px;
       margin-bottom: 40px;
     }
-    .title-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: baseline;
-      gap: 6px;
-      margin-bottom: 40px;
+    .filters {
+      width: 250px;
+      padding: 20px;
+      background-color: #f8fbff;
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
     }
-    .title-container h1 {
-      font-weight: 800;
-      font-size: 2.2rem;
-      margin: 0;
-      white-space: nowrap;
-      color: #004080;
+    .filters select, .filters input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
-    .title-container .subtitle {
-      font-weight: 700;
-      font-size: 1.8rem;
-      color: #007bff;
-      white-space: nowrap;
-    }
-    /* بيانات التدريبات */
     .training-list {
+      flex-grow: 1;
       max-height: 60vh;
       overflow-y: auto;
       text-align: right;
@@ -74,6 +69,11 @@
       box-shadow: 0 4px 10px rgba(0,91,181,0.15);
       background: #f8fbff;
       text-align: right;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .training-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 15px rgba(0, 123, 255, 0.3);
     }
     .training-card h3 {
       color: #005bb5;
@@ -89,7 +89,23 @@
       list-style-type: square;
       color: #004080;
     }
-    /* زرار الرجوع */
+    .pagination {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .pagination button {
+      padding: 10px 20px;
+      margin: 0 5px;
+      font-size: 1rem;
+      background-color: #005bb5;
+      color: white;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    .pagination button:hover {
+      background-color: #004080;
+    }
     .btn-back {
       background: linear-gradient(90deg, #0080ff, #005bb5);
       border: none;
@@ -103,9 +119,6 @@
       transition: all 0.3s ease;
       user-select: none;
       margin-bottom: 30px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
     }
     .btn-back:hover {
       background: linear-gradient(90deg, #005bb5, #003d7a);
@@ -116,33 +129,76 @@
       transform: translateY(-1px);
       box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
     }
-    @media (max-width: 650px) {
-      .container {
-        padding: 30px 20px 40px;
-      }
-    }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="title-container">
-      <h1>التدريبات</h1>
-      <div class="subtitle">جميع الألعاب المتاحة</div>
+    <!-- Sidebar for filters -->
+    <div class="filters">
+      <select id="gameFilter" onchange="applyFilters()">
+        <option value="">اختر اللعبة</option>
+        <option value="كارتية">كارتية</option>
+        <option value="كرة قدم">كرة قدم</option>
+        <!-- Add more options as needed -->
+      </select>
+
+      <select id="dayFilter" onchange="applyFilters()">
+        <option value="">اختر اليوم</option>
+        <option value="سبت">سبت</option>
+        <option value="أحد">أحد</option>
+        <option value="ثلاثاء">ثلاثاء</option>
+        <option value="خميس">خميس</option>
+        <!-- Add more days as needed -->
+      </select>
+
+      <input type="text" id="searchBar" placeholder="ابحث عن تدريب..." oninput="searchTrainings()" />
     </div>
 
-    <button class="btn-back" onclick="location.href='Main.html'">
-      <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للصفحة الرئيسية
-    </button>
-
+    <!-- Training List -->
     <div class="training-list" id="trainingList">
       <p>جاري تحميل البيانات...</p>
     </div>
   </div>
 
+  <div class="pagination" id="pagination"></div>
+
+  <button class="btn-back" onclick="location.href='Main.html'">
+    <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للصفحة الرئيسية
+  </button>
+
   <script>
     const apiUrl = "https://script.google.com/macros/s/AKfycbwhKMTVxijHeeWT1LcGoRg2HzTYgtumWDPPGINcfOcztAMMXlRg_0qbSlPoldm6XlMn/exec";
     const trainingList = document.getElementById('trainingList');
+    const pagination = document.getElementById('pagination');
+    let data = [];
+    let currentPage = 1;
+    const rowsPerPage = 5;
+
+    // Fetch data from API
+    async function fetchTrainings() {
+      try {
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error('حدث خطأ في جلب البيانات');
+        data = await res.json();
+        displayTrainings(getPageData());
+      } catch (error) {
+        console.error("حدث خطأ في تحميل البيانات: ", error);
+        trainingList.innerHTML = "<p>حدث خطأ في تحميل البيانات، يرجى المحاولة لاحقاً.</p>";
+      }
+    }
+
+    // Display the filtered and paginated data
+    function displayTrainings(trainings) {
+      if (!trainings.length) {
+        trainingList.innerHTML = "<p>لا توجد بيانات لعرضها حالياً.</p>";
+        return;
+      }
+
+      const htmlCards = trainings.map(createTrainingCard).join('');
+      trainingList.innerHTML = htmlCards;
+      renderPagination();
+    }
 
     function createTrainingCard(training) {
       const ulDays = training.days.map(day => `<li>${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
@@ -158,44 +214,42 @@
       `;
     }
 
-    async function fetchTrainings() {
-      try {
-        const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error('حدث خطأ في جلب البيانات');
-        const data = await res.json();
+    // Apply filters and search
+    function applyFilters() {
+      const selectedGame = document.getElementById('gameFilter').value;
+      const selectedDay = document.getElementById('dayFilter').value;
+      const filteredData = data.filter(item => 
+        (!selectedGame || item["اللعبة"] === selectedGame) &&
+        (!selectedDay || item["اليوم"] === selectedDay)
+      );
+      displayTrainings(filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+    }
 
-        if (!data || !data.length) {
-          trainingList.innerHTML = "<p>لا توجد بيانات لعرضها حالياً.</p>";
-          return;
-        }
+    // Search by text
+    function searchTrainings() {
+      const query = document.getElementById('searchBar').value.toLowerCase();
+      const filteredData = data.filter(item => 
+        item["اللعبة"].toLowerCase().includes(query) || 
+        item["الأكاديمية"].toLowerCase().includes(query)
+      );
+      displayTrainings(filteredData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+    }
 
-        const trainingsMap = new Map();
-
-        data.forEach(item => {
-          const key = item["اللعبة"] + "||" + item["الأكاديمية"];
-          if (!trainingsMap.has(key)) {
-            trainingsMap.set(key, {
-              game: item["اللعبة"],
-              academy: item["الأكاديمية"],
-              price: item["سعر التدريب"],
-              coach: item["رقم الكابتن"],
-              days: []
-            });
-          }
-          trainingsMap.get(key).days.push({
-            day: item["اليوم"],
-            from: item["من"],
-            to: item["إلى"]
-          });
-        });
-
-        const htmlCards = Array.from(trainingsMap.values()).map(createTrainingCard).join('');
-        trainingList.innerHTML = htmlCards;
-
-      } catch (error) {
-        console.error("حدث خطأ في تحميل البيانات: ", error);
-        trainingList.innerHTML = "<p>حدث خطأ في تحميل البيانات، يرجى المحاولة لاحقاً.</p>";
+    // Pagination logic
+    function renderPagination() {
+      const pageCount = Math.ceil(data.length / rowsPerPage);
+      pagination.innerHTML = '';
+      for (let i = 1; i <= pageCount; i++) {
+        const button = document.createElement('button');
+        button.textContent = `الصفحة ${i}`;
+        button.onclick = () => changePage(i);
+        pagination.appendChild(button);
       }
+    }
+
+    function changePage(page) {
+      currentPage = page;
+      applyFilters();
     }
 
     fetchTrainings();
