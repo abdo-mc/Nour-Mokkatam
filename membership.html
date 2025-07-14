@@ -163,41 +163,25 @@
     user-select: none;
   }
 
-  @media(max-width: 900px) {
-    main {
-      flex-direction: column;
-      padding: 10px 15px;
-    }
-    aside.filters {
-      width: 100%;
-      flex-direction: row;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 10px;
-    }
-    aside.filters h3 {
-      width: 100%;
-      font-size: 1.1rem;
-      text-align: center;
-      border-bottom: none;
-      margin-top: 10px;
-      color: #00529b;
-    }
-    section.search-area {
-      padding: 15px 10px;
-    }
-    table {
-      font-size: 0.9rem;
-    }
-    th, td {
-      padding: 8px 5px;
-    }
-    .search-box {
-      flex-direction: column;
-      align-items: stretch;
-    }
+  .pagination {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
   }
+  .pagination button {
+    background: #00529b;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .pagination button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
 </style>
 </head>
 <body>
@@ -214,7 +198,7 @@
 
 <main>
 
-  <aside class="filters" aria-label="فلاتر العضويات">
+  <aside class="filters">
     <h3>نوع العضوية</h3>
     <button data-filter-type="membershipType" data-filter-value="الكل" class="active">الكل</button>
     <button data-filter-type="membershipType" data-filter-value="عاملة">عاملة</button>
@@ -237,9 +221,9 @@
     <button data-filter-type="assembly" data-filter-value="لا">لا</button>
   </aside>
 
-  <section class="search-area" role="main" aria-live="polite" aria-atomic="true">
+  <section class="search-area">
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="ابحث برقم العضوية أو الاسم الأول" aria-label="بحث برقم العضوية أو الاسم" autocomplete="off" />
+      <input type="text" id="searchInput" placeholder="ابحث برقم العضوية أو الاسم الأول" />
     </div>
 
     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -248,32 +232,29 @@
     </div>
 
     <div id="result"></div>
+    <div class="pagination" id="pagination"></div>
   </section>
 
 </main>
 
 <script>
   const apiUrl = "https://script.google.com/macros/s/AKfycbzEjXCNkR1dv7DGfaiaYdFMmMYXGIpLAZVLjGAJD-7lSTeEUe8cSSfnonnWvOUjExc5HA/exec";
-
-  const filters = {
-    membershipType: "الكل",
-    gender: "الكل",
-    renewal: "الكل",
-    assembly: "الكل"
-  };
-
-  const filterButtons = document.querySelectorAll("aside.filters button");
-  const searchInput = document.getElementById("searchInput");
+  const filters = { membershipType: "الكل", gender: "الكل", renewal: "الكل", assembly: "الكل" };
   const resultDiv = document.getElementById("result");
+  const paginationDiv = document.getElementById("pagination");
+  const searchInput = document.getElementById("searchInput");
+  let allResults = [];
+  let currentPage = 1;
+  const itemsPerPage = 50;
 
   function goHome() {
     window.location.href = "home.html";
   }
 
-  filterButtons.forEach(btn => {
+  document.querySelectorAll("aside.filters button").forEach(btn => {
     btn.addEventListener("click", () => {
-      const type = btn.getAttribute("data-filter-type");
-      const value = btn.getAttribute("data-filter-value");
+      const type = btn.dataset.filterType;
+      const value = btn.dataset.filterValue;
       document.querySelectorAll(`button[data-filter-type="${type}"]`).forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       filters[type] = value;
@@ -284,9 +265,7 @@
   let debounceTimer;
   searchInput.addEventListener("input", () => {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      loadData();
-    }, 600);
+    debounceTimer = setTimeout(() => loadData(), 600);
   });
 
   function loadData() {
@@ -297,132 +276,105 @@
       resultDiv.innerHTML = "<p>اكتب على الأقل 3 حروف للبحث بالاسم.</p>";
       return;
     }
-
     if (searchVal === "" && !hasFilter) {
       resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر.</p>";
       return;
     }
 
     let params = new URLSearchParams();
-
-    if (searchVal !== "") {
-      if (/^\d+$/.test(searchVal)) {
-        params.append("id", searchVal);
-      } else {
-        params.append("name", searchVal);
-      }
+    if (searchVal) {
+      /^\d+$/.test(searchVal) ? params.append("id", searchVal) : params.append("name", searchVal);
     }
-
     Object.keys(filters).forEach(key => {
-      if (filters[key] && filters[key] !== "الكل") {
-        params.append(key, filters[key]);
-      }
+      if (filters[key] !== "الكل") params.append(key, filters[key]);
     });
 
     resultDiv.innerHTML = "جاري التحميل...";
-
     fetch(apiUrl + "?" + params.toString())
       .then(res => res.json())
       .then(data => {
         if (data.error) {
-          resultDiv.innerHTML = `<div class="error-msg">❌ حدث خطأ: ${data.error}</div>`;
+          resultDiv.innerHTML = `<div class="error-msg">❌ ${data.error}</div>`;
           return;
         }
-        if ((!data.results || data.results.length === 0) && !data.id) {
-          resultDiv.innerHTML = "<p>لا توجد نتائج.</p>";
-          return;
-        }
-        renderResults(data.results || (data.id ? [data] : []));
+        allResults = data.results || (data.id ? [data] : []);
+        currentPage = 1;
+        renderResults();
       })
       .catch(() => {
         resultDiv.innerHTML = `<div class="error-msg">❌ حدث خطأ أثناء تحميل البيانات.</div>`;
       });
   }
 
-  function renderResults(members) {
-    if (!members || members.length === 0) {
+  function renderResults() {
+    if (!allResults || allResults.length === 0) {
       resultDiv.innerHTML = "<p>لا توجد نتائج.</p>";
+      paginationDiv.innerHTML = "";
       return;
     }
 
-    let html = `<table aria-label="جدول نتائج البحث">
-      <thead>
-        <tr>
-          <th>رقم العضوية</th>
-          <th>الاسم</th>
-          <th>نوع العضوية</th>
-          <th>النوع</th>
-          <th>التجديد</th>
-          <th>حق حضور الجمعية العمومية</th>
-          <th>صورة العضو</th>
-        </tr>
-      </thead>
-      <tbody>`;
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageItems = allResults.slice(start, end);
 
-    members.forEach(m => {
+    let html = `<p>عدد النتائج: ${allResults.length}</p><table><thead>
+      <tr>
+        <th>رقم العضوية</th>
+        <th>الاسم</th>
+        <th>نوع العضوية</th>
+        <th>النوع</th>
+        <th>التجديد</th>
+        <th>الجمعية العمومية</th>
+        <th>صورة العضو</th>
+      </tr></thead><tbody>`;
+
+    pageItems.forEach(m => {
       html += `<tr>
         <td>${m["رقم العضوية"] || "-"}</td>
-        <td class="name-cell"><a href="memberDetails.html?id=${encodeURIComponent(m["رقم العضوية"])}" target="_blank" rel="noopener noreferrer">${m["الاسم"] || "-"}</a></td>
+        <td class="name-cell"><a href="memberDetails.html?id=${encodeURIComponent(m["رقم العضوية"])}" target="_blank">${m["الاسم"] || "-"}</a></td>
         <td>${m["نوع العضوية"] || "-"}</td>
         <td>${m["النوع"] || "-"}</td>
         <td>${m["التجديد"] || "-"}</td>
         <td>${m["حق حضور الجمعية العمومية"] || "-"}</td>
-        <td class="img-cell"><img src="${m["صورة العضو"] || 'https://via.placeholder.com/55'}" alt="صورة ${m["الاسم"] || 'عضو'}" loading="lazy"/></td>
+        <td class="img-cell"><img src="${m["صورة العضو"] || 'https://via.placeholder.com/55'}" alt="صورة ${m["الاسم"] || 'عضو'}" /></td>
       </tr>`;
     });
 
     html += "</tbody></table>";
-    resultDiv.innerHTML = `<p>عدد النتائج: ${members.length}</p>` + html;
+    resultDiv.innerHTML = html;
+
+    const totalPages = Math.ceil(allResults.length / itemsPerPage);
+    paginationDiv.innerHTML = `
+      <button ${currentPage === 1 ? "disabled" : ""} onclick="changePage(${currentPage - 1})">السابق</button>
+      <span>صفحة ${currentPage} من ${totalPages}</span>
+      <button ${currentPage === totalPages ? "disabled" : ""} onclick="changePage(${currentPage + 1})">التالي</button>
+    `;
+  }
+
+  function changePage(page) {
+    currentPage = page;
+    renderResults();
   }
 
   function printResults() {
     const content = resultDiv.innerHTML;
-    const printWindow = window.open('', '', 'width=900,height=700');
-    printWindow.document.write(`
-      <html dir="rtl" lang="ar">
-      <head>
-        <title>طباعة النتائج</title>
-        <style>
-          body { font-family: 'Cairo', sans-serif; padding: 20px; }
-          table { width: 100%; border-collapse: collapse; }
-          th, td { border: 1px solid #333; padding: 8px; text-align: center; }
-          thead { background-color: #00529b; color: white; }
-        </style>
-      </head>
-      <body>${content}</body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
+    const win = window.open('', '', 'width=900,height=700');
+    win.document.write(`<html dir="rtl"><head><title>طباعة النتائج</title></head><body>${content}</body></html>`);
+    win.document.close();
+    win.print();
   }
 
   function downloadExcel() {
     const table = resultDiv.querySelector("table");
-    if (!table) {
-      alert("لا توجد بيانات لتحميلها.");
-      return;
-    }
-
-    let tableHTML = table.outerHTML.replace(/ /g, '%20');
-
-    const filename = 'العضويات.xls';
-    const dataType = 'application/vnd.ms-excel';
-
-    const downloadLink = document.createElement("a");
-    document.body.appendChild(downloadLink);
-
-    if (navigator.msSaveOrOpenBlob) {
-      const blob = new Blob(['\ufeff', tableHTML], { type: dataType });
-      navigator.msSaveOrOpenBlob(blob, filename);
-    } else {
-      downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-      downloadLink.download = filename;
-      downloadLink.click();
-    }
-
-    document.body.removeChild(downloadLink);
+    if (!table) return alert("لا توجد بيانات للتحميل.");
+    const blob = new Blob(['\ufeff', table.outerHTML], { type: 'application/vnd.ms-excel' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "العضويات.xls";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر.</p>";
