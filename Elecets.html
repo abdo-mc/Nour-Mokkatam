@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>استعلام انتخابات مركز شباب نور المقطم</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
@@ -171,8 +171,8 @@
   <header>استعلام انتخابات مركز شباب نور المقطم</header>
 
   <div class="search-box">
-    <h3>🔍 ابحث برقم العضوية أو الاسم</h3>
-    <input type="text" id="searchInput" placeholder="ادخل رقم العضوية أو الاسم" />
+    <h3>🔍 ابحث برقم العضوية</h3>
+    <input type="text" id="searchInput" placeholder="ادخل رقم العضوية" />
     <br />
     <button class="search-btn" onclick="search()">بحث</button>
   </div>
@@ -195,20 +195,18 @@
   function search() {
     const value = document.getElementById('searchInput').value.trim();
     if (!value) {
-      showError("من فضلك أدخل رقم العضوية أو الاسم");
+      showError("من فضلك أدخل رقم العضوية");
       return;
     }
 
     document.getElementById('result').textContent = "جاري البحث...";
-    let queryParam = isNaN(value) ? `name=${encodeURIComponent(value)}` : `id=${encodeURIComponent(value)}`;
-
-    fetch(`${apiBase}?${queryParam}`)
+    fetch(`${apiBase}?id=${encodeURIComponent(value)}`)
       .then(res => res.json())
       .then(data => {
-        if (data.error || (!data.result && !data.results)) {
+        if (data.error || !data.result) {
           showError(data.error || "لا توجد بيانات مطابقة");
         } else {
-          const d = data.result || data.results[0];
+          const d = data.result;
           document.getElementById('result').innerHTML = `
             <h3>بيانات العضو</h3>
             <table>
