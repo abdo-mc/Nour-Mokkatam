@@ -5,24 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>التدريبات</title>
   <style>
-    /* ... نفس CSS السابق بدون تغيير ... */
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
-    body { font-family: 'Cairo', sans-serif; margin:0; padding:0; background:#f9fafc; color:#222; display:flex; flex-direction:column; min-height:100vh;}
-    header { background:#00529b; color:#fff; padding:15px 20px; position:relative; text-align:center; font-size:1.9rem; font-weight:700;}
-    header button.home-btn { position:absolute; left:20px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:white; font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:6px; transition:color .3s;}
+    body { font-family: 'Cairo', sans-serif; margin:0; padding:0; background:#f9fafc; color:#222; display:flex; flex-direction:column; min-height:100vh; }
+    header { background-color:#00529b; color:white; padding:15px 20px; font-size:1.9rem; font-weight:700; text-align:center; position:relative; }
+    header button.home-btn { position:absolute; left:20px; top:50%; transform:translateY(-50%); background:transparent; border:none; color:white; font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:6px; cursor:pointer; transition:color .3s; }
     header button.home-btn:hover { color:#ffdc00; }
     header button.home-btn svg { width:22px; height:22px; fill:#ffdc00; }
-
     main { flex:1; display:flex; padding:20px; gap:20px; }
-    aside.filters { width:210px; background:#fff; border-radius:8px; box-shadow:0 0 10px rgb(0 0 0 /0.1); padding:15px 10px; display:flex; flex-direction:column; gap:12px; }
+    aside.filters { width:210px; background:white; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1); padding:15px 10px; display:flex; flex-direction:column; gap:12px; user-select:none; }
     aside.filters h3 { font-weight:600; margin-bottom:10px; color:#00529b; border-bottom:2px solid #00529b; padding-bottom:5px; }
     aside.filters select { padding:10px; font-size:1rem; border-radius:6px; border:2px solid #00529b; outline:none; cursor:pointer; }
-
-    section.search-area { flex:1; background:#fff; border-radius:10px; box-shadow:0 0 15px rgb(0 0 0 /0.07); padding:20px 25px; display:flex; flex-direction:column; gap:15px;}
-
+    section.search-area { flex:1; background:white; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.07); padding:20px 25px; display:flex; flex-direction:column; gap:15px; }
     .info-box { font-size:1.1rem; padding:15px; background:#f0f8ff; border-radius:6px; }
     .info-box span { font-weight:600; }
-    .game-section { margin-bottom:20px; border-bottom:1px solid #ddd; padding-bottom:15px; }
   </style>
 </head>
 <body>
@@ -40,24 +35,22 @@
 <main>
   <aside class="filters">
     <h3>اختر اللعبة</h3>
-    <select id="gameSelect">
-      <option value="">-- الكل --</option>
-    </select>
+    <select id="gameSelect"><option value="">الكل</option></select>
 
     <h3>اختر الأكاديمية</h3>
-    <select id="academySelect" disabled>
-      <option value="">-- الكل --</option>
-    </select>
+    <select id="academySelect" disabled><option value="">الكل</option></select>
 
-    <div id="trainingInfo" class="info-box" style="display: none;">
-      <p><span>سعر التدريب: </span><span id="trainingPrice">0</span> جم</p>
+    <div id="trainingInfo" class="info-box" style="display:none;">
+      <p><span>سعر التدريب: </span><span id="trainingPrice">0</span> جنيه</p>
       <p><span>رقم الكابتن: </span><span id="coachNumber">-</span></p>
       <h3>مواعيد التدريب</h3>
       <div id="trainingSchedule"></div>
     </div>
   </aside>
 
-  <section class="search-area" id="result"></section>
+  <section class="search-area" id="result">
+    <!-- يتم هنا عرض "عرض الكل" أو تفاصيل أكاديمية -->
+  </section>
 </main>
 
 <script>
@@ -69,133 +62,94 @@
   const coachNumber = document.getElementById("coachNumber");
   const trainingSchedule = document.getElementById("trainingSchedule");
   const resultSection = document.getElementById("result");
+  let rawData = [];
 
-  let allData = [];
-
-  function loadAllData() {
-    fetch(`${apiUrl}?action=getRawData`) // تحتاج تحديث على السكربت ليعيد صفوف كاملة
+  function loadRawData() {
+    fetch(`${apiUrl}?action=getRawData`)
       .then(res => res.json())
       .then(data => {
-        allData = data; 
+        rawData = data;
         populateGames();
       })
-      .catch(console.error);
+      .catch(err => console.error("خطأ في جلب البيانات الخام:", err));
   }
 
-  // جلب القيم للألعاب
   function populateGames() {
-    const games = [...new Set(allData.map(r => r["اللعبه"]))];
-    gameSelect.innerHTML = '<option value="">-- الكل --</option>';
-    games.forEach(g => {
-      const opt = new Option(g, g);
-      gameSelect.add(opt);
-    });
-    gameSelect.disabled = false;
+    const games = Array.from(new Set(rawData.map(r => r["اللعبه"])));
+    gameSelect.innerHTML = '<option value="">الكل</option>';
+    games.forEach(g => gameSelect.appendChild(new Option(g,g)));
+    gameSelect.disabled = games.length === 0;
   }
 
-  // عند تغيير اللعبة
   gameSelect.addEventListener("change", () => {
     const game = gameSelect.value;
-    trainingInfo.style.display = 'none';
-    resultSection.innerHTML = '';
-    if (!game) { // الكل
+    resultSection.innerHTML = "";
+    trainingInfo.style.display = "none";
+    academySelect.innerHTML = '<option value="">الكل</option>';
+    academySelect.disabled = true;
+
+    if (!game) {
       displayAllGames();
-      academySelect.disabled = true;
-      academySelect.innerHTML = '<option value="">-- الكل --</option>';
     } else {
-      loadAcademies(game);
+      const list = Array.from(new Set(rawData.filter(r => r["اللعبه"]===game).map(r=>r["الاكاديمية"])));
+      list.forEach(a=>academySelect.appendChild(new Option(a,a)));
+      academySelect.disabled = list.length === 0;
     }
   });
 
-  // الأكاديميات
-  function loadAcademies(game) {
-    const filtered = allData.filter(r => r["اللعبه"] === game);
-    const list = [...new Set(filtered.map(r => r["الاكاديمية"]))];
-    academySelect.innerHTML = '<option value="">-- الكل --</option>';
-    list.forEach(a => academySelect.add(new Option(a, a)));
-    academySelect.disabled = !list.length;
-  }
-
-  // عند اختيار أكاديمية
   academySelect.addEventListener("change", () => {
     const game = gameSelect.value;
-    const academy = academySelect.value;
-    if (!academy) {
-      displayGameSections(game); // كل أكاديمية باللعبة
+    const acc = academySelect.value;
+    trainingInfo.style.display = "none";
+    resultSection.innerHTML = "";
+
+    if (!acc) {
+      displayGameSections(game);
     } else {
-      displaySingleAcademy(game, academy);
+      displaySingleAcademy(game, acc);
     }
   });
 
-  // عرض كل الألعاب إذا action=getRawData
   function displayAllGames() {
     resultSection.innerHTML = '';
     const grouped = {};
-    allData.forEach(r => {
-      const key = r["اللعبه"];
-      grouped[key] = grouped[key] || [];
-      grouped[key].push(r);
-    });
-    Object.entries(grouped).forEach(([game, rows]) => {
-      const sec = document.createElement('div'); sec.classList.add('game-section');
+    rawData.forEach(r=> { (grouped[r["اللعبه"]] ||= []).push(r); });
+    for (const [game, rows] of Object.entries(grouped)) {
+      const sec = document.createElement("div"); sec.className="info-box";
       const price = rows[0]["سعر التدريب"];
       const coach = rows[0]["رقم الكابتن"];
-      sec.innerHTML = `<h3>${game}</h3>
-                       <p><span>سعر التدريب:</span> ${price} جم</p>
-                       <p><span>الكابتن:</span> ${coach}</p>`;
-      rows.forEach(item => {
-        const d = document.createElement('div');
-        d.textContent = `${item["اليوم"]} من ${item["من"]} إلى ${item["إلى"]}`;
-        sec.appendChild(d);
-      });
+      sec.innerHTML = `<h3>${game}</h3><p><span>السعر:</span> ${price} جم</p><p><span>الكابتن:</span> ${coach}</p>`;
+      rows.forEach(it=> sec.innerHTML+=`<p>${it["اليوم"]}: من ${it["من"]} - إلى ${it["إلى"]}</p>`);
       resultSection.appendChild(sec);
-    });
+    }
   }
 
   function displayGameSections(game) {
     resultSection.innerHTML = '';
-    const rows = allData.filter(r => r["اللعبه"] === game);
     const grouped = {};
-    rows.forEach(r => {
-      const key = r["الاكاديمية"];
-      grouped[key] = grouped[key] || [];
-      grouped[key].push(r);
-    });
-    Object.entries(grouped).forEach(([academy, rows]) => {
-      const sec = document.createElement('div'); sec.classList.add('game-section');
+    rawData.filter(r=>r["اللعبه"]===game).forEach(r=> { (grouped[r["الاكاديمية"]] ||= []).push(r); });
+    for (const [acc, rows] of Object.entries(grouped)) {
+      const sec = document.createElement("div"); sec.className="info-box";
       const price = rows[0]["سعر التدريب"];
       const coach = rows[0]["رقم الكابتن"];
-      sec.innerHTML = `<h3>${academy}</h3>
-                       <p><span>سعر التدريب:</span> ${price} جم</p>
-                       <p><span>الكابتن:</span> ${coach}</p>`;
-      rows.forEach(item => {
-        const d = document.createElement('div');
-        d.textContent = `${item["اليوم"]} من ${item["من"]} إلى ${item["إلى"]}`;
-        sec.appendChild(d);
-      });
+      sec.innerHTML = `<h3>${acc}</h3><p><span>السعر:</span> ${price} جم</p><p><span>الكابتن:</span> ${coach}</p>`;
+      rows.forEach(it=> sec.innerHTML+=`<p>${it["اليوم"]}: من ${it["من"]} - إلى ${it["إلى"]}</p>`);
       resultSection.appendChild(sec);
-    });
+    }
   }
 
-  function displaySingleAcademy(game, academy) {
-    const rows = allData.filter(r => r["اللعبه"] === game && r["الاكاديمية"] === academy);
+  function displaySingleAcademy(game, acc) {
+    const rows = rawData.filter(r=> r["اللعبه"]===game && r["الاكاديمية"]===acc);
     if (!rows.length) return;
     trainingPrice.textContent = rows[0]["سعر التدريب"];
     coachNumber.textContent = rows[0]["رقم الكابتن"];
     trainingSchedule.innerHTML = '';
-    rows.forEach(item => {
-      const div = document.createElement('div');
-      div.textContent = `${item["اليوم"]} من ${item["من"]} إلى ${item["إلى"]}`;
-      trainingSchedule.appendChild(div);
-    });
+    rows.forEach(it=> trainingSchedule.innerHTML+= `<div>${it["اليوم"]}: من ${it["من"]} - إلى ${it["إلى"]}</div>`);
     trainingInfo.style.display = 'block';
-    resultSection.innerHTML = '';
   }
 
-  function goHome() { window.location.href = "home.html"; }
-
-  // إبدأ
-  loadAllData();
+  function goHome(){ window.location.href="home.html"; }
+  loadRawData();
 </script>
 
 </body>
