@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>التدريبات</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0; padding: 0;
+      background: #f9fafc;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #00529b;
+      color: white;
+      padding: 15px 20px;
+      font-size: 1.9rem;
+      font-weight: 700;
+      text-align: center;
+      position: relative;
+    }
+
+    header button.home-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.3s ease;
+    }
+
+    header button.home-btn:hover {
+      color: #ffdc00;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    aside.filters {
+      width: 250px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+      padding: 15px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      user-select: none;
+    }
+
+    aside.filters h3 {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #00529b;
+      border-bottom: 2px solid #00529b;
+      padding-bottom: 5px;
+    }
+
+    select, option {
+      font-size: 1rem;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    section.details-area {
+      flex: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgb(0 0 0 / 0.07);
+      padding: 20px 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .details-box {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .details-box p {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .details-box ul {
+      padding-left: 20px;
+      list-style-type: square;
+    }
+
+    .details-box button {
+      padding: 10px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .details-box button:hover {
+      background: #218838;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  <button class="home-btn" onclick="goHome()" aria-label="الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
+    الصفحة الرئيسية
+  </button>
+  التدريبات
+</header>
+
+<main>
+  <aside class="filters">
+    <h3>اختر اللعبة</h3>
+    <select id="gameSelect">
+      <!-- سيتم ملء هذه القائمة من البيانات -->
+    </select>
+
+    <h3>اختر الأكاديمية</h3>
+    <select id="academySelect">
+      <!-- سيتم ملء هذه القائمة من البيانات -->
+    </select>
+
+  </aside>
+
+  <section class="details-area">
+    <div id="trainingDetails" class="details-box">
+      <!-- سيتم ملء هذه المنطقة بتفاصيل التدريب -->
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const apiUrl = "https://script.google.com/macros/s/AKfycbzEjXCNkR1dv7DGfaiaYdFMmMYXGIpLAZVLjGAJD-7lSTeEUe8cSSfnonnWvOUjExc5HA/exec";
+  const gameSelect = document.getElementById("gameSelect");
+  const academySelect = document.getElementById("academySelect");
+  const detailsDiv = document.getElementById("trainingDetails");
+
+  // تحميل الألعاب من الإكسل
+  function loadGames() {
+    fetch(apiUrl + "?action=getGames")
+      .then(res => res.json())
+      .then(data => {
+        const games = data.games || [];
+        games.forEach(game => {
+          const option = document.createElement("option");
+          option.value = game;
+          option.textContent = game;
+          gameSelect.appendChild(option);
+        });
+      });
+  }
+
+  // تحميل الأكاديميات بناءً على اللعبة
+  function loadAcademies(game) {
+    fetch(apiUrl + `?action=getAcademies&game=${game}`)
+      .then(res => res.json())
+      .then(data => {
+        academySelect.innerHTML = "";  // مسح الأكاديميات القديمة
+        const academies = data.academies || [];
+        academies.forEach(academy => {
+          const option = document.createElement("option");
+          option.value = academy;
+          option.textContent = academy;
+          academySelect.appendChild(option);
+        });
+      });
+  }
+
+  // تحميل التفاصيل بناءً على الأكاديمية
+  function loadTrainingDetails(game, academy) {
+    const params = new URLSearchParams({ game, academy });
+    detailsDiv.innerHTML = "جاري تحميل التفاصيل...";
+
+    fetch(apiUrl + "?" + params.toString())
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          detailsDiv.innerHTML = `<p class="error-msg">❌ ${data.error}</p>`;
+          return;
+        }
+
+        const details = data.details || {};
+        if (!details) {
+          detailsDiv.innerHTML = "<p>لا توجد بيانات للتدريب لهذه الأكاديمية.</p>";
+          return;
+        }
+
+        // عرض رقم الكابتن والسعر
+        let html = `
+          <h3>تفاصيل التدريب</h3>
+          <p><strong>رقم الكابتن:</strong> ${details.contact || '-'}</p>
+          <p><strong>السعر:</strong> ${details.price || '-'}</p>
+        `;
+
+        // عرض الأيام والمواعيد
+        html += "<h4>الأيام والمواعيد:</h4>";
+        if (details.days && Array.isArray(details.days)) {
+          html += "<ul>";
+          details.days.forEach(day => {
+            html += `<li><strong>${day.name}:</strong> من ${day.from} إلى ${day.to}</li>`;
+          });
+          html += "</ul>";
+        } else {
+          html += "<p>لا توجد بيانات عن الأيام.</p>";
+        }
+
+        detailsDiv.innerHTML = html;
+      })
+      .catch(() => {
+        detailsDiv.innerHTML = `<p class="error-msg">❌ حدث خطأ أثناء تحميل البيانات.</p>`;
+      });
+  }
+
+  // أحداث الاختيارات
+  gameSelect.addEventListener("change", (e) => {
+    const game = e.target.value;
+    loadAcademies(game);
+  });
+
+  academySelect.addEventListener("change", (e) => {
+    const academy = e.target.value;
+    const game = gameSelect.value;
+    loadTrainingDetails(game, academy);
+  });
+
+  // تحميل البيانات عند فتح الصفحة
+  loadGames();
+</script>
+
+</body>
+</html>
