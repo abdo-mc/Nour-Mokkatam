@@ -244,24 +244,26 @@
       const ulDays = training.days.map(day => `<li><i class="fa-regular fa-clock"></i> ${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
 
       // رقم الكابتن بدون مسافات عشان الواتساب
-      const cleanCoachNumber = training.coach.replace(/\s+/g, '');
+      function createTrainingCard(training) {
+  const ulDays = training.days.map(day => `<li><i class="fa-regular fa-clock"></i> ${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
 
-      return `
-        <div class="training-card">
-          <h3><i class="fa-solid fa-gamepad"></i> اللعبة: ${training.game}</h3>
-          <p><i class="fa-solid fa-school"></i> الأكاديمية: ${training.academy}</p>
-          <p><i class="fa-solid fa-money-bill-wave"></i> اشتراك اللعبة: ${training.price} جنيه</p>
-          <p>
-            <i class="fa-solid fa-phone"></i> رقم الكابتن: ${training.coach}
-            <a href="https://wa.me/2${cleanCoachNumber}" target="_blank" class="whatsapp-link" title="تواصل واتساب">
-              <i class="fa-brands fa-whatsapp"></i>
-            </a>
-          </p>
-          <p><i class="fa-solid fa-calendar-days"></i> المواعيد:</p>
-          <ul>${ulDays}</ul>
-        </div>
-      `;
-    }
+  // تحقق من نوع المتغير قبل استخدام replace
+  const cleanCoachNumber = (typeof training.coach === 'string' ? training.coach : '').replace(/\s+/g, '');
+
+  return `
+    <div class="training-card">
+      <h3><i class="fa-solid fa-gamepad"></i> اللعبة: ${training.game}</h3>
+      <p><i class="fa-solid fa-school"></i> الأكاديمية: ${training.academy}</p>
+      <p><i class="fa-solid fa-money-bill-wave"></i> اشتراك اللعبة: ${training.price} جنيه</p>
+      <p>
+        <i class="fa-solid fa-phone"></i> رقم الكابتن: ${training.coach || '-'}
+        ${cleanCoachNumber ? `<a href="https://wa.me/2${cleanCoachNumber}" target="_blank" class="whatsapp-link" title="تواصل واتساب"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
+      </p>
+      <p><i class="fa-solid fa-calendar-days"></i> المواعيد:</p>
+      <ul>${ulDays}</ul>
+    </div>
+  `;
+}
 
     function renderTrainings(data) {
       const start = (currentPage - 1) * itemsPerPage;
