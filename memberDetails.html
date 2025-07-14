@@ -2,31 +2,142 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>تفاصيل العضو</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
-    body { font-family: 'Cairo', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; direction: rtl; color: #333; }
-    h1 { color: #004080; text-align: center; margin-bottom: 10px; }
-    .user-info { text-align: center; color: #555; margin-bottom: 30px; font-size: 1rem; }
-    .member-info { max-width: 400px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); text-align: center;}
-    .member-info img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; }
-    .member-info table { width: 100%; text-align: right; font-size: 1.1rem; border-collapse: collapse; }
-    .member-info th, .member-info td { padding: 10px; border-bottom: 1px solid #ddd; }
-    .member-info th { color: #004080; font-weight: 700; width: 40%; }
-    .error { color: red; font-weight: bold; text-align: center; padding: 20px; }
-    .back-link { display: block; margin-top: 30px; text-align: center; font-weight: 700; color: #004080; text-decoration: none; }
-    .back-link:hover { text-decoration: underline; }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      color: #004080;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .user-info {
+      text-align: center;
+      color: #555;
+      margin-bottom: 30px;
+      font-size: 1rem;
+    }
+    .member-info {
+      max-width: 450px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .member-info img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border: 3px solid #004080;
+    }
+    .member-info table {
+      width: 100%;
+      text-align: right;
+      font-size: 1.1rem;
+      border-collapse: collapse;
+    }
+    .member-info th,
+    .member-info td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .member-info th {
+      color: #004080;
+      font-weight: 700;
+      width: 40%;
+    }
+    .status {
+      font-weight: bold;
+      padding: 10px;
+      margin-top: 15px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .active {
+      color: #155724;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+    }
+    .inactive {
+      color: #721c24;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+    }
+    .back-link,
+    .print-btn {
+      display: inline-block;
+      margin-top: 30px;
+      margin-inline: 10px;
+      text-align: center;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      background-color: #004080;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+    .back-link:hover,
+    .print-btn:hover {
+      background-color: #0066cc;
+    }
+
+    /* Spinner */
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #004080;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 30px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 500px) {
+      .member-info {
+        width: 90%;
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
 
 <h1>تفاصيل العضو</h1>
 <div class="user-info" id="userInfo">جارٍ التحقق من الجلسة...</div>
-<div class="member-info" id="memberInfo">جاري تحميل البيانات...</div>
-<a href="search.html" class="back-link">⬅ العودة للبحث</a>
+<div class="member-info" id="memberInfo">
+  <div class="spinner"></div>
+</div>
+
+<div style="text-align:center;">
+  <a href="membership.html" class="back-link">⬅ العودة إلى العضويات</a>
+  <a href="#" onclick="window.print()" class="print-btn">🖨️ طباعة البيانات</a>
+</div>
 
 <script>
-  // التحقق من وجود بيانات الجلسة
   const username = localStorage.getItem('username');
   const name = localStorage.getItem('name');
   const userInfo = document.getElementById('userInfo');
@@ -38,7 +149,6 @@
     userInfo.textContent = `مرحبًا ${name}`;
   }
 
-  // دالة للحصول على قيمة براميتر من الرابط
   function getQueryParam(param) {
     return new URLSearchParams(window.location.search).get(param);
   }
@@ -48,7 +158,6 @@
     memberDiv.innerHTML = `<div class="error">لم يتم تمرير رقم العضوية في الرابط.</div>`;
   } else {
     const apiUrl = 'https://script.google.com/macros/s/AKfycbzEjXCNkR1dv7DGfaiaYdFMmMYXGIpLAZVLjGAJD-7lSTeEUe8cSSfnonnWvOUjExc5HA/exec';
-    memberDiv.textContent = 'جاري تحميل البيانات...';
 
     fetch(`${apiUrl}?action=getMember&id=${encodeURIComponent(memberId)}`)
       .then(res => res.json())
@@ -58,7 +167,10 @@
           return;
         }
 
-        // هنا نستخدم أسماء الحقول كما هي من API (مقارنتها مع صفحة العضويات)
+        const isRenewed = data["التجديد"]?.trim() === "مجدد";
+        const statusClass = isRenewed ? "active" : "inactive";
+        const statusText = isRenewed ? "عضو نشط (مجدد)" : "عضو غير نشط (غير مجدد)";
+
         memberDiv.innerHTML = `
           <img src="${data["صورة العضو"] || 'https://via.placeholder.com/120'}" alt="صورة ${data["الاسم"] || 'عضو'}" />
           <table>
@@ -69,6 +181,7 @@
             <tr><th>التجديد:</th><td>${data["التجديد"] || '-'}</td></tr>
             <tr><th>حق حضور الجمعية العمومية:</th><td>${data["حق حضور الجمعية العمومية"] || '-'}</td></tr>
           </table>
+          <div class="status ${statusClass}">${statusText}</div>
         `;
       })
       .catch(() => {
