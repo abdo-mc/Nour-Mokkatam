@@ -4,11 +4,6 @@
   <meta charset="UTF-8" />
   <title>التدريبات - مركز شباب نور المقطم</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    crossorigin="anonymous"
-  />
   <style>
     * {
       box-sizing: border-box;
@@ -25,7 +20,6 @@
       align-items: center;
       color: #004080;
     }
-    /* بدون هيدر حسب طلبك */
     .container {
       background: white;
       padding: 40px 60px 50px;
@@ -34,8 +28,7 @@
       text-align: center;
       width: 900px;
       max-width: 95vw;
-      margin-top: 40px;
-      margin-bottom: 40px;
+      margin: 40px 0;
     }
     .title-container {
       display: flex;
@@ -58,7 +51,6 @@
       color: #007bff;
       white-space: nowrap;
     }
-    /* بيانات التدريبات */
     .training-list {
       max-height: 60vh;
       overflow-y: auto;
@@ -88,7 +80,6 @@
       list-style-type: square;
       color: #004080;
     }
-    /* زرار الرجوع */
     .btn-back {
       background: linear-gradient(90deg, #0080ff, #005bb5);
       border: none;
@@ -123,7 +114,6 @@
   </style>
 </head>
 <body>
-
   <div class="container">
     <div class="title-container">
       <h1>التدريبات</h1>
@@ -131,7 +121,7 @@
     </div>
 
     <button class="btn-back" onclick="location.href='Main.html'">
-      <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للرئيسية
+      &#8592; العودة للصفحة الرئيسية
     </button>
 
     <div class="training-list" id="trainingList">
@@ -140,12 +130,16 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzcE_1OfbFq5hFr8Vm1KQ_JyyCviT9J6ni1WUzX6VCcbViBGwkK47kDVaILKs41Ayz3cw/exec";
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzcE_1OfbFq5hFr8Vm1KQ_JyyCviT9J6ni1WUzX6VCcbViBGwkK47kDVaILKs41Ayz3cw/exec";
 
     const trainingList = document.getElementById('trainingList');
 
     function createTrainingCard(training) {
-      const ulDays = training.days.map(day => `<li>${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
+      // اجمع مواعيد الأيام المختلفة في قائمة واحدة
+      let daysHtml = '';
+      if (Array.isArray(training.days)) {
+        daysHtml = training.days.map(day => `<li>${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
+      }
       return `
         <div class="training-card">
           <h3>اللعبة: ${training.game}</h3>
@@ -153,25 +147,23 @@
           <p><strong>سعر التدريب:</strong> ${training.price} جنيه</p>
           <p><strong>رقم الكابتن:</strong> ${training.coach}</p>
           <p><strong>المواعيد:</strong></p>
-          <ul>${ulDays}</ul>
+          <ul>${daysHtml}</ul>
         </div>
       `;
     }
 
     async function fetchTrainings() {
-      console.log("بدء تحميل التدريبات...");
       try {
-        const res = await fetch(API_URL);
+        const res = await fetch(apiUrl);
         if (!res.ok) throw new Error('حدث خطأ في جلب البيانات');
         const data = await res.json();
-        console.log("البيانات المستلمة:", data);
 
         if (!data.length) {
           trainingList.innerHTML = "<p>لا توجد بيانات لعرضها حالياً.</p>";
           return;
         }
 
-        // تجميع المواعيد حسب اللعبة والأكاديمية
+        // دمج بيانات الأيام حسب كل لعبة وأكاديمية
         const trainingsMap = new Map();
 
         data.forEach(item => {
@@ -188,7 +180,7 @@
           trainingsMap.get(key).days.push({
             day: item["اليوم"],
             from: item["من"],
-            to: item["الي"]
+            to: item["إلى"]
           });
         });
 
@@ -196,7 +188,7 @@
         trainingList.innerHTML = htmlCards;
 
       } catch (error) {
-        console.error("خطأ أثناء جلب البيانات:", error);
+        console.error(error);
         trainingList.innerHTML = "<p>حدث خطأ في تحميل البيانات، يرجى المحاولة لاحقاً.</p>";
       }
     }
