@@ -18,7 +18,7 @@
     body {
       font-family: 'Cairo', sans-serif;
       margin: 0;
-      padding: 0;
+      padding: 20px 0 40px;
       direction: rtl;
       background: #f0f4f8;
       min-height: 100vh;
@@ -64,6 +64,7 @@
       overflow-y: auto;
       text-align: right;
       direction: rtl;
+      min-height: 150px;
     }
     .training-card {
       border: 2px solid #005bb5;
@@ -105,11 +106,14 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      text-decoration: none;
     }
     .btn-back:hover {
       background: linear-gradient(90deg, #005bb5, #003d7a);
       box-shadow: 0 8px 25px rgba(0, 74, 179, 0.7);
       transform: translateY(-3px);
+      text-decoration: none;
+      color: #fff;
     }
     .btn-back:active {
       transform: translateY(-1px);
@@ -130,9 +134,9 @@
       <div class="subtitle">جميع الألعاب المتاحة</div>
     </div>
 
-    <button class="btn-back" onclick="location.href='Main.html'">
-      <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للرئيسية
-    </button>
+    <a href="Main.html" class="btn-back">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للصفحة الرئيسية
+    </a>
 
     <div class="training-list" id="trainingList">
       <p>جاري تحميل البيانات...</p>
@@ -140,7 +144,7 @@
   </div>
 
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbzcE_1OfbFq5hFr8Vm1KQ_JyyCviT9J6ni1WUzX6VCcbViBGwkK47kDVaILKs41Ayz3cw/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbzcE_1OfbFq5hFr8Vm1KQ_JyyCviT9J6ni1WUzX6VCcbViBGwkK47kDVaILKs41Ayz3cw/exec";
 
     const trainingList = document.getElementById('trainingList');
 
@@ -160,11 +164,12 @@
 
     async function fetchTrainings() {
       try {
-        const res = await fetch(apiUrl);
+        const res = await fetch(API_URL);
         if (!res.ok) throw new Error('حدث خطأ في جلب البيانات');
+
         const data = await res.json();
 
-        if (!data.length) {
+        if (!Array.isArray(data) || data.length === 0) {
           trainingList.innerHTML = "<p>لا توجد بيانات لعرضها حالياً.</p>";
           return;
         }
@@ -172,11 +177,12 @@
         const trainingsMap = new Map();
 
         data.forEach(item => {
-          const key = item["اللعبه"] + "||" + item["الاكاديمية"];
+          // استخدم أسماء الأعمدة حسب شيتك بالضبط
+          const key = item["اللعبة"] + "||" + item["الأكاديمية"];
           if (!trainingsMap.has(key)) {
             trainingsMap.set(key, {
-              game: item["اللعبه"],
-              academy: item["الاكاديمية"],
+              game: item["اللعبة"],
+              academy: item["الأكاديمية"],
               price: item["سعر التدريب"],
               coach: item["رقم الكابتن"],
               days: []
@@ -200,5 +206,6 @@
 
     fetchTrainings();
   </script>
+
 </body>
 </html>
