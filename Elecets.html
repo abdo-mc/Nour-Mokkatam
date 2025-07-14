@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>استعلام انتخابات مركز شباب نور المقطم</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
@@ -171,8 +171,8 @@
   <header>استعلام انتخابات مركز شباب نور المقطم</header>
 
   <div class="search-box">
-    <h3>🔍 ابحث برقم العضوية</h3>
-    <input type="text" id="searchInput" placeholder="ادخل رقم العضوية" />
+    <h3>🔍 ابحث برقم العضوية أو الاسم</h3>
+    <input type="text" id="searchInput" placeholder="ادخل رقم العضوية أو الاسم" />
     <br />
     <button class="search-btn" onclick="search()">بحث</button>
   </div>
@@ -195,25 +195,28 @@
   function search() {
     const value = document.getElementById('searchInput').value.trim();
     if (!value) {
-      showError("من فضلك أدخل رقم العضوية");
+      showError("من فضلك أدخل رقم العضوية أو الاسم");
       return;
     }
 
     document.getElementById('result').textContent = "جاري البحث...";
-    fetch(`${apiBase}?id=${encodeURIComponent(value)}`)
+    let queryParam = isNaN(value) ? `name=${encodeURIComponent(value)}` : `id=${encodeURIComponent(value)}`;
+
+    fetch(`${apiBase}?${queryParam}`)
       .then(res => res.json())
       .then(data => {
-        if (data.error) {
-          showError(data.error);
+        if (data.error || (!data.result && !data.results)) {
+          showError(data.error || "لا توجد بيانات مطابقة");
         } else {
+          const d = data.result || data.results[0];
           document.getElementById('result').innerHTML = `
             <h3>بيانات العضو</h3>
             <table>
-              <tr><th>الاسم</th><td>${data.name}</td></tr>
-              <tr><th>رقم العضوية</th><td>${data.id}</td></tr>
-              <tr><th>اللجنة</th><td>${data.committee}</td></tr>
-              <tr><th>الرقم في الكشف</th><td>${data.order}</td></tr>
-              <tr><th>تاريخ الميلاد</th><td>${data.birth}</td></tr>
+              <tr><th>الاسم</th><td>${d.name}</td></tr>
+              <tr><th>رقم العضوية</th><td>${d.id}</td></tr>
+              <tr><th>اللجنة</th><td>${d.committee}</td></tr>
+              <tr><th>الرقم في الكشف</th><td>${d.order}</td></tr>
+              <tr><th>تاريخ الميلاد</th><td>${d.birth}</td></tr>
             </table>
           `;
         }
