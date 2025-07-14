@@ -147,20 +147,19 @@
 <script>
   const apiUrl = "https://script.google.com/macros/s/AKfycbzcE_1OfbFq5hFr8Vm1KQ_JyyCviT9J6ni1WUzX6VCcbViBGwkK47kDVaILKs41Ayz3cw/exec";
 
-  
   const gameSelect = document.getElementById("gameSelect");
   const academySelect = document.getElementById("academySelect");
   const trainingInfo = document.getElementById("trainingInfo");
   const trainingSchedule = document.getElementById("trainingSchedule");
   const trainingPrice = document.getElementById("trainingPrice");
   const coachNumber = document.getElementById("coachNumber");
-  
-  // تحميل بيانات الألعاب من السورس
+
   function loadGames() {
-    fetch(apiUrl)
+    fetch(apiUrl + "?action=getGames")
       .then(res => res.json())
       .then(data => {
-        const games = [...new Set(data.map(item => item["اللعبه"]))];  // تجميع الألعاب الفريدة
+        const games = data.games || [];
+        gameSelect.innerHTML = '<option value="الكل">الكل</option>';
         games.forEach(game => {
           const option = document.createElement("option");
           option.value = game;
@@ -168,22 +167,15 @@
           gameSelect.appendChild(option);
         });
       })
-      .catch(error => console.log("Error fetching data:", error));
+      .catch(error => console.log("Error fetching games:", error));
   }
 
-  gameSelect.addEventListener("change", () => {
-    const selectedGame = gameSelect.value;
-    loadAcademies(selectedGame);
-  });
-
-  // تحميل الأكاديميات بناءً على اللعبة المختارة
   function loadAcademies(game) {
-    fetch(apiUrl)
+    fetch(apiUrl + "?action=getAcademies&game=" + encodeURIComponent(game))
       .then(res => res.json())
       .then(data => {
-        const filteredData = data.filter(item => item["اللعبه"] === game || game === "الكل");
-        const academies = [...new Set(filteredData.map(item => item["الاكاديمية"]))];  // تجميع الأكاديميات الفريدة
-        academySelect.innerHTML = '<option value="الكل">الكل</option>'; // اعادة تعيين الاكاديميات
+        const academies = data.academies || [];
+        academySelect.innerHTML = '<option value="الكل">الكل</option>';
         academies.forEach(academy => {
           const option = document.createElement("option");
           option.value = academy;
@@ -192,52 +184,31 @@
         });
         academySelect.disabled = academies.length === 0;
       })
-      .catch(error => console.log("Error fetching data:", error));
+      .catch(error => console.log("Error fetching academies:", error));
   }
+
+  // لم يتم إعدادها بعد، هنكملها مع إضافة السكريبت
+  function loadTrainingDetails(academy) {
+    // لسه محتاجة دعم من السكريبت
+    trainingInfo.style.display = "none";
+  }
+
+  gameSelect.addEventListener("change", () => {
+    const selectedGame = gameSelect.value;
+    loadAcademies(selectedGame);
+  });
 
   academySelect.addEventListener("change", () => {
     const selectedAcademy = academySelect.value;
     loadTrainingDetails(selectedAcademy);
   });
 
-  // تحميل مواعيد التدريب
-  function loadTrainingDetails(academy) {
-    const selectedGame = gameSelect.value;
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(data => {
-        const filteredData = data.filter(item => item["اللعبه"] === selectedGame && (item["الاكاديمية"] === academy || academy === "الكل"));
-        
-        if (filteredData.length > 0) {
-          const firstItem = filteredData[0];
-          trainingPrice.textContent = firstItem["سعر التدريب"];
-          coachNumber.textContent = firstItem["رقم الكابتن"];
-          
-          trainingSchedule.innerHTML = "";
-          filteredData.forEach(item => {
-            const day = document.createElement("div");
-            day.innerHTML = `
-              <p><strong>${item["اليوم"]}</strong>: من ${item["من"]} إلى ${item["الي"]}</p>
-            `;
-            trainingSchedule.appendChild(day);
-          });
-
-          trainingInfo.style.display = "block";
-        } else {
-          trainingInfo.style.display = "none";
-        }
-      })
-      .catch(error => console.log("Error fetching data:", error));
-  }
-
-  // تحميل الألعاب أول مرة عند بداية الصفحة
-  loadGames();
-  
-  // العودة إلى الصفحة الرئيسية
   function goHome() {
     window.location.href = "home.html";
   }
 
+  // تشغيل أول تحميل
+  loadGames();
 </script>
 
 </body>
