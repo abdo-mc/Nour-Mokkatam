@@ -7,10 +7,135 @@
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-papbkp2bLZvVgx1jhMg8Dl58zjmoCQlLBHjrFVf5LjX3RZFLxE2Zo0qh8/c1n0eL+8PMPZ3PVcEaO37pXwYB1w=="
     crossorigin="anonymous"
+    referrerpolicy="no-referrer"
   />
   <style>
-    /* هنا تضع كل الـ CSS الموجود */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #004080;
+    }
+    header {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 10px;
+      box-sizing: border-box;
+      background: white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    header img {
+      height: 60px;
+      width: auto;
+    }
+    .container {
+      background: white;
+      padding: 40px 60px 50px;
+      border-radius: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 900px;
+      max-width: 95vw;
+      margin-bottom: 40px;
+    }
+    .title-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 40px;
+    }
+    .title-container h1 {
+      font-weight: 800;
+      font-size: 2.2rem;
+      margin: 0;
+      white-space: nowrap;
+      color: #004080;
+    }
+    .title-container .subtitle {
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #007bff;
+      white-space: nowrap;
+    }
+    /* بيانات التدريبات */
+    .training-list {
+      max-height: 60vh;
+      overflow-y: auto;
+      text-align: right;
+      direction: rtl;
+    }
+    .training-card {
+      border: 2px solid #005bb5;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0,91,181,0.15);
+      background: #f8fbff;
+      text-align: right;
+    }
+    .training-card h3 {
+      color: #005bb5;
+      margin-bottom: 8px;
+    }
+    .training-card p {
+      margin: 6px 0;
+      font-weight: 600;
+    }
+    .training-card ul {
+      padding-right: 20px;
+      margin: 6px 0;
+      list-style-type: square;
+      color: #004080;
+    }
+    /* زرار الرجوع */
+    .btn-back {
+      background: linear-gradient(90deg, #0080ff, #005bb5);
+      border: none;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+      transition: all 0.3s ease;
+      user-select: none;
+      margin-bottom: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-back:hover {
+      background: linear-gradient(90deg, #005bb5, #003d7a);
+      box-shadow: 0 8px 25px rgba(0, 74, 179, 0.7);
+      transform: translateY(-3px);
+    }
+    .btn-back:active {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+    }
+    @media (max-width: 650px) {
+      .container {
+        padding: 30px 20px 40px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -35,9 +160,8 @@
   </div>
 
   <script>
-    // رابط API الجديد الذي يعمل
+    // هنا تحط رابط السكريبت المنشور على Google Apps Script الخاص بك لجلب بيانات الألعاب
     const apiUrl = "https://script.google.com/macros/s/AKfycbywMLxJT_xBYoFCdSglMuCIVATe-qcu3m5x3t64fIza/dev?action=getTrainings";
-
     const trainingList = document.getElementById('trainingList');
 
     function createTrainingCard(training) {
@@ -72,11 +196,11 @@
         const trainingsMap = new Map();
 
         data.forEach(item => {
-          const key = item["اللعبه"] + "||" + item["الاكاديمية"];
+          const key = item["اللعبة"] + "||" + item["الأكاديمية"];
           if (!trainingsMap.has(key)) {
             trainingsMap.set(key, {
-              game: item["اللعبه"],
-              academy: item["الاكاديمية"],
+              game: item["اللعبة"],
+              academy: item["الأكاديمية"],
               price: item["سعر التدريب"],
               coach: item["رقم الكابتن"],
               days: []
