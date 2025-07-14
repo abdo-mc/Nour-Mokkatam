@@ -5,6 +5,8 @@
   <title>تسجيل دخول</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+
+    
     body {
       font-family: 'Cairo', sans-serif;
       background: #f0f4f8;
@@ -122,6 +124,14 @@
       display: none;
     }
   </style>
+
+    <script>
+    // تأكد المستخدم مسجل دخول سابقًا
+    if (localStorage.getItem("username")) {
+      window.location.href = "Home.html";
+    }
+  </script>
+  
 </head>
 <body>
   <header>مركز شباب نور المقطم</header>
