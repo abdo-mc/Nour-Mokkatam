@@ -6,18 +6,107 @@
   <title>التدريبات</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
-    body { font-family: 'Cairo', sans-serif; margin:0; padding:0; background:#f9fafc; color:#222; display:flex; flex-direction:column; min-height:100vh; }
-    header { background-color:#00529b; color:white; padding:15px 20px; font-size:1.9rem; font-weight:700; text-align:center; position:relative; }
-    header button.home-btn { position:absolute; left:20px; top:50%; transform:translateY(-50%); background:transparent; border:none; color:white; font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:6px; cursor:pointer; transition:color .3s; }
-    header button.home-btn:hover { color:#ffdc00; }
-    header button.home-btn svg { width:22px; height:22px; fill:#ffdc00; }
-    main { flex:1; display:flex; padding:20px; gap:20px; }
-    aside.filters { width:210px; background:white; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1); padding:15px 10px; display:flex; flex-direction:column; gap:12px; user-select:none; }
-    aside.filters h3 { font-weight:600; margin-bottom:10px; color:#00529b; border-bottom:2px solid #00529b; padding-bottom:5px; }
-    aside.filters select { padding:10px; font-size:1rem; border-radius:6px; border:2px solid #00529b; outline:none; cursor:pointer; }
-    section.search-area { flex:1; background:white; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.07); padding:20px 25px; display:flex; flex-direction:column; gap:15px; }
-    .info-box { font-size:1.1rem; padding:15px; background:#f0f8ff; border-radius:6px; }
-    .info-box span { font-weight:600; }
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0; padding: 0;
+      background: #f9fafc;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #00529b;
+      color: white;
+      padding: 15px 20px;
+      font-size: 1.9rem;
+      font-weight: 700;
+      text-align: center;
+      position: relative;
+    }
+    header button.home-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.3s ease;
+    }
+    header button.home-btn:hover {
+      color: #ffdc00;
+    }
+    header button.home-btn svg {
+      width: 22px; height: 22px;
+      fill: #ffdc00;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      padding: 20px;
+      gap: 20px;
+    }
+    aside.filters {
+      width: 210px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+      padding: 15px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      user-select: none;
+    }
+    aside.filters h3 {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #00529b;
+      border-bottom: 2px solid #00529b;
+      padding-bottom: 5px;
+    }
+    aside.filters select {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 2px solid #00529b;
+      outline: none;
+      cursor: pointer;
+    }
+
+    section.search-area {
+      flex: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgb(0 0 0 / 0.07);
+      padding: 20px 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .info-box {
+      font-size: 1.1rem;
+      padding: 15px;
+      background: #f0f8ff;
+      border-radius: 6px;
+    }
+
+    .info-box span {
+      font-weight: 600;
+    }
+
+    #trainingSchedule div {
+      margin-bottom: 6px;
+    }
+
   </style>
 </head>
 <body>
@@ -33,123 +122,285 @@
 </header>
 
 <main>
+
   <aside class="filters">
     <h3>اختر اللعبة</h3>
-    <select id="gameSelect"><option value="">الكل</option></select>
+    <select id="gameSelect">
+      <option value="">-- اختر اللعبة --</option>
+      <option value="الكل">الكل</option>
+    </select>
 
     <h3>اختر الأكاديمية</h3>
-    <select id="academySelect" disabled><option value="">الكل</option></select>
+    <select id="academySelect" disabled>
+      <option value="">-- اختر الأكاديمية --</option>
+      <option value="الكل">الكل</option>
+    </select>
 
-    <div id="trainingInfo" class="info-box" style="display:none;">
+    <div id="trainingInfo" class="info-box" style="display: none;">
       <p><span>سعر التدريب: </span><span id="trainingPrice">0</span> جنيه</p>
       <p><span>رقم الكابتن: </span><span id="coachNumber">-</span></p>
+
       <h3>مواعيد التدريب</h3>
       <div id="trainingSchedule"></div>
     </div>
   </aside>
 
-  <section class="search-area" id="result">
-    <!-- يتم هنا عرض "عرض الكل" أو تفاصيل أكاديمية -->
+  <section class="search-area">
+    <div id="result"></div>
   </section>
+
 </main>
 
 <script>
   const apiUrl = "https://script.google.com/macros/s/AKfycbzcE_1OfbFq5hFr8Vm1KQ_JyyCviT9J6ni1WUzX6VCcbViBGwkK47kDVaILKs41Ayz3cw/exec";
+
   const gameSelect = document.getElementById("gameSelect");
   const academySelect = document.getElementById("academySelect");
   const trainingInfo = document.getElementById("trainingInfo");
+  const trainingSchedule = document.getElementById("trainingSchedule");
   const trainingPrice = document.getElementById("trainingPrice");
   const coachNumber = document.getElementById("coachNumber");
-  const trainingSchedule = document.getElementById("trainingSchedule");
-  const resultSection = document.getElementById("result");
-  let rawData = [];
 
-  function loadRawData() {
-    fetch(`${apiUrl}?action=getRawData`)
+  // تحميل الألعاب
+  function loadGames() {
+    fetch(apiUrl + "?action=getGames")
       .then(res => res.json())
       .then(data => {
-        rawData = data;
-        populateGames();
-      })
-      .catch(err => console.error("خطأ في جلب البيانات الخام:", err));
-  }
+        if (data.games) {
+          // امسح الخيارات القديمة
+          for (let i = gameSelect.options.length - 1; i >= 1; i--) {
+            gameSelect.remove(i);
+          }
 
-  function populateGames() {
-    const games = Array.from(new Set(rawData.map(r => r["اللعبه"])));
-    gameSelect.innerHTML = '<option value="">الكل</option>';
-    games.forEach(g => gameSelect.appendChild(new Option(g,g)));
-    gameSelect.disabled = games.length === 0;
+          data.games.forEach(game => {
+            const option = document.createElement("option");
+            option.value = game;
+            option.textContent = game;
+            gameSelect.appendChild(option);
+          });
+        }
+      })
+      .catch(err => console.error("خطأ في جلب الألعاب:", err));
   }
 
   gameSelect.addEventListener("change", () => {
-    const game = gameSelect.value;
-    resultSection.innerHTML = "";
-    trainingInfo.style.display = "none";
-    academySelect.innerHTML = '<option value="">الكل</option>';
-    academySelect.disabled = true;
+    const selectedGame = gameSelect.value;
+    if (!selectedGame || selectedGame === "") {
+      academySelect.innerHTML = '<option value="">-- اختر الأكاديمية --</option>';
+      academySelect.disabled = true;
+      trainingInfo.style.display = "none";
+      return;
+    }
 
-    if (!game) {
-      displayAllGames();
+    if (selectedGame === "الكل") {
+      // لو اختار الكل، نملأ الأكاديميات بكل الأكاديميات من كل الألعاب
+      loadAllAcademies();
     } else {
-      const list = Array.from(new Set(rawData.filter(r => r["اللعبه"]===game).map(r=>r["الاكاديمية"])));
-      list.forEach(a=>academySelect.appendChild(new Option(a,a)));
-      academySelect.disabled = list.length === 0;
+      loadAcademies(selectedGame);
     }
   });
+
+  function loadAcademies(game) {
+    fetch(apiUrl + "?action=getAcademies&game=" + encodeURIComponent(game))
+      .then(res => res.json())
+      .then(data => {
+        if (data.academies) {
+          academySelect.innerHTML = '<option value="">-- اختر الأكاديمية --</option><option value="الكل">الكل</option>';
+          data.academies.forEach(academy => {
+            const option = document.createElement("option");
+            option.value = academy;
+            option.textContent = academy;
+            academySelect.appendChild(option);
+          });
+          academySelect.disabled = false;
+          trainingInfo.style.display = "none";
+        } else {
+          academySelect.innerHTML = '<option value="">-- اختر الأكاديمية --</option>';
+          academySelect.disabled = true;
+          trainingInfo.style.display = "none";
+        }
+      })
+      .catch(err => console.error("خطأ في جلب الأكاديميات:", err));
+  }
+
+  // تحميل كل الأكاديميات لجميع الألعاب (للحالة "الكل")
+  function loadAllAcademies() {
+    fetch(apiUrl + "?action=getRawData")
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const allAcademies = [...new Set(data.map(item => item["الاكاديمية"]))];
+          academySelect.innerHTML = '<option value="">-- اختر الأكاديمية --</option><option value="الكل">الكل</option>';
+          allAcademies.forEach(acad => {
+            const option = document.createElement("option");
+            option.value = acad;
+            option.textContent = acad;
+            academySelect.appendChild(option);
+          });
+          academySelect.disabled = false;
+          trainingInfo.style.display = "none";
+        }
+      })
+      .catch(err => console.error("خطأ في جلب كل الأكاديميات:", err));
+  }
 
   academySelect.addEventListener("change", () => {
-    const game = gameSelect.value;
-    const acc = academySelect.value;
-    trainingInfo.style.display = "none";
-    resultSection.innerHTML = "";
+    const selectedGame = gameSelect.value;
+    const selectedAcademy = academySelect.value;
+    if (!selectedAcademy || selectedAcademy === "") {
+      trainingInfo.style.display = "none";
+      return;
+    }
 
-    if (!acc) {
-      displayGameSections(game);
+    if (selectedGame === "الكل" && selectedAcademy === "الكل") {
+      // حالة اختيار الكل في اللعبه والكل في الأكاديمية: عرض كل الألعاب مع معلوماتهم
+      loadAllGamesInfo();
+    } else if (selectedGame === "الكل") {
+      // لو الكل في اللعبة وأكاديمية محددة - نعرض بيانات حسب الأكاديمية فقط
+      loadTrainingByAcademy(selectedAcademy);
+    } else if (selectedAcademy === "الكل") {
+      // لو اللعبة محددة والأكاديمية كلها - نعرض بيانات كل أكاديميات اللعبة
+      loadTrainingByGame(selectedGame);
     } else {
-      displaySingleAcademy(game, acc);
+      // اللعبة والأكاديمية محددين - نعرض التفاصيل المحددة
+      loadTrainingDetails(selectedGame, selectedAcademy);
     }
   });
 
-  function displayAllGames() {
-    resultSection.innerHTML = '';
-    const grouped = {};
-    rawData.forEach(r=> { (grouped[r["اللعبه"]] ||= []).push(r); });
-    for (const [game, rows] of Object.entries(grouped)) {
-      const sec = document.createElement("div"); sec.className="info-box";
-      const price = rows[0]["سعر التدريب"];
-      const coach = rows[0]["رقم الكابتن"];
-      sec.innerHTML = `<h3>${game}</h3><p><span>السعر:</span> ${price} جم</p><p><span>الكابتن:</span> ${coach}</p>`;
-      rows.forEach(it=> sec.innerHTML+=`<p>${it["اليوم"]}: من ${it["من"]} - إلى ${it["إلى"]}</p>`);
-      resultSection.appendChild(sec);
-    }
+  // تحميل بيانات كل الألعاب مع الأكاديميات (للحالة الكل + الكل)
+  function loadAllGamesInfo() {
+    fetch(apiUrl + "?action=getRawData")
+      .then(res => res.json())
+      .then(data => {
+        if (!Array.isArray(data)) {
+          document.getElementById("result").textContent = "لا توجد بيانات";
+          return;
+        }
+
+        let html = "<h2>كل الألعاب</h2>";
+        data.forEach(item => {
+          html += `
+            <div class="info-box" style="margin-bottom:15px;">
+              <p><strong>اللعبة:</strong> ${item["اللعبه"]}</p>
+              <p><strong>الأكاديمية:</strong> ${item["الاكاديمية"]}</p>
+              <p><strong>سعر التدريب:</strong> ${item["سعر التدريب"]} جنيه</p>
+              <p><strong>رقم الكابتن:</strong> ${item["رقم الكابتن"]}</p>
+              <p><strong>اليوم:</strong> ${item["اليوم"]} من ${item["من"]} إلى ${item["الي"]}</p>
+            </div>`;
+        });
+        document.getElementById("result").innerHTML = html;
+        trainingInfo.style.display = "none";
+      })
+      .catch(err => console.error("خطأ في جلب كل بيانات الألعاب:", err));
   }
 
-  function displayGameSections(game) {
-    resultSection.innerHTML = '';
-    const grouped = {};
-    rawData.filter(r=>r["اللعبه"]===game).forEach(r=> { (grouped[r["الاكاديمية"]] ||= []).push(r); });
-    for (const [acc, rows] of Object.entries(grouped)) {
-      const sec = document.createElement("div"); sec.className="info-box";
-      const price = rows[0]["سعر التدريب"];
-      const coach = rows[0]["رقم الكابتن"];
-      sec.innerHTML = `<h3>${acc}</h3><p><span>السعر:</span> ${price} جم</p><p><span>الكابتن:</span> ${coach}</p>`;
-      rows.forEach(it=> sec.innerHTML+=`<p>${it["اليوم"]}: من ${it["من"]} - إلى ${it["إلى"]}</p>`);
-      resultSection.appendChild(sec);
-    }
+  // تحميل بيانات كل أكاديميات اللعبة المحددة (الكابتن، السعر، الأيام)
+  function loadTrainingByGame(game) {
+    fetch(apiUrl + "?action=getRawData")
+      .then(res => res.json())
+      .then(data => {
+        if (!Array.isArray(data)) {
+          document.getElementById("result").textContent = "لا توجد بيانات";
+          return;
+        }
+
+        const filtered = data.filter(item => item["اللعبه"] === game);
+        if (filtered.length === 0) {
+          document.getElementById("result").textContent = "لا توجد بيانات لهذه اللعبة";
+          trainingInfo.style.display = "none";
+          return;
+        }
+
+        let html = `<h2>جميع أكاديميات لعبة: ${game}</h2>`;
+        filtered.forEach(item => {
+          html += `
+            <div class="info-box" style="margin-bottom:15px;">
+              <p><strong>الأكاديمية:</strong> ${item["الاكاديمية"]}</p>
+              <p><strong>سعر التدريب:</strong> ${item["سعر التدريب"]} جنيه</p>
+              <p><strong>رقم الكابتن:</strong> ${item["رقم الكابتن"]}</p>
+              <p><strong>اليوم:</strong> ${item["اليوم"]} من ${item["من"]} إلى ${item["الي"]}</p>
+            </div>`;
+        });
+        document.getElementById("result").innerHTML = html;
+        trainingInfo.style.display = "none";
+      })
+      .catch(err => console.error("خطأ في جلب بيانات اللعبة:", err));
   }
 
-  function displaySingleAcademy(game, acc) {
-    const rows = rawData.filter(r=> r["اللعبه"]===game && r["الاكاديمية"]===acc);
-    if (!rows.length) return;
-    trainingPrice.textContent = rows[0]["سعر التدريب"];
-    coachNumber.textContent = rows[0]["رقم الكابتن"];
-    trainingSchedule.innerHTML = '';
-    rows.forEach(it=> trainingSchedule.innerHTML+= `<div>${it["اليوم"]}: من ${it["من"]} - إلى ${it["إلى"]}</div>`);
-    trainingInfo.style.display = 'block';
+  // تحميل بيانات كل الأكاديميات المحددة (في حالة اختيار الكل لعبة وأكاديمية محددة)
+  function loadTrainingByAcademy(academy) {
+    fetch(apiUrl + "?action=getRawData")
+      .then(res => res.json())
+      .then(data => {
+        if (!Array.isArray(data)) {
+          document.getElementById("result").textContent = "لا توجد بيانات";
+          return;
+        }
+
+        const filtered = data.filter(item => item["الاكاديمية"] === academy);
+        if (filtered.length === 0) {
+          document.getElementById("result").textContent = "لا توجد بيانات لهذه الأكاديمية";
+          trainingInfo.style.display = "none";
+          return;
+        }
+
+        let html = `<h2>جميع الألعاب في الأكاديمية: ${academy}</h2>`;
+        filtered.forEach(item => {
+          html += `
+            <div class="info-box" style="margin-bottom:15px;">
+              <p><strong>اللعبة:</strong> ${item["اللعبه"]}</p>
+              <p><strong>سعر التدريب:</strong> ${item["سعر التدريب"]} جنيه</p>
+              <p><strong>رقم الكابتن:</strong> ${item["رقم الكابتن"]}</p>
+              <p><strong>اليوم:</strong> ${item["اليوم"]} من ${item["من"]} إلى ${item["الي"]}</p>
+            </div>`;
+        });
+        document.getElementById("result").innerHTML = html;
+        trainingInfo.style.display = "none";
+      })
+      .catch(err => console.error("خطأ في جلب بيانات الأكاديمية:", err));
   }
 
-  function goHome(){ window.location.href="home.html"; }
-  loadRawData();
+  // تحميل بيانات التدريب التفصيلية (سعر، رقم كابتن، مواعيد) حسب لعبة وأكاديمية محددة
+  function loadTrainingDetails(game, academy) {
+    fetch(apiUrl + `?action=getTrainingData&game=${encodeURIComponent(game)}&academy=${encodeURIComponent(academy)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          document.getElementById("result").textContent = data.error;
+          trainingInfo.style.display = "none";
+          return;
+        }
+        trainingPrice.textContent = data.price || "-";
+        coachNumber.textContent = data.coachNumber || "-";
+
+        // امسح جدول المواعيد القديم
+        trainingSchedule.innerHTML = "";
+
+        if (Array.isArray(data.schedule)) {
+          data.schedule.forEach(item => {
+            const div = document.createElement("div");
+            div.textContent = `${item.اليوم}: من ${item.من} إلى ${item.إلى || item.الي}`;
+            trainingSchedule.appendChild(div);
+          });
+        }
+
+        trainingInfo.style.display = "block";
+        document.getElementById("result").innerHTML = "";
+      })
+      .catch(err => {
+        console.error("خطأ في جلب تفاصيل التدريب:", err);
+        trainingInfo.style.display = "none";
+      });
+  }
+
+  function goHome() {
+    // تقدر تعدل لينك الصفحة الرئيسية هنا لو حابب
+    window.location.href = "/";
+  }
+
+  // تحميل الألعاب عند بداية تحميل الصفحة
+  loadGames();
+
 </script>
 
 </body>
