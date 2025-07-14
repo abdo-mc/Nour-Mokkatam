@@ -200,8 +200,6 @@
     }
 
     document.getElementById('result').textContent = "جاري البحث...";
-
-    // ابعت باراميتر id للسكريبت
     fetch(`${apiBase}?id=${encodeURIComponent(value)}`)
       .then(res => res.json())
       .then(data => {
@@ -215,7 +213,7 @@
               <tr><th>رقم العضوية</th><td>${data.id}</td></tr>
               <tr><th>اللجنة</th><td>${data.committee}</td></tr>
               <tr><th>الرقم في الكشف</th><td>${data.order}</td></tr>
-              <tr><th>تاريخ الميلاد</th><td>${data.birthDate}</td></tr>
+              <tr><th>تاريخ الميلاد</th><td>${data.birth}</td></tr>
             </table>
           `;
         }
@@ -237,7 +235,7 @@
               <td>${row.id}</td>
               <td>${row.committee}</td>
               <td>${row.order}</td>
-              <td>${row.birthDate}</td>
+              <td>${row.birth}</td>
             </tr>
           `).join('');
 
