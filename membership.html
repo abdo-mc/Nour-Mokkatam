@@ -182,8 +182,8 @@
     cursor: not-allowed;
   }
 
-
-   table thead th {
+  /* عنوان الجدول ثابت */
+  table thead th {
     position: sticky;
     top: 0;
     background-color: #00529b;
@@ -191,7 +191,6 @@
     z-index: 10;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
-
 </style>
 </head>
 <body>
@@ -305,6 +304,8 @@
       .then(data => {
         if (data.error) {
           resultDiv.innerHTML = `<div class="error-msg">❌ ${data.error}</div>`;
+          allResults = [];
+          paginationDiv.innerHTML = "";
           return;
         }
         allResults = data.results || (data.id ? [data] : []);
@@ -313,6 +314,8 @@
       })
       .catch(() => {
         resultDiv.innerHTML = `<div class="error-msg">❌ حدث خطأ أثناء تحميل البيانات.</div>`;
+        allResults = [];
+        paginationDiv.innerHTML = "";
       });
   }
 
@@ -329,6 +332,7 @@
 
     let html = `<p>عدد النتائج: ${allResults.length}</p><table><thead>
       <tr>
+        <th>مسلسل</th>
         <th>رقم العضوية</th>
         <th>الاسم</th>
         <th>نوع العضوية</th>
@@ -338,8 +342,10 @@
         <th>صورة العضو</th>
       </tr></thead><tbody>`;
 
-    pageItems.forEach(m => {
+    pageItems.forEach((m, idx) => {
+      const serial = start + idx + 1;
       html += `<tr>
+        <td>${serial}</td>
         <td>${m["رقم العضوية"] || "-"}</td>
         <td class="name-cell"><a href="memberDetails.html?id=${encodeURIComponent(m["رقم العضوية"])}" target="_blank">${m["الاسم"] || "-"}</a></td>
         <td>${m["نوع العضوية"] || "-"}</td>
@@ -375,9 +381,42 @@
   }
 
   function downloadExcel() {
-    const table = resultDiv.querySelector("table");
-    if (!table) return alert("لا توجد بيانات للتحميل.");
-    const blob = new Blob(['\ufeff', table.outerHTML], { type: 'application/vnd.ms-excel' });
+    if (!allResults || allResults.length === 0) {
+      return alert("لا توجد بيانات للتحميل.");
+    }
+
+    // نجهز جدول كامل من كل النتائج (مش الصفحة فقط)
+    let excelHtml = `<table border="1"><thead>
+      <tr>
+        <th>مسلسل</th>
+        <th>رقم العضوية</th>
+        <th>الاسم</th>
+        <th>نوع العضوية</th>
+        <th>النوع</th>
+        <th>التجديد</th>
+        <th>الجمعية العمومية</th>
+        <th>صورة العضو</th>
+      </tr></thead><tbody>`;
+
+    allResults.forEach((m, idx) => {
+      const serial = idx + 1;
+      // صورة في الاكسل عادة غير مدعومة، سنعرض الرابط فقط
+      const imageLink = m["صورة العضو"] ? m["صورة العضو"] : '';
+      excelHtml += `<tr>
+        <td>${serial}</td>
+        <td>${m["رقم العضوية"] || "-"}</td>
+        <td>${m["الاسم"] || "-"}</td>
+        <td>${m["نوع العضوية"] || "-"}</td>
+        <td>${m["النوع"] || "-"}</td>
+        <td>${m["التجديد"] || "-"}</td>
+        <td>${m["حق حضور الجمعية العمومية"] || "-"}</td>
+        <td>${imageLink}</td>
+      </tr>`;
+    });
+
+    excelHtml += "</tbody></table>";
+
+    const blob = new Blob(['\ufeff', excelHtml], { type: 'application/vnd.ms-excel' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -385,8 +424,10 @@
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   }
 
+  // تحميل أول مرة تظهر صفحة تطلب إدخال بيانات أو فلتر
   resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر.</p>";
 </script>
 
