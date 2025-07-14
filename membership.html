@@ -362,7 +362,7 @@
     members.forEach(m => {
       html += `<tr>
         <td>${m["رقم العضوية"] || "-"}</td>
-        <td class="name-cell"><a href="member-details.html?id=${encodeURIComponent(m["رقم العضوية"])}" target="_blank" rel="noopener noreferrer">${m["الاسم"] || "-"}</a></td>
+        <td class="name-cell"><a href="memberDetails.html?id=${encodeURIComponent(m["رقم العضوية"])}" target="_blank" rel="noopener noreferrer">${m["الاسم"] || "-"}</a></td>
         <td>${m["نوع العضوية"] || "-"}</td>
         <td>${m["النوع"] || "-"}</td>
         <td>${m["التجديد"] || "-"}</td>
