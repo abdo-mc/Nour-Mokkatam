@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>تفاصيل العضو</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+    body { font-family: 'Cairo', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; direction: rtl; color: #333; }
+    h1 { color: #004080; text-align: center; margin-bottom: 10px; }
+    .user-info { text-align: center; color: #555; margin-bottom: 30px; font-size: 1rem; }
+    .member-info { max-width: 400px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); text-align: center;}
+    .member-info img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; }
+    .member-info table { width: 100%; text-align: right; font-size: 1.1rem; border-collapse: collapse; }
+    .member-info th, .member-info td { padding: 10px; border-bottom: 1px solid #ddd; }
+    .member-info th { color: #004080; font-weight: 700; width: 40%; }
+    .error { color: red; font-weight: bold; text-align: center; padding: 20px; }
+    .back-link { display: block; margin-top: 30px; text-align: center; font-weight: 700; color: #004080; text-decoration: none; }
+    .back-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<h1>تفاصيل العضو</h1>
+<div class="user-info" id="userInfo">جارٍ التحقق من الجلسة...</div>
+<div class="member-info" id="memberInfo">جاري تحميل البيانات...</div>
+<a href="search.html" class="back-link">⬅ العودة للبحث</a>
+
+<script>
+  const username = sessionStorage.getItem('username');
+  const name = sessionStorage.getItem('name');
+  const userInfo = document.getElementById('userInfo');
+  const memberDiv = document.getElementById('memberInfo');
+
+  if (!username) window.location.href = 'login.html';
+  else userInfo.textContent = `مرحبًا ${name}`;
+
+  function getQueryParam(param) {
+    return new URLSearchParams(window.location.search).get(param);
+  }
+
+  const memberId = getQueryParam('id');
+  if (!memberId) {
+    memberDiv.innerHTML = `<div class="error">لم يتم تمرير رقم العضوية في الرابط.</div>`;
+  } else {
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbzEjXCNkR1dv7DGfaiaYdFMmMYXGIpLAZVLjGAJD-7lSTeEUe8cSSfnonnWvOUjExc5HA/exec';
+    memberDiv.textContent = 'جاري تحميل البيانات...';
+    fetch(`${apiUrl}?action=getMember&id=${encodeURIComponent(memberId)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          memberDiv.innerHTML = `<div class="error">❌ ${data.error}</div>`;
+        } else if (data) {
+          memberDiv.innerHTML = `
+            <img src="${data.photo || 'https://via.placeholder.com/120'}" alt="صورة ${data.name}" />
+            <table>
+              <tr><th>رقم العضوية:</th><td>${data.id}</td></tr>
+              <tr><th>الاسم:</th><td>${data.name}</td></tr>
+              <tr><th>نوع العضوية:</th><td>${data.type}</td></tr>
+              <tr><th>تاريخ الانضمام:</th><td>${data.joinDate}</td></tr>
+              <tr><th>الهاتف:</th><td>${data.phone}</td></tr>
+              <tr><th>البريد الإلكتروني:</th><td>${data.email}</td></tr>
+              <tr><th>الحالة:</th><td>${data.status}</td></tr>
+            </table>
+          `;
+        } else {
+          memberDiv.innerHTML = `<div class="error">لا توجد بيانات لهذا العضو.</div>`;
+        }
+      })
+      .catch(() => {
+        memberDiv.innerHTML = `<div class="error">❌ حدث خطأ أثناء الاتصال.</div>`;
+      });
+  }
+</script>
+
+</body>
+</html>
