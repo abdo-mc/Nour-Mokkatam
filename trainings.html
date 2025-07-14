@@ -154,21 +154,22 @@
   const trainingPrice = document.getElementById("trainingPrice");
   const coachNumber = document.getElementById("coachNumber");
 
-  function loadGames() {
-    fetch(apiUrl + "?action=getGames")
-      .then(res => res.json())
-      .then(data => {
-        const games = data.games || [];
-        gameSelect.innerHTML = '<option value="الكل">الكل</option>';
-        games.forEach(game => {
-          const option = document.createElement("option");
-          option.value = game;
-          option.textContent = game;
-          gameSelect.appendChild(option);
-        });
-      })
-      .catch(error => console.log("Error fetching games:", error));
-  }
+function loadGames() {
+  fetch(apiUrl + "?action=getGames")
+    .then(res => res.json())
+    .then(data => {
+      const games = data.games || [];
+      gameSelect.innerHTML = '<option value="الكل">الكل</option>';
+      games.forEach(game => {
+        const option = document.createElement("option");
+        option.value = game;
+        option.textContent = game;
+        gameSelect.appendChild(option);
+      });
+    })
+    .catch(error => console.log("Error fetching games:", error));
+}
+
 
   function loadAcademies(game) {
     fetch(apiUrl + "?action=getAcademies&game=" + encodeURIComponent(game))
