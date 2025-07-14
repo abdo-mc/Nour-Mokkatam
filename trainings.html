@@ -10,7 +10,8 @@
     * { box-sizing: border-box; }
     body {
       font-family: 'Cairo', sans-serif;
-      margin: 0; padding: 0;
+      margin: 0;
+      padding: 0;
       direction: rtl;
       background: #eef4fc;
       color: #004080;
@@ -42,11 +43,6 @@
       color: #004080;
     }
 
-    .title-container .subtitle {
-      font-size: 1.5rem;
-      color: #007bff;
-    }
-
     .filters {
       display: flex;
       justify-content: flex-end;
@@ -71,8 +67,8 @@
     }
 
     .training-list {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
       gap: 20px;
       min-height: 200px;
     }
@@ -98,6 +94,18 @@
       margin: 6px 0;
       list-style-type: square;
       color: #004080;
+    }
+
+    .phone-whatsapp {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .phone-whatsapp a {
+      color: #25D366;
+      font-size: 1.2rem;
     }
 
     .btn-back {
@@ -144,6 +152,16 @@
     .pagination button:hover {
       background-color: #005bb5;
     }
+
+    @media (max-width: 768px) {
+      .training-list {
+        grid-template-columns: 1fr;
+      }
+
+      .filters {
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -151,7 +169,6 @@
   <div class="container">
     <div class="title-container">
       <h1>التدريبات</h1>
-      <div class="subtitle">جميع الألعاب المتاحة</div>
     </div>
 
     <div class="filters">
@@ -194,14 +211,19 @@
     const itemsPerPage = 6;
 
     function createTrainingCard(training) {
-      const ulDays = training.days.map(day => `<li>${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
+      const ulDays = training.days.map(day => `<li><i class="fa-regular fa-clock"></i> ${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
       return `
         <div class="training-card">
-          <h3>اللعبة: ${training.game}</h3>
-          <p><strong>الأكاديمية:</strong> ${training.academy}</p>
-          <p><strong>سعر التدريب:</strong> ${training.price} جنيه</p>
-          <p><strong>رقم الكابتن:</strong> ${training.coach}</p>
-          <p><strong>المواعيد:</strong></p>
+          <h3><i class="fa-solid fa-futbol"></i> ${training.game}</h3>
+          <p><strong><i class="fa-solid fa-school"></i> الأكاديمية:</strong> ${training.academy}</p>
+          <p><strong><i class="fa-solid fa-money-bill-wave"></i> اشتراك اللعبة:</strong> ${training.price} جنيه</p>
+          <div class="phone-whatsapp">
+            <p><strong><i class="fa-solid fa-phone"></i> رقم الكابتن:</strong> ${training.coach}</p>
+            <a href="https://wa.me/2${training.coach.replace(/\s+/g, '')}" target="_blank" title="تواصل واتساب">
+              <i class="fa-brands fa-whatsapp"></i>
+            </a>
+          </div>
+          <p><strong><i class="fa-solid fa-calendar-days"></i> المواعيد:</strong></p>
           <ul>${ulDays}</ul>
         </div>
       `;
