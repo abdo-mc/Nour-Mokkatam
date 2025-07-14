@@ -168,9 +168,10 @@
             msgSuccess.style.display = "block";
 
             // حفظ بيانات الجلسة
-            sessionStorage.setItem('username', data.username);
-            sessionStorage.setItem('role', data.role);
-            sessionStorage.setItem('name', data.name);
+            localStorage.setItem('username', data.username);
+            localStorage.setItem('role', data.role);
+            localStorage.setItem('name', data.name);
+
 
             // توجيه بعد تأخير بسيط عشان المستخدم يشوف الرسالة
             setTimeout(() => {
