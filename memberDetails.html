@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <title>تفاصيل العضو</title>
@@ -26,14 +26,19 @@
 <a href="search.html" class="back-link">⬅ العودة للبحث</a>
 
 <script>
-  const username = localStorage.getItem('username');
-  const name = localStorage.getItem('name');
+  // التحقق من وجود بيانات الجلسة
+  const username = sessionStorage.getItem('username');
+  const name = sessionStorage.getItem('name');
   const userInfo = document.getElementById('userInfo');
   const memberDiv = document.getElementById('memberInfo');
 
-  if (!username) window.location.href = 'login.html';
-  else userInfo.textContent = `مرحبًا ${name}`;
+  if (!username) {
+    window.location.href = 'login.html';
+  } else {
+    userInfo.textContent = `مرحبًا ${name}`;
+  }
 
+  // دالة للحصول على قيمة براميتر من الرابط
   function getQueryParam(param) {
     return new URLSearchParams(window.location.search).get(param);
   }
@@ -44,27 +49,27 @@
   } else {
     const apiUrl = 'https://script.google.com/macros/s/AKfycbzEjXCNkR1dv7DGfaiaYdFMmMYXGIpLAZVLjGAJD-7lSTeEUe8cSSfnonnWvOUjExc5HA/exec';
     memberDiv.textContent = 'جاري تحميل البيانات...';
+
     fetch(`${apiUrl}?action=getMember&id=${encodeURIComponent(memberId)}`)
       .then(res => res.json())
       .then(data => {
         if (data.error) {
           memberDiv.innerHTML = `<div class="error">❌ ${data.error}</div>`;
-        } else if (data) {
-          memberDiv.innerHTML = `
-            <img src="${data.photo || 'https://via.placeholder.com/120'}" alt="صورة ${data.name}" />
-            <table>
-              <tr><th>رقم العضوية:</th><td>${data.id}</td></tr>
-              <tr><th>الاسم:</th><td>${data.name}</td></tr>
-              <tr><th>نوع العضوية:</th><td>${data.type}</td></tr>
-              <tr><th>تاريخ الانضمام:</th><td>${data.joinDate}</td></tr>
-              <tr><th>الهاتف:</th><td>${data.phone}</td></tr>
-              <tr><th>البريد الإلكتروني:</th><td>${data.email}</td></tr>
-              <tr><th>الحالة:</th><td>${data.status}</td></tr>
-            </table>
-          `;
-        } else {
-          memberDiv.innerHTML = `<div class="error">لا توجد بيانات لهذا العضو.</div>`;
+          return;
         }
+
+        // هنا نستخدم أسماء الحقول كما هي من API (مقارنتها مع صفحة العضويات)
+        memberDiv.innerHTML = `
+          <img src="${data["صورة العضو"] || 'https://via.placeholder.com/120'}" alt="صورة ${data["الاسم"] || 'عضو'}" />
+          <table>
+            <tr><th>رقم العضوية:</th><td>${data["رقم العضوية"] || '-'}</td></tr>
+            <tr><th>الاسم:</th><td>${data["الاسم"] || '-'}</td></tr>
+            <tr><th>نوع العضوية:</th><td>${data["نوع العضوية"] || '-'}</td></tr>
+            <tr><th>النوع:</th><td>${data["النوع"] || '-'}</td></tr>
+            <tr><th>التجديد:</th><td>${data["التجديد"] || '-'}</td></tr>
+            <tr><th>حق حضور الجمعية العمومية:</th><td>${data["حق حضور الجمعية العمومية"] || '-'}</td></tr>
+          </table>
+        `;
       })
       .catch(() => {
         memberDiv.innerHTML = `<div class="error">❌ حدث خطأ أثناء الاتصال.</div>`;
