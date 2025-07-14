@@ -27,22 +27,6 @@
       align-items: center;
       color: #004080;
     }
-    header {
-      width: 100%;
-      max-width: 960px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 10px;
-      box-sizing: border-box;
-      background: white;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-    header img {
-      height: 60px;
-      width: auto;
-    }
     .container {
       background: white;
       padding: 40px 60px 50px;
@@ -51,6 +35,7 @@
       text-align: center;
       width: 900px;
       max-width: 95vw;
+      margin-top: 20px;
       margin-bottom: 40px;
     }
     .title-container {
@@ -139,10 +124,6 @@
   </style>
 </head>
 <body>
-  <header>
-    <img src="https://drive.google.com/uc?export=view&id=1kgHdRe8f6Lwi-x12GFzEGVO7XVr6PQsB" alt="وزارة الشباب والرياضة" />
-    <img src="https://drive.google.com/uc?export=view&id=19ArNiOiblQdq0vIfGXWP4u1w1fZu_UWF" alt="مركز شباب نور المقطم" />
-  </header>
 
   <div class="container">
     <div class="title-container">
@@ -160,7 +141,6 @@
   </div>
 
   <script>
-    // هنا تحط رابط السكريبت المنشور على Google Apps Script الخاص بك لجلب بيانات الألعاب
     const apiUrl = "https://script.google.com/macros/s/AKfycbywMLxJT_xBYoFCdSglMuCIVATe-qcu3m5x3t64fIza/dev?action=getTrainings";
     const trainingList = document.getElementById('trainingList');
 
@@ -184,14 +164,10 @@
         if (!res.ok) throw new Error('حدث خطأ في جلب البيانات');
         const data = await res.json();
 
-        if (!data.length) {
+        if (!data || !data.length) {
           trainingList.innerHTML = "<p>لا توجد بيانات لعرضها حالياً.</p>";
           return;
         }
-
-        // تنسيق البيانات: افترض إن البيانات عندك فيها الأعمدة: 
-        // "اللعبه", "الاكاديمية", "سعر التدريب", "رقم الكابتن", "اليوم", "من", "الي"
-        // لازم نجمّع كل مواعيد اليوم المختلفة لكل لعبة وأكاديمية مع بعض
 
         const trainingsMap = new Map();
 
@@ -217,7 +193,7 @@
         trainingList.innerHTML = htmlCards;
 
       } catch (error) {
-        console.error(error);
+        console.error("حدث خطأ في تحميل البيانات: ", error);
         trainingList.innerHTML = "<p>حدث خطأ في تحميل البيانات، يرجى المحاولة لاحقاً.</p>";
       }
     }
