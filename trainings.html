@@ -7,6 +7,7 @@
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous"
   />
   <style>
     * {
@@ -24,7 +25,7 @@
       align-items: center;
       color: #004080;
     }
-    /* حذف الهيدر حسب طلبك */
+    /* بدون هيدر حسب طلبك */
     .container {
       background: white;
       padding: 40px 60px 50px;
@@ -33,7 +34,8 @@
       text-align: center;
       width: 900px;
       max-width: 95vw;
-      margin: 40px 0;
+      margin-top: 40px;
+      margin-bottom: 40px;
     }
     .title-container {
       display: flex;
@@ -129,7 +131,7 @@
     </div>
 
     <button class="btn-back" onclick="location.href='Main.html'">
-      <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للصفحة الرئيسية
+      <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للرئيسية
     </button>
 
     <div class="training-list" id="trainingList">
@@ -157,16 +159,19 @@
     }
 
     async function fetchTrainings() {
+      console.log("بدء تحميل التدريبات...");
       try {
         const res = await fetch(API_URL);
         if (!res.ok) throw new Error('حدث خطأ في جلب البيانات');
         const data = await res.json();
+        console.log("البيانات المستلمة:", data);
 
         if (!data.length) {
           trainingList.innerHTML = "<p>لا توجد بيانات لعرضها حالياً.</p>";
           return;
         }
 
+        // تجميع المواعيد حسب اللعبة والأكاديمية
         const trainingsMap = new Map();
 
         data.forEach(item => {
@@ -183,7 +188,7 @@
           trainingsMap.get(key).days.push({
             day: item["اليوم"],
             from: item["من"],
-            to: item["إلى"]
+            to: item["الي"]
           });
         });
 
@@ -191,7 +196,7 @@
         trainingList.innerHTML = htmlCards;
 
       } catch (error) {
-        console.error(error);
+        console.error("خطأ أثناء جلب البيانات:", error);
         trainingList.innerHTML = "<p>حدث خطأ في تحميل البيانات، يرجى المحاولة لاحقاً.</p>";
       }
     }
