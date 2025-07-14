@@ -2,283 +2,228 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>التدريبات</title>
+  <title>التدريبات - مركز شباب نور المقطم</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-papbkp2bLZvVgx1jhMg8Dl58zjmoCQlLBHjrFVf5LjX3RZFLxE2Zo0qh8/c1n0eL+8PMPZ3PVcEaO37pXwYB1w=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Cairo', sans-serif;
-      margin: 0; padding: 0;
-      background: #f9fafc;
-      color: #222;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      background: #f0f4f8;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      align-items: center;
+      color: #004080;
     }
     header {
-      background-color: #00529b;
-      color: white;
-      padding: 15px 20px;
-      font-size: 1.9rem;
-      font-weight: 700;
-      text-align: center;
-      position: relative;
-    }
-    main {
-      flex: 1;
+      width: 100%;
+      max-width: 960px;
       display: flex;
-      padding: 20px;
-      gap: 20px;
-    }
-    aside.filters {
-      width: 250px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
-      padding: 15px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      user-select: none;
-    }
-    aside.filters h3 {
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #00529b;
-      border-bottom: 2px solid #00529b;
-      padding-bottom: 5px;
-    }
-    aside.filters select {
-      padding: 10px;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 2px solid #00529b;
-      outline: none;
-      cursor: pointer;
-    }
-    section.result-area {
-      flex: 1;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 10px;
+      box-sizing: border-box;
       background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgb(0 0 0 / 0.07);
-      padding: 20px 25px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    header img {
+      height: 60px;
+      width: auto;
+    }
+    .container {
+      background: white;
+      padding: 40px 60px 50px;
+      border-radius: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 900px;
+      max-width: 95vw;
+      margin-bottom: 40px;
+    }
+    .title-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 40px;
+    }
+    .title-container h1 {
+      font-weight: 800;
+      font-size: 2.2rem;
+      margin: 0;
+      white-space: nowrap;
+      color: #004080;
+    }
+    .title-container .subtitle {
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #007bff;
+      white-space: nowrap;
+    }
+    /* بيانات التدريبات */
+    .training-list {
+      max-height: 60vh;
       overflow-y: auto;
-      max-height: 80vh;
+      text-align: right;
+      direction: rtl;
     }
-    .info-box {
-      background: #f0f8ff;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 15px;
-      box-shadow: 0 0 8px rgb(0 0 0 / 0.1);
+    .training-card {
+      border: 2px solid #005bb5;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0,91,181,0.15);
+      background: #f8fbff;
+      text-align: right;
     }
-    .info-box h4 {
-      margin-top: 0;
+    .training-card h3 {
+      color: #005bb5;
       margin-bottom: 8px;
-      color: #00529b;
+    }
+    .training-card p {
+      margin: 6px 0;
+      font-weight: 600;
+    }
+    .training-card ul {
+      padding-right: 20px;
+      margin: 6px 0;
+      list-style-type: square;
+      color: #004080;
+    }
+    /* زرار الرجوع */
+    .btn-back {
+      background: linear-gradient(90deg, #0080ff, #005bb5);
+      border: none;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+      transition: all 0.3s ease;
+      user-select: none;
+      margin-bottom: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-back:hover {
+      background: linear-gradient(90deg, #005bb5, #003d7a);
+      box-shadow: 0 8px 25px rgba(0, 74, 179, 0.7);
+      transform: translateY(-3px);
+    }
+    .btn-back:active {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+    }
+    @media (max-width: 650px) {
+      .container {
+        padding: 30px 20px 40px;
+      }
     }
   </style>
 </head>
 <body>
+  <header>
+    <img src="https://drive.google.com/uc?export=view&id=1kgHdRe8f6Lwi-x12GFzEGVO7XVr6PQsB" alt="وزارة الشباب والرياضة" />
+    <img src="https://drive.google.com/uc?export=view&id=19ArNiOiblQdq0vIfGXWP4u1w1fZu_UWF" alt="مركز شباب نور المقطم" />
+  </header>
 
-<header>
-  التدريبات
-</header>
+  <div class="container">
+    <div class="title-container">
+      <h1>التدريبات</h1>
+      <div class="subtitle">جميع الألعاب المتاحة</div>
+    </div>
 
-<main>
-  <aside class="filters">
-    <h3>اختر اللعبة</h3>
-    <select id="gameSelect">
-      <option value="الكل">الكل</option>
-    </select>
+    <button class="btn-back" onclick="location.href='activities.html'">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للأنشطة
+    </button>
 
-    <h3>اختر الأكاديمية</h3>
-    <select id="academySelect" disabled>
-      <option value="الكل">الكل</option>
-    </select>
-  </aside>
+    <div class="training-list" id="trainingList">
+      <p>جاري تحميل البيانات...</p>
+    </div>
+  </div>
 
-  <section class="result-area" id="result">
-    <p>اختر اللعبة لعرض التفاصيل.</p>
-  </section>
-</main>
+  <script>
+    // هنا تحط رابط السكريبت المنشور على Google Apps Script الخاص بك لجلب بيانات الألعاب
+    const API_URL = "https://script.google.com/macros/s/معرف_سكريبتك/exec?action=getRawData";
 
-<script>
-  const apiUrl = "https://script.google.com/macros/s/AKfycbzcE_1OfbFq5hFr8Vm1KQ_JyyCviT9J6ni1WUzX6VCcbViBGwkK47kDVaILKs41Ayz3cw/exec";
+    const trainingList = document.getElementById('trainingList');
 
-  const gameSelect = document.getElementById("gameSelect");
-  const academySelect = document.getElementById("academySelect");
-  const resultArea = document.getElementById("result");
-
-  // تحميل كل البيانات مرة وحدة لتسهيل الفلترة محلياً
-  let allData = [];
-
-  function fetchAllData() {
-    fetch(apiUrl + "?action=getRawData")
-      .then(res => res.json())
-      .then(data => {
-        allData = data;
-        populateGames();
-      })
-      .catch(err => {
-        console.error("خطأ في جلب البيانات:", err);
-        resultArea.innerHTML = "<p>حدث خطأ في تحميل البيانات، حاول مرة أخرى.</p>";
-      });
-  }
-
-  function populateGames() {
-    // إزالة الألعاب الحالية (عدا "الكل")
-    gameSelect.innerHTML = '<option value="الكل">الكل</option>';
-
-    const uniqueGames = [...new Set(allData.map(item => item["اللعبه"]))];
-    uniqueGames.forEach(game => {
-      const opt = document.createElement("option");
-      opt.value = game;
-      opt.textContent = game;
-      gameSelect.appendChild(opt);
-    });
-  }
-
-  gameSelect.addEventListener("change", () => {
-    const selectedGame = gameSelect.value;
-    academySelect.innerHTML = "";
-    resultArea.innerHTML = "";
-
-    if (selectedGame === "الكل") {
-      // لما تختار الكل - عرض كل الألعاب مع التفاصيل
-      academySelect.disabled = true;
-      showAllGames();
-    } else {
-      // اختيار لعبة محددة - عرض الأكاديميات المرتبطة بها
-      academySelect.disabled = false;
-      populateAcademies(selectedGame);
-      resultArea.innerHTML = "<p>اختر الأكاديمية لعرض التفاصيل.</p>";
-    }
-  });
-
-  function populateAcademies(game) {
-    // جلب الأكاديميات الخاصة باللعبة
-    const filtered = allData.filter(item => item["اللعبه"] === game);
-    const uniqueAcademies = [...new Set(filtered.map(item => item["الاكاديمية"]))];
-
-    // إضافة خيار "الكل"
-    academySelect.innerHTML = '<option value="الكل">الكل</option>';
-    uniqueAcademies.forEach(acad => {
-      const opt = document.createElement("option");
-      opt.value = acad;
-      opt.textContent = acad;
-      academySelect.appendChild(opt);
-    });
-  }
-
-  academySelect.addEventListener("change", () => {
-    const selectedGame = gameSelect.value;
-    const selectedAcademy = academySelect.value;
-
-    if (!selectedAcademy) {
-      resultArea.innerHTML = "<p>اختر الأكاديمية لعرض التفاصيل.</p>";
-      return;
-    }
-
-    if (selectedAcademy === "الكل") {
-      // عرض كل الأكاديميات للعبة المختارة
-      showAllAcademiesForGame(selectedGame);
-    } else {
-      // عرض بيانات الأكاديمية المحددة فقط
-      showAcademyDetails(selectedGame, selectedAcademy);
-    }
-  });
-
-  // عرض كل الألعاب مع التفاصيل (لما تختار "الكل" في اللعبة)
-  function showAllGames() {
-    if (allData.length === 0) {
-      resultArea.innerHTML = "<p>لا توجد بيانات للعرض.</p>";
-      return;
-    }
-    let html = "";
-    // مجموعة الألعاب الفريدة
-    const uniqueGames = [...new Set(allData.map(item => item["اللعبه"]))];
-
-    uniqueGames.forEach(game => {
-      html += `<div class="info-box"><h3>اللعبة: ${game}</h3>`;
-      const gameItems = allData.filter(item => item["اللعبه"] === game);
-
-      // قائمة الأكاديميات الفريدة مع تفاصيلها
-      const uniqueAcademies = [...new Set(gameItems.map(i => i["الاكاديمية"]))];
-      uniqueAcademies.forEach(acad => {
-        const acadItems = gameItems.filter(i => i["الاكاديمية"] === acad);
-        const first = acadItems[0];
-        html += `
-          <div style="margin-bottom:10px; padding:10px; border:1px solid #ddd; border-radius:5px;">
-            <h4>الأكاديمية: ${acad}</h4>
-            <p><strong>سعر التدريب:</strong> ${first["سعر التدريب"]} جنيه</p>
-            <p><strong>رقم الكابتن:</strong> ${first["رقم الكابتن"]}</p>
-            <p><strong>المواعيد:</strong></p>
-            <ul>
-              ${acadItems.map(i => `<li>${i["اليوم"]}: من ${i["من"]} إلى ${i["الي"]}</li>`).join("")}
-            </ul>
-          </div>
-        `;
-      });
-      html += "</div>";
-    });
-    resultArea.innerHTML = html;
-  }
-
-  // عرض كل الأكاديميات للعبة مختارة (لما تختار "الكل" في الأكاديمية)
-  function showAllAcademiesForGame(game) {
-    const filtered = allData.filter(item => item["اللعبه"] === game);
-    if (filtered.length === 0) {
-      resultArea.innerHTML = "<p>لا توجد بيانات لهذه اللعبة.</p>";
-      return;
-    }
-    let html = `<h3>جميع الأكاديميات للعبة ${game}:</h3>`;
-    const uniqueAcademies = [...new Set(filtered.map(i => i["الاكاديمية"]))];
-    uniqueAcademies.forEach(acad => {
-      const acadItems = filtered.filter(i => i["الاكاديمية"] === acad);
-      const first = acadItems[0];
-      html += `
-        <div class="info-box">
-          <h4>الأكاديمية: ${acad}</h4>
-          <p><strong>سعر التدريب:</strong> ${first["سعر التدريب"]} جنيه</p>
-          <p><strong>رقم الكابتن:</strong> ${first["رقم الكابتن"]}</p>
+    function createTrainingCard(training) {
+      const ulDays = training.days.map(day => `<li>${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
+      return `
+        <div class="training-card">
+          <h3>اللعبة: ${training.game}</h3>
+          <p><strong>الأكاديمية:</strong> ${training.academy}</p>
+          <p><strong>سعر التدريب:</strong> ${training.price} جنيه</p>
+          <p><strong>رقم الكابتن:</strong> ${training.coach}</p>
           <p><strong>المواعيد:</strong></p>
-          <ul>
-            ${acadItems.map(i => `<li>${i["اليوم"]}: من ${i["من"]} إلى ${i["الي"]}</li>`).join("")}
-          </ul>
+          <ul>${ulDays}</ul>
         </div>
       `;
-    });
-    resultArea.innerHTML = html;
-  }
-
-  // عرض تفاصيل أكاديمية محددة للعبة محددة
-  function showAcademyDetails(game, academy) {
-    const filtered = allData.filter(item => item["اللعبه"] === game && item["الاكاديمية"] === academy);
-    if (filtered.length === 0) {
-      resultArea.innerHTML = "<p>لا توجد بيانات لهذه الأكاديمية.</p>";
-      return;
     }
-    const first = filtered[0];
-    let html = `
-      <div class="info-box">
-        <h3>اللعبة: ${game}</h3>
-        <h4>الأكاديمية: ${academy}</h4>
-        <p><strong>سعر التدريب:</strong> ${first["سعر التدريب"]} جنيه</p>
-        <p><strong>رقم الكابتن:</strong> ${first["رقم الكابتن"]}</p>
-        <p><strong>المواعيد:</strong></p>
-        <ul>
-          ${filtered.map(i => `<li>${i["اليوم"]}: من ${i["من"]} إلى ${i["الي"]}</li>`).join("")}
-        </ul>
-      </div>
-    `;
-    resultArea.innerHTML = html;
-  }
 
-  // بداية تحميل البيانات عند فتح الصفحة
-  fetchAllData();
+    async function fetchTrainings() {
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('حدث خطأ في جلب البيانات');
+        const data = await res.json();
 
-</script>
+        if (!data.length) {
+          trainingList.innerHTML = "<p>لا توجد بيانات لعرضها حالياً.</p>";
+          return;
+        }
 
+        // تنسيق البيانات: افترض إن البيانات عندك فيها الأعمدة: 
+        // "اللعبه", "الاكاديمية", "سعر التدريب", "رقم الكابتن", "اليوم", "من", "الي"
+        // لازم نجمّع كل مواعيد اليوم المختلفة لكل لعبة وأكاديمية مع بعض
+
+        const trainingsMap = new Map();
+
+        data.forEach(item => {
+          const key = item["اللعبه"] + "||" + item["الاكاديمية"];
+          if (!trainingsMap.has(key)) {
+            trainingsMap.set(key, {
+              game: item["اللعبه"],
+              academy: item["الاكاديمية"],
+              price: item["سعر التدريب"],
+              coach: item["رقم الكابتن"],
+              days: []
+            });
+          }
+          trainingsMap.get(key).days.push({
+            day: item["اليوم"],
+            from: item["من"],
+            to: item["الي"]
+          });
+        });
+
+        const htmlCards = Array.from(trainingsMap.values()).map(createTrainingCard).join('');
+        trainingList.innerHTML = htmlCards;
+
+      } catch (error) {
+        console.error(error);
+        trainingList.innerHTML = "<p>حدث خطأ في تحميل البيانات، يرجى المحاولة لاحقاً.</p>";
+      }
+    }
+
+    fetchTrainings();
+  </script>
 </body>
 </html>
