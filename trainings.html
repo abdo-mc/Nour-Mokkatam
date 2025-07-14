@@ -5,26 +5,144 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>التدريبات</title>
   <style>
-    /* ... CSS زي ما هو ... */
+    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0; padding: 0;
+      background: #f9fafc;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #00529b;
+      color: white;
+      padding: 15px 20px;
+      font-size: 1.9rem;
+      font-weight: 700;
+      text-align: center;
+      position: relative;
+    }
+    header button.home-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.3s ease;
+    }
+    header button.home-btn:hover {
+      color: #ffdc00;
+    }
+    header button.home-btn svg {
+      width: 22px; height: 22px;
+      fill: #ffdc00;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      padding: 20px;
+      gap: 20px;
+    }
+    aside.filters {
+      width: 210px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+      padding: 15px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      user-select: none;
+    }
+    aside.filters h3 {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #00529b;
+      border-bottom: 2px solid #00529b;
+      padding-bottom: 5px;
+    }
+    aside.filters select {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 2px solid #00529b;
+      outline: none;
+      cursor: pointer;
+    }
+
+    section.search-area {
+      flex: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgb(0 0 0 / 0.07);
+      padding: 20px 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .info-box {
+      font-size: 1.1rem;
+      padding: 15px;
+      background: #f0f8ff;
+      border-radius: 6px;
+    }
+
+    .info-box span {
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
 
+<header>
+  <button class="home-btn" onclick="goHome()" aria-label="الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+    </svg>
+    الصفحة الرئيسية
+  </button>
+  التدريبات
+</header>
+
 <main>
+
   <aside class="filters">
     <h3>اختر اللعبة</h3>
-    <select id="gameSelect"><option value="">-- اختر لعبة --</option></select>
+    <select id="gameSelect">
+      <option value="">-- اختر لعبة --</option>
+    </select>
 
     <h3>اختر الأكاديمية</h3>
-    <select id="academySelect" disabled><option value="">-- اختر أكاديمية --</option></select>
+    <select id="academySelect" disabled>
+      <option value="">-- اختر أكاديمية --</option>
+    </select>
 
-    <div id="trainingInfo" class="info-box" style="display:none;">
-      <p><span>سعر التدريب:</span> <span id="trainingPrice">0</span> جنيه</p>
-      <p><span>رقم الكابتن:</span> <span id="coachNumber">-</span></p>
+    <div id="trainingInfo" class="info-box" style="display: none;">
+      <p><span>سعر التدريب: </span><span id="trainingPrice">0</span> جنيه</p>
+      <p><span>رقم الكابتن: </span><span id="coachNumber">-</span></p>
+
       <h3>مواعيد التدريب</h3>
       <div id="trainingSchedule"></div>
     </div>
   </aside>
+
+  <section class="search-area">
+    <!-- يمكن تستخدم result لعرض رسائل أو عرض شيء إضافي -->
+    <div id="result"></div>
+  </section>
+
 </main>
 
 <script>
@@ -33,61 +151,58 @@
   const gameSelect = document.getElementById("gameSelect");
   const academySelect = document.getElementById("academySelect");
   const trainingInfo = document.getElementById("trainingInfo");
+  const trainingSchedule = document.getElementById("trainingSchedule");
   const trainingPrice = document.getElementById("trainingPrice");
   const coachNumber = document.getElementById("coachNumber");
-  const trainingSchedule = document.getElementById("trainingSchedule");
 
-  // دالة loadGames
   function loadGames() {
-    console.log("🔍 جلب الألعاب...");
     fetch(`${apiUrl}?action=getGames`)
       .then(res => res.json())
       .then(data => {
-        console.log("📥 بيانات getGames:", data);
         const games = data.games || [];
         gameSelect.innerHTML = '<option value="">-- اختر لعبة --</option>';
         games.forEach(g => {
-          const opt = new Option(g, g);
-          gameSelect.add(opt);
+          const opt = document.createElement('option');
+          opt.value = g;
+          opt.textContent = g;
+          gameSelect.appendChild(opt);
         });
-        gameSelect.disabled = false;
+        gameSelect.disabled = !games.length;
       })
-      .catch(e => console.error("❌ خطأ جلب الألعاب:", e));
+      .catch(console.error);
   }
 
-  // دالة loadAcademies
   function loadAcademies(game) {
-    console.log("🔍 جلب الأكاديميات لـ:", game);
     fetch(`${apiUrl}?action=getAcademies&game=${encodeURIComponent(game)}`)
       .then(res => res.json())
       .then(data => {
-        console.log("📥 بيانات getAcademies:", data);
-        const acc = data.academies || [];
+        const list = data.academies || [];
         academySelect.innerHTML = '<option value="">-- اختر أكاديمية --</option>';
-        acc.forEach(a => {
-          const opt = new Option(a, a);
-          academySelect.add(opt);
+        list.forEach(a => {
+          const opt = document.createElement('option');
+          opt.value = a;
+          opt.textContent = a;
+          academySelect.appendChild(opt);
         });
-        academySelect.disabled = !acc.length;
+        academySelect.disabled = !list.length;
+        trainingInfo.style.display = 'none';
       })
-      .catch(e => console.error("❌ خطأ جلب الأكاديميات:", e));
+      .catch(console.error);
   }
 
-  // دالة loadTrainingDetails
   function loadTrainingDetails(academy) {
-    const game = gameSelect.value;
-    console.log("🔍 جلب التفاصيل:", game, academy);
-    fetch(`${apiUrl}?action=getTrainingDetails&game=${encodeURIComponent(game)}&academy=${encodeURIComponent(academy)}`)
+    const game = encodeURIComponent(gameSelect.value);
+    const acc  = encodeURIComponent(academy);
+    fetch(`${apiUrl}?action=getTrainingDetails&game=${game}&academy=${acc}`)
       .then(res => res.json())
       .then(data => {
-        console.log("📥 بيانات getTrainingDetails:", data);
         if (data.schedule && data.schedule.length) {
-          trainingPrice.textContent = data.price || 'غير متوفر';
-          coachNumber.textContent = data.coach || '-';
+          trainingPrice.textContent = data.price;
+          coachNumber.textContent = data.coach;
           trainingSchedule.innerHTML = '';
           data.schedule.forEach(item => {
             const div = document.createElement('div');
-            div.textContent = `${item.اليوم}: من ${item.من} إلى ${item.إلى}`;
+            div.innerHTML = `<p><strong>${item.اليوم}</strong>: من ${item.من} إلى ${item.إلى}</p>`;
             trainingSchedule.appendChild(div);
           });
           trainingInfo.style.display = 'block';
@@ -95,22 +210,22 @@
           trainingInfo.style.display = 'none';
         }
       })
-      .catch(e => {
-        console.error("❌ خطأ جلب تفاصيل التدريب:", e);
-        trainingInfo.style.display = 'none';
-      });
+      .catch(console.error);
   }
 
-  // أحداث اختيار
   gameSelect.addEventListener('change', () => {
     if (gameSelect.value) loadAcademies(gameSelect.value);
-    trainingInfo.style.display = 'none';
   });
+
   academySelect.addEventListener('change', () => {
     if (academySelect.value) loadTrainingDetails(academySelect.value);
   });
 
-  // تشغيل أولي
+  function goHome() {
+    window.location.href = "home.html";
+  }
+
+  // بدء تحميل الألعاب
   loadGames();
 </script>
 
