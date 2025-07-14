@@ -145,8 +145,10 @@
     const trainingList = document.getElementById('trainingList');
 
     function createTrainingCard(training) {
-      const ulDays = training.days.map(day => <li>${day.day}: من ${day.from} إلى ${day.to}</li>).join('');
-      return 
+      const ulDays = training.days.map(day => {
+        return `<li>${day.day}: من ${day.from} إلى ${day.to}</li>`;
+      }).join('');
+      return `
         <div class="training-card">
           <h3>اللعبة: ${training.game}</h3>
           <p><strong>الأكاديمية:</strong> ${training.academy}</p>
@@ -155,7 +157,7 @@
           <p><strong>المواعيد:</strong></p>
           <ul>${ulDays}</ul>
         </div>
-      ;
+      `;
     }
 
     async function fetchTrainings() {
