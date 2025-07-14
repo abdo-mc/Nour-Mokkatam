@@ -4,122 +4,145 @@
   <meta charset="UTF-8" />
   <title>التدريبات - مركز شباب نور المقطم</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    integrity="sha512-papbkp2bLZvVgx1jhMg8Dl58zjmoCQlLBHjrFVf5LjX3RZFLxE2Zo0qh8/c1n0eL+8PMPZ3PVcEaO37pXwYB1w=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       font-family: 'Cairo', sans-serif;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       direction: rtl;
-      background: #f0f4f8;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background: #eef4fc;
       color: #004080;
     }
+
     .container {
       background: white;
       padding: 40px 60px 50px;
       border-radius: 20px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 900px;
+      width: 1200px;
       max-width: 95vw;
-      margin-top: 20px;
-      margin-bottom: 40px;
+      margin: 40px auto;
+      animation: fadeIn 1s ease-in-out;
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
     .title-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: baseline;
-      gap: 6px;
-      margin-bottom: 40px;
+      text-align: center;
+      margin-bottom: 30px;
     }
+
     .title-container h1 {
-      font-weight: 800;
-      font-size: 2.2rem;
-      margin: 0;
-      white-space: nowrap;
+      font-size: 2.5rem;
       color: #004080;
     }
+
     .title-container .subtitle {
-      font-weight: 700;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       color: #007bff;
-      white-space: nowrap;
     }
-    /* بيانات التدريبات */
+
+    .filters {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    select {
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 2px solid #007bff;
+      font-weight: bold;
+      background: #f4faff;
+      color: #004080;
+      transition: 0.3s;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #004080;
+    }
+
     .training-list {
-      max-height: 60vh;
-      overflow-y: auto;
-      text-align: right;
-      direction: rtl;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 200px;
     }
+
     .training-card {
       border: 2px solid #005bb5;
       border-radius: 12px;
       padding: 20px;
-      margin-bottom: 20px;
+      background: #f9fbff;
       box-shadow: 0 4px 10px rgba(0,91,181,0.15);
-      background: #f8fbff;
-      text-align: right;
+      animation: fadeInCard 0.5s ease forwards;
     }
-    .training-card h3 {
-      color: #005bb5;
-      margin-bottom: 8px;
+
+    @keyframes fadeInCard {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    .training-card p {
-      margin: 6px 0;
-      font-weight: 600;
-    }
+
+    .training-card h3 { color: #005bb5; margin-bottom: 8px; }
+    .training-card p { margin: 6px 0; font-weight: 600; }
     .training-card ul {
       padding-right: 20px;
       margin: 6px 0;
       list-style-type: square;
       color: #004080;
     }
-    /* زرار الرجوع */
+
     .btn-back {
+      margin: 20px 0;
       background: linear-gradient(90deg, #0080ff, #005bb5);
-      border: none;
       padding: 12px 24px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #fff;
+      color: white;
+      font-weight: bold;
+      border: none;
       border-radius: 12px;
       cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
-      transition: all 0.3s ease;
-      user-select: none;
-      margin-bottom: 30px;
       display: inline-flex;
-      align-items: center;
       gap: 8px;
+      align-items: center;
+      transition: 0.3s ease;
     }
+
     .btn-back:hover {
-      background: linear-gradient(90deg, #005bb5, #003d7a);
+      transform: scale(1.05);
       box-shadow: 0 8px 25px rgba(0, 74, 179, 0.7);
-      transform: translateY(-3px);
     }
-    .btn-back:active {
-      transform: translateY(-1px);
-      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+
+    .pagination {
+      margin-top: 30px;
+      text-align: center;
     }
-    @media (max-width: 650px) {
-      .container {
-        padding: 30px 20px 40px;
-      }
+
+    .pagination button {
+      margin: 0 5px;
+      padding: 10px 15px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .pagination button.active {
+      background-color: #004080;
+    }
+
+    .pagination button:hover {
+      background-color: #005bb5;
     }
   </style>
 </head>
@@ -131,23 +154,47 @@
       <div class="subtitle">جميع الألعاب المتاحة</div>
     </div>
 
-    <button class="btn-back" onclick="location.href='Main.html'">
-      <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للصفحة الرئيسية
-    </button>
+    <div class="filters">
+      <select id="dayFilter">
+        <option value="">كل الأيام</option>
+        <option value="السبت">السبت</option>
+        <option value="الأحد">الأحد</option>
+        <option value="الإثنين">الإثنين</option>
+        <option value="الثلاثاء">الثلاثاء</option>
+        <option value="الأربعاء">الأربعاء</option>
+        <option value="الخميس">الخميس</option>
+        <option value="الجمعة">الجمعة</option>
+      </select>
+
+      <select id="gameFilter">
+        <option value="">كل الألعاب</option>
+      </select>
+    </div>
 
     <div class="training-list" id="trainingList">
       <p>جاري تحميل البيانات...</p>
     </div>
+
+    <div class="pagination" id="pagination"></div>
+
+    <button class="btn-back" onclick="location.href='Main.html'">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للصفحة الرئيسية
+    </button>
   </div>
 
   <script>
     const apiUrl = "https://script.google.com/macros/s/AKfycbwhKMTVxijHeeWT1LcGoRg2HzTYgtumWDPPGINcfOcztAMMXlRg_0qbSlPoldm6XlMn/exec";
     const trainingList = document.getElementById('trainingList');
+    const dayFilter = document.getElementById('dayFilter');
+    const gameFilter = document.getElementById('gameFilter');
+    const pagination = document.getElementById('pagination');
+
+    let allTrainings = [];
+    let currentPage = 1;
+    const itemsPerPage = 6;
 
     function createTrainingCard(training) {
-      const ulDays = training.days.map(day => {
-        return `<li>${day.day}: من ${day.from} إلى ${day.to}</li>`;
-      }).join('');
+      const ulDays = training.days.map(day => `<li>${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
       return `
         <div class="training-card">
           <h3>اللعبة: ${training.game}</h3>
@@ -160,16 +207,49 @@
       `;
     }
 
+    function renderTrainings(data) {
+      const start = (currentPage - 1) * itemsPerPage;
+      const paginatedData = data.slice(start, start + itemsPerPage);
+      trainingList.innerHTML = paginatedData.map(createTrainingCard).join('') || '<p>لا توجد نتائج مطابقة.</p>';
+      renderPagination(data.length);
+    }
+
+    function renderPagination(totalItems) {
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      pagination.innerHTML = '';
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add('active');
+        btn.onclick = () => {
+          currentPage = i;
+          applyFilters();
+        };
+        pagination.appendChild(btn);
+      }
+    }
+
+    function applyFilters() {
+      const selectedDay = dayFilter.value;
+      const selectedGame = gameFilter.value;
+
+      let filtered = [...allTrainings];
+      if (selectedDay) {
+        filtered = filtered.filter(t => t.days.some(d => d.day === selectedDay));
+      }
+      if (selectedGame) {
+        filtered = filtered.filter(t => t.game === selectedGame);
+      }
+
+      currentPage = 1;
+      renderTrainings(filtered);
+    }
+
     async function fetchTrainings() {
       try {
         const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error('حدث خطأ في جلب البيانات');
         const data = await res.json();
-
-        if (!data || !data.length) {
-          trainingList.innerHTML = "<p>لا توجد بيانات لعرضها حالياً.</p>";
-          return;
-        }
 
         const trainingsMap = new Map();
 
@@ -191,14 +271,27 @@
           });
         });
 
-        const htmlCards = Array.from(trainingsMap.values()).map(createTrainingCard).join('');
-        trainingList.innerHTML = htmlCards;
-
-      } catch (error) {
-        console.error("حدث خطأ في تحميل البيانات: ", error);
-        trainingList.innerHTML = "<p>حدث خطأ في تحميل البيانات، يرجى المحاولة لاحقاً.</p>";
+        allTrainings = Array.from(trainingsMap.values());
+        populateGameFilter();
+        applyFilters();
+      } catch (err) {
+        console.error(err);
+        trainingList.innerHTML = "<p>حدث خطأ في تحميل البيانات.</p>";
       }
     }
+
+    function populateGameFilter() {
+      const games = [...new Set(allTrainings.map(t => t.game))];
+      games.forEach(game => {
+        const opt = document.createElement('option');
+        opt.value = game;
+        opt.textContent = game;
+        gameFilter.appendChild(opt);
+      });
+    }
+
+    dayFilter.addEventListener('change', applyFilters);
+    gameFilter.addEventListener('change', applyFilters);
 
     fetchTrainings();
   </script>
