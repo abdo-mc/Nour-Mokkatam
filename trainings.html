@@ -4,12 +4,21 @@
   <meta charset="UTF-8" />
   <title>التدريبات - مركز شباب نور المقطم</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous"
+  />
   <style>
-    /* نفس التنسيقات السابقة */
-    /* ... */
+    /* هنا تضع كل الـ CSS الموجود */
   </style>
 </head>
 <body>
+  <header>
+    <img src="https://drive.google.com/uc?export=view&id=1kgHdRe8f6Lwi-x12GFzEGVO7XVr6PQsB" alt="وزارة الشباب والرياضة" />
+    <img src="https://drive.google.com/uc?export=view&id=19ArNiOiblQdq0vIfGXWP4u1w1fZu_UWF" alt="مركز شباب نور المقطم" />
+  </header>
+
   <div class="container">
     <div class="title-container">
       <h1>التدريبات</h1>
@@ -17,7 +26,7 @@
     </div>
 
     <button class="btn-back" onclick="location.href='Main.html'">
-      &#8592; العودة للصفحة الرئيسية
+      <i class="fa-solid fa-arrow-right-from-bracket"></i> العودة للصفحة الرئيسية
     </button>
 
     <div class="training-list" id="trainingList">
@@ -26,15 +35,13 @@
   </div>
 
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbzcE_1OfbFq5hFr8Vm1KQ_JyyCviT9J6ni1WUzX6VCcbViBGwkK47kDVaILKs41Ayz3cw/exec";
+    // رابط API الجديد الذي يعمل
+    const apiUrl = "https://script.google.com/macros/s/AKfycbywMLxJT_xBYoFCdSglMuCIVATe-qcu3m5x3t64fIza/dev?action=getTrainings";
 
     const trainingList = document.getElementById('trainingList');
 
     function createTrainingCard(training) {
-      let daysHtml = '';
-      if (Array.isArray(training.days)) {
-        daysHtml = training.days.map(day => `<li>${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
-      }
+      const ulDays = training.days.map(day => `<li>${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
       return `
         <div class="training-card">
           <h3>اللعبة: ${training.game}</h3>
@@ -42,7 +49,7 @@
           <p><strong>سعر التدريب:</strong> ${training.price} جنيه</p>
           <p><strong>رقم الكابتن:</strong> ${training.coach}</p>
           <p><strong>المواعيد:</strong></p>
-          <ul>${daysHtml}</ul>
+          <ul>${ulDays}</ul>
         </div>
       `;
     }
@@ -58,14 +65,18 @@
           return;
         }
 
+        // تنسيق البيانات: افترض إن البيانات عندك فيها الأعمدة: 
+        // "اللعبه", "الاكاديمية", "سعر التدريب", "رقم الكابتن", "اليوم", "من", "الي"
+        // لازم نجمّع كل مواعيد اليوم المختلفة لكل لعبة وأكاديمية مع بعض
+
         const trainingsMap = new Map();
 
         data.forEach(item => {
-          const key = item["اللعبة"] + "||" + item["الأكاديمية"];
+          const key = item["اللعبه"] + "||" + item["الاكاديمية"];
           if (!trainingsMap.has(key)) {
             trainingsMap.set(key, {
-              game: item["اللعبة"],
-              academy: item["الأكاديمية"],
+              game: item["اللعبه"],
+              academy: item["الاكاديمية"],
               price: item["سعر التدريب"],
               coach: item["رقم الكابتن"],
               days: []
