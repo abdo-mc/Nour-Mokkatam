@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>استعلام انتخابات مركز شباب نور المقطم</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+    /* ... نفس التنسيقات اللي عندك ... */
     body {
       font-family: 'Cairo', sans-serif;
       background: #f9f9f9;
@@ -192,21 +192,23 @@
     document.getElementById('result').innerHTML = `<div class="error">❌ ${message}</div>`;
   }
 
+  // بحث برقم العضوية فقط
   function search() {
-    const value = document.getElementById('searchInput').value.trim();
-    if (!value) {
+    const id = document.getElementById('searchInput').value.trim();
+    if (!id) {
       showError("من فضلك أدخل رقم العضوية");
       return;
     }
 
     document.getElementById('result').textContent = "جاري البحث...";
-    fetch(`${apiBase}?id=${encodeURIComponent(value)}`)
+
+    fetch(`${apiBase}?id=${encodeURIComponent(id)}`)
       .then(res => res.json())
       .then(data => {
-        if (data.error || !data.result) {
-          showError(data.error || "لا توجد بيانات مطابقة");
+        if (data.error) {
+          showError(data.error);
         } else {
-          const d = data.result;
+          const d = data;
           document.getElementById('result').innerHTML = `
             <h3>بيانات العضو</h3>
             <table>
@@ -222,40 +224,43 @@
       .catch(() => showError("حدث خطأ في الاتصال."));
   }
 
+  // تحميل كل أعضاء اللجنة
   function loadCommittee(num) {
     document.getElementById('result').textContent = "جاري تحميل بيانات اللجنة...";
+
     fetch(`${apiBase}?committee=${encodeURIComponent(num)}`)
       .then(res => res.json())
       .then(data => {
         if (!data.results || data.results.length === 0) {
           showError("لا توجد بيانات لهذه اللجنة");
-        } else {
-          const rows = data.results.map(row => `
-            <tr>
-              <td>${row.name}</td>
-              <td>${row.id}</td>
-              <td>${row.committee}</td>
-              <td>${row.order}</td>
-              <td>${row.birth}</td>
-            </tr>
-          `).join('');
-
-          document.getElementById('result').innerHTML = `
-            <h3>اللجنة رقم ${num}</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>الاسم</th>
-                  <th>رقم العضوية</th>
-                  <th>اللجنة</th>
-                  <th>الرقم في الكشف</th>
-                  <th>تاريخ الميلاد</th>
-                </tr>
-              </thead>
-              <tbody>${rows}</tbody>
-            </table>
-          `;
+          return;
         }
+
+        const rows = data.results.map(row => `
+          <tr>
+            <td>${row.name}</td>
+            <td>${row.id}</td>
+            <td>${row.committee}</td>
+            <td>${row.order}</td>
+            <td>${row.birth}</td>
+          </tr>
+        `).join('');
+
+        document.getElementById('result').innerHTML = `
+          <h3>اللجنة رقم ${num}</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>رقم العضوية</th>
+                <th>اللجنة</th>
+                <th>الرقم في الكشف</th>
+                <th>تاريخ الميلاد</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
       })
       .catch(() => showError("حدث خطأ في الاتصال."));
   }
