@@ -5,103 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>التدريبات</title>
   <style>
+    /* ... نفس CSS السابق بدون تغيير ... */
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
-    body {
-      font-family: 'Cairo', sans-serif;
-      margin: 0; padding: 0;
-      background: #f9fafc;
-      color: #222;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      background-color: #00529b;
-      color: white;
-      padding: 15px 20px;
-      font-size: 1.9rem;
-      font-weight: 700;
-      text-align: center;
-      position: relative;
-    }
-    header button.home-btn {
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: color 0.3s ease;
-    }
-    header button.home-btn:hover {
-      color: #ffdc00;
-    }
-    header button.home-btn svg {
-      width: 22px; height: 22px;
-      fill: #ffdc00;
-    }
+    body { font-family: 'Cairo', sans-serif; margin:0; padding:0; background:#f9fafc; color:#222; display:flex; flex-direction:column; min-height:100vh;}
+    header { background:#00529b; color:#fff; padding:15px 20px; position:relative; text-align:center; font-size:1.9rem; font-weight:700;}
+    header button.home-btn { position:absolute; left:20px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:white; font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:6px; transition:color .3s;}
+    header button.home-btn:hover { color:#ffdc00; }
+    header button.home-btn svg { width:22px; height:22px; fill:#ffdc00; }
 
-    main {
-      flex: 1;
-      display: flex;
-      padding: 20px;
-      gap: 20px;
-    }
-    aside.filters {
-      width: 210px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
-      padding: 15px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      user-select: none;
-    }
-    aside.filters h3 {
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #00529b;
-      border-bottom: 2px solid #00529b;
-      padding-bottom: 5px;
-    }
-    aside.filters select {
-      padding: 10px;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: 2px solid #00529b;
-      outline: none;
-      cursor: pointer;
-    }
+    main { flex:1; display:flex; padding:20px; gap:20px; }
+    aside.filters { width:210px; background:#fff; border-radius:8px; box-shadow:0 0 10px rgb(0 0 0 /0.1); padding:15px 10px; display:flex; flex-direction:column; gap:12px; }
+    aside.filters h3 { font-weight:600; margin-bottom:10px; color:#00529b; border-bottom:2px solid #00529b; padding-bottom:5px; }
+    aside.filters select { padding:10px; font-size:1rem; border-radius:6px; border:2px solid #00529b; outline:none; cursor:pointer; }
 
-    section.search-area {
-      flex: 1;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgb(0 0 0 / 0.07);
-      padding: 20px 25px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+    section.search-area { flex:1; background:#fff; border-radius:10px; box-shadow:0 0 15px rgb(0 0 0 /0.07); padding:20px 25px; display:flex; flex-direction:column; gap:15px;}
 
-    .info-box {
-      font-size: 1.1rem;
-      padding: 15px;
-      background: #f0f8ff;
-      border-radius: 6px;
-    }
-
-    .info-box span {
-      font-weight: 600;
-    }
+    .info-box { font-size:1.1rem; padding:15px; background:#f0f8ff; border-radius:6px; }
+    .info-box span { font-weight:600; }
+    .game-section { margin-bottom:20px; border-bottom:1px solid #ddd; padding-bottom:15px; }
   </style>
 </head>
 <body>
@@ -117,116 +38,164 @@
 </header>
 
 <main>
-
   <aside class="filters">
     <h3>اختر اللعبة</h3>
     <select id="gameSelect">
-      <option value="">-- اختر لعبة --</option>
+      <option value="">-- الكل --</option>
     </select>
 
     <h3>اختر الأكاديمية</h3>
     <select id="academySelect" disabled>
-      <option value="">-- اختر أكاديمية --</option>
+      <option value="">-- الكل --</option>
     </select>
 
     <div id="trainingInfo" class="info-box" style="display: none;">
-      <p><span>سعر التدريب: </span><span id="trainingPrice">0</span> جنيه</p>
+      <p><span>سعر التدريب: </span><span id="trainingPrice">0</span> جم</p>
       <p><span>رقم الكابتن: </span><span id="coachNumber">-</span></p>
-
       <h3>مواعيد التدريب</h3>
       <div id="trainingSchedule"></div>
     </div>
   </aside>
 
-  <section class="search-area">
-    <!-- يمكن تستخدم result لعرض رسائل أو عرض شيء إضافي -->
-    <div id="result"></div>
-  </section>
-
+  <section class="search-area" id="result"></section>
 </main>
 
 <script>
   const apiUrl = "https://script.google.com/macros/s/AKfycbzcE_1OfbFq5hFr8Vm1KQ_JyyCviT9J6ni1WUzX6VCcbViBGwkK47kDVaILKs41Ayz3cw/exec";
-
   const gameSelect = document.getElementById("gameSelect");
   const academySelect = document.getElementById("academySelect");
   const trainingInfo = document.getElementById("trainingInfo");
-  const trainingSchedule = document.getElementById("trainingSchedule");
   const trainingPrice = document.getElementById("trainingPrice");
   const coachNumber = document.getElementById("coachNumber");
+  const trainingSchedule = document.getElementById("trainingSchedule");
+  const resultSection = document.getElementById("result");
 
-  function loadGames() {
-    fetch(`${apiUrl}?action=getGames`)
+  let allData = [];
+
+  function loadAllData() {
+    fetch(`${apiUrl}?action=getRawData`) // تحتاج تحديث على السكربت ليعيد صفوف كاملة
       .then(res => res.json())
       .then(data => {
-        const games = data.games || [];
-        gameSelect.innerHTML = '<option value="">-- اختر لعبة --</option>';
-        games.forEach(g => {
-          const opt = document.createElement('option');
-          opt.value = g;
-          opt.textContent = g;
-          gameSelect.appendChild(opt);
-        });
-        gameSelect.disabled = !games.length;
+        allData = data; 
+        populateGames();
       })
       .catch(console.error);
   }
 
+  // جلب القيم للألعاب
+  function populateGames() {
+    const games = [...new Set(allData.map(r => r["اللعبه"]))];
+    gameSelect.innerHTML = '<option value="">-- الكل --</option>';
+    games.forEach(g => {
+      const opt = new Option(g, g);
+      gameSelect.add(opt);
+    });
+    gameSelect.disabled = false;
+  }
+
+  // عند تغيير اللعبة
+  gameSelect.addEventListener("change", () => {
+    const game = gameSelect.value;
+    trainingInfo.style.display = 'none';
+    resultSection.innerHTML = '';
+    if (!game) { // الكل
+      displayAllGames();
+      academySelect.disabled = true;
+      academySelect.innerHTML = '<option value="">-- الكل --</option>';
+    } else {
+      loadAcademies(game);
+    }
+  });
+
+  // الأكاديميات
   function loadAcademies(game) {
-    fetch(`${apiUrl}?action=getAcademies&game=${encodeURIComponent(game)}`)
-      .then(res => res.json())
-      .then(data => {
-        const list = data.academies || [];
-        academySelect.innerHTML = '<option value="">-- اختر أكاديمية --</option>';
-        list.forEach(a => {
-          const opt = document.createElement('option');
-          opt.value = a;
-          opt.textContent = a;
-          academySelect.appendChild(opt);
-        });
-        academySelect.disabled = !list.length;
-        trainingInfo.style.display = 'none';
-      })
-      .catch(console.error);
+    const filtered = allData.filter(r => r["اللعبه"] === game);
+    const list = [...new Set(filtered.map(r => r["الاكاديمية"]))];
+    academySelect.innerHTML = '<option value="">-- الكل --</option>';
+    list.forEach(a => academySelect.add(new Option(a, a)));
+    academySelect.disabled = !list.length;
   }
 
-  function loadTrainingDetails(academy) {
-    const game = encodeURIComponent(gameSelect.value);
-    const acc  = encodeURIComponent(academy);
-    fetch(`${apiUrl}?action=getTrainingDetails&game=${game}&academy=${acc}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.schedule && data.schedule.length) {
-          trainingPrice.textContent = data.price;
-          coachNumber.textContent = data.coach;
-          trainingSchedule.innerHTML = '';
-          data.schedule.forEach(item => {
-            const div = document.createElement('div');
-            div.innerHTML = `<p><strong>${item.اليوم}</strong>: من ${item.من} إلى ${item.إلى}</p>`;
-            trainingSchedule.appendChild(div);
-          });
-          trainingInfo.style.display = 'block';
-        } else {
-          trainingInfo.style.display = 'none';
-        }
-      })
-      .catch(console.error);
-  }
-
-  gameSelect.addEventListener('change', () => {
-    if (gameSelect.value) loadAcademies(gameSelect.value);
+  // عند اختيار أكاديمية
+  academySelect.addEventListener("change", () => {
+    const game = gameSelect.value;
+    const academy = academySelect.value;
+    if (!academy) {
+      displayGameSections(game); // كل أكاديمية باللعبة
+    } else {
+      displaySingleAcademy(game, academy);
+    }
   });
 
-  academySelect.addEventListener('change', () => {
-    if (academySelect.value) loadTrainingDetails(academySelect.value);
-  });
-
-  function goHome() {
-    window.location.href = "home.html";
+  // عرض كل الألعاب إذا action=getRawData
+  function displayAllGames() {
+    resultSection.innerHTML = '';
+    const grouped = {};
+    allData.forEach(r => {
+      const key = r["اللعبه"];
+      grouped[key] = grouped[key] || [];
+      grouped[key].push(r);
+    });
+    Object.entries(grouped).forEach(([game, rows]) => {
+      const sec = document.createElement('div'); sec.classList.add('game-section');
+      const price = rows[0]["سعر التدريب"];
+      const coach = rows[0]["رقم الكابتن"];
+      sec.innerHTML = `<h3>${game}</h3>
+                       <p><span>سعر التدريب:</span> ${price} جم</p>
+                       <p><span>الكابتن:</span> ${coach}</p>`;
+      rows.forEach(item => {
+        const d = document.createElement('div');
+        d.textContent = `${item["اليوم"]} من ${item["من"]} إلى ${item["إلى"]}`;
+        sec.appendChild(d);
+      });
+      resultSection.appendChild(sec);
+    });
   }
 
-  // بدء تحميل الألعاب
-  loadGames();
+  function displayGameSections(game) {
+    resultSection.innerHTML = '';
+    const rows = allData.filter(r => r["اللعبه"] === game);
+    const grouped = {};
+    rows.forEach(r => {
+      const key = r["الاكاديمية"];
+      grouped[key] = grouped[key] || [];
+      grouped[key].push(r);
+    });
+    Object.entries(grouped).forEach(([academy, rows]) => {
+      const sec = document.createElement('div'); sec.classList.add('game-section');
+      const price = rows[0]["سعر التدريب"];
+      const coach = rows[0]["رقم الكابتن"];
+      sec.innerHTML = `<h3>${academy}</h3>
+                       <p><span>سعر التدريب:</span> ${price} جم</p>
+                       <p><span>الكابتن:</span> ${coach}</p>`;
+      rows.forEach(item => {
+        const d = document.createElement('div');
+        d.textContent = `${item["اليوم"]} من ${item["من"]} إلى ${item["إلى"]}`;
+        sec.appendChild(d);
+      });
+      resultSection.appendChild(sec);
+    });
+  }
+
+  function displaySingleAcademy(game, academy) {
+    const rows = allData.filter(r => r["اللعبه"] === game && r["الاكاديمية"] === academy);
+    if (!rows.length) return;
+    trainingPrice.textContent = rows[0]["سعر التدريب"];
+    coachNumber.textContent = rows[0]["رقم الكابتن"];
+    trainingSchedule.innerHTML = '';
+    rows.forEach(item => {
+      const div = document.createElement('div');
+      div.textContent = `${item["اليوم"]} من ${item["من"]} إلى ${item["إلى"]}`;
+      trainingSchedule.appendChild(div);
+    });
+    trainingInfo.style.display = 'block';
+    resultSection.innerHTML = '';
+  }
+
+  function goHome() { window.location.href = "home.html"; }
+
+  // إبدأ
+  loadAllData();
 </script>
 
 </body>
