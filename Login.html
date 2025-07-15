@@ -6,7 +6,6 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
 
-    
     body {
       font-family: 'Cairo', sans-serif;
       background: #f0f4f8;
@@ -125,13 +124,12 @@
     }
   </style>
 
-    <script>
+  <script>
     // تأكد المستخدم مسجل دخول سابقًا
     if (localStorage.getItem("username")) {
       window.location.href = "Home.html";
     }
   </script>
-  
 </head>
 <body>
   <header>مركز شباب نور المقطم</header>
@@ -141,10 +139,7 @@
       <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="username" />
       <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password" />
       <button class="login-btn" onclick="login()">تسجيل دخول</button>
-      
-      <!-- زرار الصفحة الرئيسية -->
       <button class="home-btn" onclick="goHome()">العودة إلى الصفحة الرئيسية</button>
-
       <div class="forgot" onclick="forgotPassword()">نسيت كلمة المرور؟</div>
       <div id="msgSuccess" class="message"></div>
       <div id="msgError" class="error-message"></div>
@@ -155,12 +150,11 @@
     const apiUrl = "https://script.google.com/macros/s/AKfycbySD2R9nbJs1CJVFjgd5Pcqog2mdiCigMtwcSg9Xi3t3t3d4fB-6sVJagCj78pFXWNApg/exec";
 
     function login() {
-      const username = document.getElementById('username').value.trim();
+      const username = document.getElementById('username').value.trim().toLowerCase();
       const password = document.getElementById('password').value.trim();
       const msgSuccess = document.getElementById('msgSuccess');
       const msgError = document.getElementById('msgError');
 
-      // اخفاء الرسائل القديمة
       msgSuccess.style.display = "none";
       msgError.style.display = "none";
 
@@ -177,20 +171,13 @@
             msgSuccess.textContent = `مرحبًا ${data.name}، تم تسجيل الدخول بنجاح`;
             msgSuccess.style.display = "block";
 
-            // حفظ بيانات الجلسة
             localStorage.setItem('username', data.username);
             localStorage.setItem('role', data.role);
             localStorage.setItem('name', data.name);
 
-
-            // توجيه بعد تأخير بسيط عشان المستخدم يشوف الرسالة
             setTimeout(() => {
-              if (data.role === 'admin') {
-                window.location.href = "Home.html";
-              } else {
-                window.location.href = "Home.html";
-              }
-            }, 1500);
+              window.location.href = "Home.html";
+            }, 300);
           } else {
             msgError.textContent = data.error;
             msgError.style.display = "block";
@@ -208,10 +195,16 @@
       window.open(`https://wa.me/${contact}?text=${message}`, '_blank');
     }
 
-    // دالة الزرار للعودة للصفحة الرئيسية
     function goHome() {
-      window.location.href = "Main.html"; // غيّر الرابط لو الصفحة الرئيسية باسم مختلف
+      window.location.href = "Main.html";
     }
+
+    // تفعيل زر Enter لتسجيل الدخول
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        login();
+      }
+    });
   </script>
 </body>
 </html>
