@@ -59,20 +59,22 @@
     overflow: hidden;
     position: relative;
     white-space: nowrap;
+    border-top: 3px solid #007bff;
+    border-bottom: 3px solid #007bff;
   }
-  .news-ticker span {
+  .news-ticker .ticker-content {
     display: inline-block;
-    padding-left: 100%;
-    animation: ticker 20s linear infinite;
+    white-space: nowrap;
+    animation: ticker 30s linear infinite;
   }
   @keyframes ticker {
-    0% { transform: translateX(0); }
+    0% { transform: translateX(100%); }
     100% { transform: translateX(-100%); }
   }
   /* زرائر التنقل */
   .container {
     max-width: 960px;
-    margin: 30px auto;
+    margin: 30px auto 60px;
     padding: 0 20px 40px;
   }
   .buttons-row {
@@ -113,7 +115,6 @@
   i.fa {
     font-size: 1.4rem;
   }
-
   /* كروت الأخبار والفعاليات والإحصائيات */
   .cards {
     display: flex;
@@ -148,6 +149,11 @@
     margin: 0;
     font-size: 1rem;
     line-height: 1.5;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .card ul li {
+    margin-bottom: 8px;
   }
   .stats {
     display: flex;
@@ -167,6 +173,10 @@
     align-items: center;
     gap: 10px;
     justify-content: center;
+    transition: background-color 0.3s ease;
+  }
+  .stat-item:hover {
+    background-color: #004080;
   }
 
   /* تجاوب */
@@ -203,13 +213,9 @@
 
 <!-- شريط الأخبار المتحرك -->
 <div class="news-ticker">
-  <span>
-    افتتاح صالة الألعاب الرياضية الجديدة &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
-    بدء الدورات الصيفية للأطفال 1 أغسطس &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
-    إعلان عن فعالية رياضية قادمة &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
-    حفل ختام الشهر - 31 يوليو 2025 &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
-    نشاط كرة القدم - 25 يوليو 2025
-  </span>
+  <div class="ticker-content" id="news-ticker-content">
+    جاري تحميل الأخبار...
+  </div>
 </div>
 
 <div class="container">
@@ -236,26 +242,120 @@
   <div class="cards">
     <div class="card" id="news-card">
       <h3>آخر الأخبار</h3>
-      <ul>
-        <li>تحميل البيانات من جوجل شيت قريباً...</li>
+      <ul id="news-list">
+        <li>جاري تحميل الأخبار...</li>
       </ul>
     </div>
     <div class="card" id="events-card">
       <h3>الفعاليات القادمة</h3>
-      <ul>
-        <li>تحميل البيانات من جوجل شيت قريباً...</li>
+      <ul id="events-list">
+        <li>جاري تحميل الفعاليات...</li>
       </ul>
     </div>
     <div class="card" id="stats-card">
       <h3>إحصائيات سريعة</h3>
-      <div class="stats">
-        <div class="stat-item"><i class="fa-solid fa-users"></i> 120 عضو</div>
-        <div class="stat-item"><i class="fa-solid fa-trophy"></i> 15 فعالية</div>
-        <div class="stat-item"><i class="fa-solid fa-calendar"></i> 5 سنوات نشاط</div>
+      <div class="stats" id="stats-list">
+        <div class="stat-item"><i class="fa-solid fa-users"></i> جاري التحميل...</div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  // رابط CSV من Google Sheets (عدل الرابط هنا لو تغير)
+  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqqNkd7P9NOGWCdk7xs-zIDpJHA4noST23Yp1ks_6dUpuu6sSTjhn5YwYD47ZOJ5IMs4kJGXY5qH8B/pub?gid=2060456841&single=true&output=csv';
+
+  // دالة لتحويل CSV إلى مصفوفة كائنات
+  function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    const headers = lines[0].split(',');
+    const data = lines.slice(1).map(line => {
+      const values = line.split(',');
+      const obj = {};
+      headers.forEach((header, i) => {
+        obj[header.trim()] = values[i] ? values[i].trim() : '';
+      });
+      return obj;
+    });
+    return data;
+  }
+
+  // جلب بيانات CSV وتحديث الصفحة
+  async function loadData() {
+    try {
+      const res = await fetch(csvUrl);
+      if (!res.ok) throw new Error('خطأ في تحميل البيانات');
+      const csvText = await res.text();
+      const data = parseCSV(csvText);
+
+      // فلترة وتصنيف البيانات بناءً على نوعها (مثلاً: news, event, stat)
+      // مع افتراض ان في العمود "type" اللي يحدد نوع كل صف
+      const newsItems = data.filter(item => item.type === 'news');
+      const eventsItems = data.filter(item => item.type === 'event');
+      const statsItems = data.filter(item => item.type === 'stat');
+
+      // تحديث شريط الأخبار المتحرك
+      const tickerContainer = document.getElementById('news-ticker-content');
+      if(newsItems.length) {
+        tickerContainer.textContent = newsItems.map(n => n.title).join(' \u00A0\u00A0\u00A0\u2022\u00A0\u00A0\u00A0 ');
+      } else {
+        tickerContainer.textContent = 'لا توجد أخبار حالياً';
+      }
+
+      // تحديث قائمة الأخبار
+      const newsList = document.getElementById('news-list');
+      newsList.innerHTML = '';
+      if(newsItems.length) {
+        newsItems.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item.title;
+          newsList.appendChild(li);
+        });
+      } else {
+        newsList.innerHTML = '<li>لا توجد أخبار حالياً</li>';
+      }
+
+      // تحديث قائمة الفعاليات
+      const eventsList = document.getElementById('events-list');
+      eventsList.innerHTML = '';
+      if(eventsItems.length) {
+        eventsItems.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item.title + (item.date ? ' - ' + item.date : '');
+          eventsList.appendChild(li);
+        });
+      } else {
+        eventsList.innerHTML = '<li>لا توجد فعاليات قادمة</li>';
+      }
+
+      // تحديث الإحصائيات
+      const statsList = document.getElementById('stats-list');
+      statsList.innerHTML = '';
+      if(statsItems.length) {
+        statsItems.forEach(item => {
+          const div = document.createElement('div');
+          div.classList.add('stat-item');
+          // اختيار أيقونة حسب نوع الإحصائية (مثلاً)
+          let iconClass = 'fa-info-circle';
+          if(item.icon) iconClass = item.icon; // اكتب الأيقونة بشكل fa-solid fa-users
+          div.innerHTML = `<i class="fa-solid ${iconClass}"></i> ${item.title} ${item.value || ''}`;
+          statsList.appendChild(div);
+        });
+      } else {
+        statsList.innerHTML = '<div class="stat-item">لا توجد إحصائيات حالياً</div>';
+      }
+
+    } catch (error) {
+      console.error(error);
+      document.getElementById('news-ticker-content').textContent = 'فشل تحميل الأخبار';
+      document.getElementById('news-list').innerHTML = '<li>فشل تحميل الأخبار</li>';
+      document.getElementById('events-list').innerHTML = '<li>فشل تحميل الفعاليات</li>';
+      document.getElementById('stats-list').innerHTML = '<div class="stat-item">فشل تحميل الإحصائيات</div>';
+    }
+  }
+
+  loadData();
+</script>
 
 </body>
 </html>
