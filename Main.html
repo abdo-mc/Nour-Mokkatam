@@ -1,248 +1,261 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <title>الصفحة الرئيسية - مركز شباب نور المقطم</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    integrity="sha512-papbkp2bLZvVgx1jhMg8Dl58zjmoCQlLBHjrFVf5LjX3RZFLxE2Zo0qh8/c1n0eL+8PMPZ3PVcEaO37pXwYB1w=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Cairo', sans-serif;
-      margin: 0;
-      padding: 0;
-      direction: rtl;
-      background: #f0f4f8;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #004080;
-    }
-    header {
-      width: 100%;
-      max-width: 960px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 10px;
-      box-sizing: border-box;
-    }
-    header img {
-      max-height: 150px;
-      height: auto;
-      width: auto;
-    }
-    .container {
-      background: white;
-      padding: 40px 60px 50px;
-      border-radius: 20px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 900px;
-      max-width: 95vw;
-      margin-top: 20px;
-    }
-    .title-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: baseline;
-      gap: 6px;
-      margin-bottom: 40px;
-    }
-    .title-container h1 {
-      font-weight: 800;
-      font-size: 2.2rem;
-      margin: 0;
-      white-space: nowrap;
-      color: #004080;
-    }
-    .title-container .subtitle {
-      font-weight: 700;
-      font-size: 1.8rem;
-      color: #007bff;
-      white-space: nowrap;
-    }
+<meta charset="UTF-8" />
+<title>الصفحة الرئيسية - مركز شباب نور المقطم</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Cairo', sans-serif;
+    margin: 0;
+    padding: 0;
+    direction: rtl;
+    background: #f0f4f8;
+    color: #004080;
+  }
+  header {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header img {
+    max-height: 150px;
+    height: auto;
+    width: auto;
+  }
+  /* البانر الرئيسي */
+  .banner {
+    background: linear-gradient(90deg, #004080, #007bff);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .banner h1 {
+    margin: 0;
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+  }
+  /* شريط الأخبار المتحرك */
+  .news-ticker {
+    background: #003366;
+    color: #fff;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap;
+  }
+  .news-ticker span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: ticker 20s linear infinite;
+  }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+  /* زرائر التنقل */
+  .container {
+    max-width: 960px;
+    margin: 30px auto;
+    padding: 0 20px 40px;
+  }
+  .buttons-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  button {
+    flex: 1 1 200px;
+    max-width: 250px;
+    background: linear-gradient(90deg, #0080ff, #005bb5);
+    border: none;
+    padding: 14px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+    transition: all 0.3s ease;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    min-width: 200px;
+  }
+  button:hover {
+    background: linear-gradient(90deg, #005bb5, #003d7a);
+    box-shadow: 0 8px 25px rgba(0, 74, 179, 0.7);
+    transform: translateY(-3px);
+  }
+  button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+  }
+  i.fa {
+    font-size: 1.4rem;
+  }
+
+  /* كروت الأخبار والفعاليات والإحصائيات */
+  .cards {
+    display: flex;
+    gap: 25px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    flex: 1 1 280px;
+    max-width: 320px;
+    padding: 20px 25px;
+    color: #004080;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .card h3 {
+    margin-top: 0;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    font-weight: 800;
+    font-size: 1.4rem;
+  }
+  .card ul {
+    padding-right: 15px;
+    list-style-type: disc;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .stats {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: auto;
+  }
+  .stat-item {
+    background: #005bb5;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 12px;
+    flex: 1 1 45%;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  /* تجاوب */
+  @media (max-width: 650px) {
     .buttons-row {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      flex-wrap: wrap;
-      margin-bottom: 40px;
+      flex-direction: column;
+      gap: 18px;
     }
     button {
-      flex: 1 1 200px;
-      max-width: 280px;
-      background: linear-gradient(90deg, #0080ff, #005bb5);
-      border: none;
-      padding: 16px 0;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #fff;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
-      transition: all 0.3s ease;
-      user-select: none;
-      display: flex;
-      justify-content: center;
+      max-width: 100%;
+      min-width: auto;
+    }
+    .cards {
+      flex-direction: column;
       align-items: center;
-      gap: 14px;
-      min-width: 200px;
-    }
-    button:hover {
-      background: linear-gradient(90deg, #005bb5, #003d7a);
-      box-shadow: 0 8px 25px rgba(0, 74, 179, 0.7);
-      transform: translateY(-3px);
-    }
-    button:active {
-      transform: translateY(-1px);
-      box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
-    }
-    i.fa {
-      font-size: 1.5rem;
-    }
-
-    /* إضافة الأقسام الجديدة */
-    .info-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 30px;
-      margin-top: 20px;
-      text-align: right;
-    }
-    .info-card {
-      background: #e7f0fe;
-      border-radius: 15px;
-      padding: 20px 25px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-      color: #004080;
-    }
-    .info-card h3 {
-      margin-top: 0;
-      margin-bottom: 15px;
-      border-bottom: 2px solid #005bb5;
-      padding-bottom: 8px;
-      font-size: 1.3rem;
-    }
-    .info-card ul {
-      padding-right: 20px;
-      margin: 0;
-      list-style: inside disc;
-      font-size: 1rem;
-      line-height: 1.5;
-    }
-    .stats {
-      display: flex;
-      justify-content: space-around;
-      font-size: 1.1rem;
-      gap: 10px;
-      flex-wrap: wrap;
     }
     .stat-item {
-      background: #005bb5;
-      color: white;
-      padding: 12px 18px;
-      border-radius: 10px;
-      flex: 1 1 100px;
-      margin: 5px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      flex: 1 1 100%;
     }
-
-    @media (max-width: 650px) {
-      .buttons-row {
-        flex-direction: column;
-        gap: 20px;
-      }
-      button {
-        max-width: 100%;
-        min-width: auto;
-      }
-      .info-section {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-      .info-card ul {
-        padding-right: 0;
-      }
-      .stats {
-        justify-content: center;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <header>
-    <img src="https://drive.google.com/thumbnail?id=19ArNiOiblQdq0vIfGXWP4u1w1fZu_UWF&sz=w1400" alt="وزارة الشباب والرياضة" />
-    <img src="https://drive.google.com/thumbnail?id=1kgHdRe8f6Lwi-x12GFzEGVO7XVr6PQsB&sz=w1400" alt="مركز شباب نور المقطم" />
-  </header>
 
-  <div class="container">
-    <div class="title-container">
-      <h1>مرحبًا بك في</h1>
-      <div class="subtitle">مركز شباب نور المقطم</div>
-    </div>
+<header>
+  <img src="https://drive.google.com/thumbnail?id=19ArNiOiblQdq0vIfGXWP4u1w1fZu_UWF&sz=w1400" alt="وزارة الشباب والرياضة" />
+  <img src="https://drive.google.com/thumbnail?id=1kgHdRe8f6Lwi-x12GFzEGVO7XVr6PQsB&sz=w1400" alt="مركز شباب نور المقطم" />
+</header>
 
-    <div class="buttons-row">
-      <button onclick="location.href='login.html'">
-        <i class="fa-solid fa-key"></i> تسجيل دخول
-      </button>
-      <button onclick="location.href='bus.html'">
-        <i class="fa-solid fa-magnifying-glass"></i> استعلام عن الرحلة
-      </button>
-      <button onclick="location.href='trainings.html'">
-        <i class="fa-solid fa-briefcase"></i> الأنشطة
-      </button>
-      <button onclick="location.href='trainings.html'">
-        <i class="fa-solid fa-dumbbell"></i> التدريبات
-      </button>
-      <button onclick="location.href='Elecets.html'">
-        <i class="fa-solid fa-users"></i> الجمعية العمومية
-      </button>
-    </div>
+<!-- البانر -->
+<section class="banner">
+  <h1>مرحبًا بك في مركز شباب نور المقطم</h1>
+</section>
 
-    <!-- القسم الجديد: أخبار + فعاليات + إحصائيات -->
-    <section class="info-section">
-      <div class="info-card">
-        <h3>آخر الأخبار</h3>
-        <ul>
-          <li>افتتاح صالة الألعاب الرياضية الجديدة.</li>
-          <li>بدء الدورات الصيفية للأطفال 1 أغسطس.</li>
-          <li>إعلان عن فعالية رياضية قادمة.</li>
-        </ul>
-      </div>
+<!-- شريط الأخبار المتحرك -->
+<div class="news-ticker">
+  <span>
+    افتتاح صالة الألعاب الرياضية الجديدة &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
+    بدء الدورات الصيفية للأطفال 1 أغسطس &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
+    إعلان عن فعالية رياضية قادمة &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
+    حفل ختام الشهر - 31 يوليو 2025 &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
+    نشاط كرة القدم - 25 يوليو 2025
+  </span>
+</div>
 
-      <div class="info-card">
-        <h3>الفعاليات القادمة</h3>
-        <ul>
-          <li>نشاط كرة القدم - 25 يوليو 2025</li>
-          <li>ورشة تطوير مهارات - 28 يوليو 2025</li>
-          <li>حفل ختام الشهر - 31 يوليو 2025</li>
-        </ul>
-      </div>
-
-      <div class="info-card">
-        <h3>إحصائيات سريعة</h3>
-        <div class="stats">
-          <div class="stat-item"><i class="fa-solid fa-users"></i> 120 عضو</div>
-          <div class="stat-item"><i class="fa-solid fa-trophy"></i> 15 فعالية</div>
-          <div class="stat-item"><i class="fa-solid fa-calendar"></i> 5 سنوات نشاط</div>
-        </div>
-      </div>
-    </section>
+<div class="container">
+  <!-- أزرار التنقل -->
+  <div class="buttons-row">
+    <button onclick="location.href='login.html'">
+      <i class="fa-solid fa-key"></i> تسجيل دخول
+    </button>
+    <button onclick="location.href='bus.html'">
+      <i class="fa-solid fa-magnifying-glass"></i> استعلام عن الرحلة
+    </button>
+    <button onclick="location.href='trainings.html'">
+      <i class="fa-solid fa-briefcase"></i> الأنشطة
+    </button>
+    <button onclick="location.href='trainings.html'">
+      <i class="fa-solid fa-dumbbell"></i> التدريبات
+    </button>
+    <button onclick="location.href='Elecets.html'">
+      <i class="fa-solid fa-users"></i> الجمعية العمومية
+    </button>
   </div>
+
+  <!-- كروت الأخبار، الفعاليات والإحصائيات -->
+  <div class="cards">
+    <div class="card" id="news-card">
+      <h3>آخر الأخبار</h3>
+      <ul>
+        <li>تحميل البيانات من جوجل شيت قريباً...</li>
+      </ul>
+    </div>
+    <div class="card" id="events-card">
+      <h3>الفعاليات القادمة</h3>
+      <ul>
+        <li>تحميل البيانات من جوجل شيت قريباً...</li>
+      </ul>
+    </div>
+    <div class="card" id="stats-card">
+      <h3>إحصائيات سريعة</h3>
+      <div class="stats">
+        <div class="stat-item"><i class="fa-solid fa-users"></i> 120 عضو</div>
+        <div class="stat-item"><i class="fa-solid fa-trophy"></i> 15 فعالية</div>
+        <div class="stat-item"><i class="fa-solid fa-calendar"></i> 5 سنوات نشاط</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
