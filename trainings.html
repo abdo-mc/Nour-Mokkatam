@@ -247,7 +247,7 @@
           <h3><i class="fa-solid fa-gamepad"></i> اللعبة: ${training.game}</h3>
           <p><i class="fa-solid fa-school"></i> الأكاديمية: ${training.academy}</p>
           <p><i class="fa-solid fa-money-bill-wave"></i> أشتراك العضو : ${training.price} جنيه</p>
-          <p><i class="fa-solid fa-money-bill-wave"></i> أشتراك الغير اعضاء : ${training.Coach} جنيه</p>
+          <p><i class="fa-solid fa-money-bill-wave"></i> أشتراك العضو : ${training.price2} جنيه</p>
           <p><i class="fa-solid fa-calendar-days"></i> المواعيد:</p>
           <ul>${ulDays}</ul>
         </div>
@@ -307,7 +307,7 @@
               game: item["اللعبة"],
               academy: item["الأكاديمية"],
               price: item["أشتراك العضو"],  // لو في الإكسل الاسم قديم غيّر هنا لـ "اشتراك اللعبة"
-              coach: item["أشتراك الغير اعضاء"],
+              price2: item["أشتراك الغير اعضاء"], 
               days: []
             });
           }
