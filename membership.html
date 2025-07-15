@@ -308,7 +308,7 @@
           paginationDiv.innerHTML = "";
           return;
         }
-        allResults = data.results || (data.id ? [data] : []);
+        allResults = data.results || (data["رقم العضوية"] ? [data] : []);
         currentPage = 1;
         renderResults();
       })
