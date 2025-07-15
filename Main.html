@@ -301,7 +301,7 @@
 
     const elSt = document.getElementById('stats-list');
     elSt.innerHTML = stats.length? stats.map(s=>
-      `<div class="stat-item"><i class="fa-solid ${s.icon}"></i> ${s.title} ${s.value|| ''}</div>`
+      `<div class="stat-item"><i class="fa-solid ${s.icon}"></i> ${s.title}  -  ${s.value || ''}</div>`
     ).join('') : 'لا توجد إحصائيات حالياً';
   }
 
