@@ -241,18 +241,13 @@
     function createTrainingCard(training) {
       const ulDays = training.days.map(day => `<li><i class="fa-regular fa-clock"></i> ${day.day}: من ${day.from} إلى ${day.to}</li>`).join('');
 
-      // رقم الكابتن بدون مسافات لاستخدامه في رابط الواتساب
-      const cleanCoachNumber = (typeof training.coach === 'string' ? training.coach : '').replace(/\s+/g, '');
 
       return `
         <div class="training-card">
           <h3><i class="fa-solid fa-gamepad"></i> اللعبة: ${training.game}</h3>
           <p><i class="fa-solid fa-school"></i> الأكاديمية: ${training.academy}</p>
-          <p><i class="fa-solid fa-money-bill-wave"></i> اشتراك اللعبة: ${training.price} جنيه</p>
-          <p>
-            <i class="fa-solid fa-phone"></i> رقم الكابتن: ${training.coach || '-'}
-            ${cleanCoachNumber ? `<a href="https://wa.me/2${cleanCoachNumber}" target="_blank" class="whatsapp-link" title="تواصل واتساب"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
-          </p>
+          <p><i class="fa-solid fa-money-bill-wave"></i> أشتراك العضو : ${training.price} جنيه</p>
+         <p><i class="fa-solid fa-money-bill-wave"></i> اشتراك الغير اعضاء : ${training.price} جنيه</p>
           <p><i class="fa-solid fa-calendar-days"></i> المواعيد:</p>
           <ul>${ulDays}</ul>
         </div>
@@ -311,8 +306,8 @@
             trainingsMap.set(key, {
               game: item["اللعبة"],
               academy: item["الأكاديمية"],
-              price: item["اشتراك اللعبة"],  // لو في الإكسل الاسم قديم غيّر هنا لـ "اشتراك اللعبة"
-              coach: item["رقم الكابتن"],
+              price: item["اشتراك العضو"],  // لو في الإكسل الاسم قديم غيّر هنا لـ "اشتراك اللعبة"
+              coach: item["اشتراك الغير اعضاء"],
               days: []
             });
           }
