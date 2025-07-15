@@ -172,7 +172,7 @@
         const statusText = isRenewed ? "عضو نشط (مجدد)" : "عضو غير نشط (غير مجدد)";
 
         memberDiv.innerHTML = `
-          <img src="${data["صورة العضو"] || 'https://via.placeholder.com/120'}" alt="صورة ${data["الاسم"] || 'عضو'}" />
+          <img src="${(data["صورة العضو"] || 'https://via.placeholder.com/120').replace(/&amp;/g, '&')}" alt="صورة ${data["الاسم"] || 'عضو'}" />
           <table>
             <tr><th>رقم العضوية:</th><td>${data["رقم العضوية"] || '-'}</td></tr>
             <tr><th>الاسم:</th><td>${data["الاسم"] || '-'}</td></tr>
