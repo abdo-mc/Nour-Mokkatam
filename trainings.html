@@ -271,7 +271,9 @@
         if (i === currentPage) btn.classList.add('active');
         btn.onclick = () => {
           currentPage = i;
+          window.fromPaginationClick = true;
           applyFilters();
+          window.fromPaginationClick = false;
         };
         pagination.appendChild(btn);
       }
@@ -289,8 +291,11 @@
         filtered = filtered.filter(t => t.game === selectedGame);
       }
 
-      currentPage = 1;
+      if (!window.fromPaginationClick) {
+          currentPage = 1;
+      }
       renderTrainings(filtered);
+
     }
 
     async function fetchTrainings() {
