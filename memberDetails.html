@@ -167,12 +167,20 @@
           return;
         }
 
-        const isRenewed = data["التجديد"]?.trim() === "مجدد";
-        const statusClass = isRenewed ? "active" : "inactive";
-        const statusText = isRenewed ? "عضو نشط (مجدد)" : "عضو غير نشط (غير مجدد)";
+        // تعويض &amp; بـ & لضمان تحميل الصورة
+        const imgSrc = (data["صورة العضو"] || 'https://via.placeholder.com/120').replace(/&amp;/g, '&');
 
-        memberDiv.innerHTML = `
-          <img src="${(data["صورة العضو"] || 'https://via.placeholder.com/120').replace(/&amp;/g, '&')}" alt="صورة ${data["الاسم"] || 'عضو'}" />
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.alt = `صورة ${data["الاسم"] || 'عضو'}`;
+        img.style.width = '120px';
+        img.style.height = '120px';
+        img.style.borderRadius = '50%';
+        img.style.objectFit = 'cover';
+        img.style.marginBottom = '20px';
+        img.style.border = '3px solid #004080';
+
+        const tableHTML = `
           <table>
             <tr><th>رقم العضوية:</th><td>${data["رقم العضوية"] || '-'}</td></tr>
             <tr><th>الاسم:</th><td>${data["الاسم"] || '-'}</td></tr>
@@ -181,8 +189,20 @@
             <tr><th>التجديد:</th><td>${data["التجديد"] || '-'}</td></tr>
             <tr><th>حق حضور الجمعية العمومية:</th><td>${data["حق حضور الجمعية العمومية"] || '-'}</td></tr>
           </table>
-          <div class="status ${statusClass}">${statusText}</div>
         `;
+
+        const isRenewed = data["التجديد"]?.trim() === "مجدد";
+        const statusClass = isRenewed ? "active" : "inactive";
+        const statusText = isRenewed ? "عضو نشط (مجدد)" : "عضو غير نشط (غير مجدد)";
+
+        const statusDiv = document.createElement('div');
+        statusDiv.className = `status ${statusClass}`;
+        statusDiv.textContent = statusText;
+
+        memberDiv.innerHTML = ''; // تنظيف المحتوى القديم
+        memberDiv.appendChild(img);
+        memberDiv.insertAdjacentHTML('beforeend', tableHTML);
+        memberDiv.appendChild(statusDiv);
       })
       .catch(() => {
         memberDiv.innerHTML = `<div class="error">❌ حدث خطأ أثناء الاتصال.</div>`;
