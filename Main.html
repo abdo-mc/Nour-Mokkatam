@@ -15,14 +15,14 @@
   body {
     font-family: 'Cairo', sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 0 20px;
     direction: rtl;
     background: #f0f4f8;
     color: #004080;
   }
   header {
     width: 100%;
-    max-width: 960px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px 10px;
     display: flex;
@@ -67,15 +67,35 @@
     white-space: nowrap;
     animation: ticker 30s linear infinite;
   }
+  /* توقف التمرير عند الوقوف بالماوس */
+  .news-ticker .ticker-content:hover {
+    animation-play-state: paused;
+  }
   @keyframes ticker {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  /* مؤشر تحميل */
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 8px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
   }
   /* زرائر التنقل */
   .container {
-    max-width: 960px;
+    max-width: 1200px;
     margin: 30px auto 60px;
-    padding: 0 20px 40px;
+    padding: 0 10px 40px;
   }
   .buttons-row {
     display: flex;
@@ -109,8 +129,9 @@
     transform: translateY(-3px);
   }
   button:active {
+    background: linear-gradient(90deg, #003d7a, #00265a);
+    box-shadow: 0 3px 8px rgba(0, 50, 120, 0.7);
     transform: translateY(-1px);
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
   }
   i.fa {
     font-size: 1.4rem;
@@ -135,20 +156,31 @@
     flex-direction: column;
     justify-content: flex-start;
   }
-  .card h3 {
+  /* ألوان مختلفة لعناوين الأخبار والفعاليات */
+  #news-card h3 {
     margin-top: 0;
-    border-bottom: 3px solid #007bff;
+    border-bottom: 3px solid #005bb5;
     padding-bottom: 8px;
     margin-bottom: 15px;
     font-weight: 800;
     font-size: 1.4rem;
+    color: #004080;
+  }
+  #events-card h3 {
+    margin-top: 0;
+    border-bottom: 3px solid #003d7a;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: #007bff;
   }
   .card ul {
-    padding-right: 15px;
+    padding-right: 25px;
     list-style-type: disc;
     margin: 0;
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.6;
     max-height: 300px;
     overflow-y: auto;
   }
@@ -197,6 +229,37 @@
       flex: 1 1 100%;
     }
   }
+
+  /* الفوتر */
+  footer {
+    background: #004080;
+    color: #fff;
+    text-align: center;
+    padding: 20px 10px;
+    font-size: 0.9rem;
+    margin-top: 40px;
+  }
+  footer a {
+    color: #cce4ff;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+  }
+  footer a:hover {
+    color: #ffffff;
+  }
+  footer .social-icons {
+    margin-top: 10px;
+  }
+  footer .social-icons a {
+    margin: 0 8px;
+    font-size: 1.5rem;
+    color: #cce4ff;
+    transition: color 0.3s ease;
+  }
+  footer .social-icons a:hover {
+    color: #ffffff;
+  }
 </style>
 </head>
 <body>
@@ -214,7 +277,7 @@
 <!-- شريط الأخبار المتحرك -->
 <div class="news-ticker">
   <div class="ticker-content" id="news-ticker-content">
-    جاري تحميل الأخبار...
+    <span>جاري تحميل الأخبار...</span><span class="spinner"></span>
   </div>
 </div>
 
@@ -261,100 +324,70 @@
   </div>
 </div>
 
+<footer>
+  <p>مركز شباب نور المقطم - جميع الحقوق محفوظة © 2025</p>
+  <p>تواصل معنا: info@nouralmoqtam.com | هاتف: 0123456789</p>
+  <p>
+    <a href="#">الرئيسية</a> | 
+    <a href="#">من نحن</a> | 
+    <a href="#">اتصل بنا</a>
+  </p>
+  <div class="social-icons">
+    <a href="#" aria-label="فيسبوك"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+    <a href="#" aria-label="انستجرام"><i class="fab fa-instagram"></i></a>
+  </div>
+</footer>
+
 <script>
-  // رابط CSV من Google Sheets (عدل الرابط هنا لو تغير)
-  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqqNkd7P9NOGWCdk7xs-zIDpJHA4noST23Yp1ks_6dUpuu6sSTjhn5YwYD47ZOJ5IMs4kJGXY5qH8B/pub?gid=2060456841&single=true&output=csv';
-
-  // دالة لتحويل CSV إلى مصفوفة كائنات
-  function parseCSV(text) {
-    const lines = text.trim().split('\n');
-    const headers = lines[0].split(',');
-    const data = lines.slice(1).map(line => {
-      const values = line.split(',');
-      const obj = {};
-      headers.forEach((header, i) => {
-        obj[header.trim()] = values[i] ? values[i].trim() : '';
-      });
-      return obj;
-    });
-    return data;
-  }
-
-  // جلب بيانات CSV وتحديث الصفحة
-  async function loadData() {
-    try {
-      const res = await fetch(csvUrl);
-      if (!res.ok) throw new Error('خطأ في تحميل البيانات');
-      const csvText = await res.text();
-      const data = parseCSV(csvText);
-
-      // فلترة وتصنيف البيانات بناءً على نوعها (مثلاً: news, event, stat)
-      // مع افتراض ان في العمود "type" اللي يحدد نوع كل صف
-      const newsItems = data.filter(item => item.type === 'news');
-      const eventsItems = data.filter(item => item.type === 'event');
-      const statsItems = data.filter(item => item.type === 'stat');
-
-      // تحديث شريط الأخبار المتحرك
-      const tickerContainer = document.getElementById('news-ticker-content');
-      if(newsItems.length) {
-        tickerContainer.textContent = newsItems.map(n => n.title).join(' \u00A0\u00A0\u00A0\u2022\u00A0\u00A0\u00A0 ');
-      } else {
-        tickerContainer.textContent = 'لا توجد أخبار حالياً';
-      }
-
-      // تحديث قائمة الأخبار
+  // محاكاة تحميل البيانات (أخبار، فعاليات، إحصائيات)
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      // تحديث الأخبار
       const newsList = document.getElementById('news-list');
       newsList.innerHTML = '';
-      if(newsItems.length) {
-        newsItems.forEach(item => {
-          const li = document.createElement('li');
-          li.textContent = item.title;
-          newsList.appendChild(li);
-        });
-      } else {
-        newsList.innerHTML = '<li>لا توجد أخبار حالياً</li>';
-      }
+      [
+        "افتتاح دورة كرة القدم الصيفية",
+        "حفل تكريم الأبطال المحليين",
+        "بدء التسجيل في الأنشطة الصيفية"
+      ].forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        newsList.appendChild(li);
+      });
 
-      // تحديث قائمة الفعاليات
+      // تحديث الفعاليات
       const eventsList = document.getElementById('events-list');
       eventsList.innerHTML = '';
-      if(eventsItems.length) {
-        eventsItems.forEach(item => {
-          const li = document.createElement('li');
-          li.textContent = item.title + (item.date ? ' - ' + item.date : '');
-          eventsList.appendChild(li);
-        });
-      } else {
-        eventsList.innerHTML = '<li>لا توجد فعاليات قادمة</li>';
-      }
+      [
+        "ورشة عمل تطوير المهارات - 25 يوليو",
+        "سباق الجري الخيري - 30 يوليو",
+        "احتفالية اليوم الرياضي - 5 أغسطس"
+      ].forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        eventsList.appendChild(li);
+      });
 
       // تحديث الإحصائيات
       const statsList = document.getElementById('stats-list');
       statsList.innerHTML = '';
-      if(statsItems.length) {
-        statsItems.forEach(item => {
-          const div = document.createElement('div');
-          div.classList.add('stat-item');
-          // اختيار أيقونة حسب نوع الإحصائية (مثلاً)
-          let iconClass = 'fa-info-circle';
-          if(item.icon) iconClass = item.icon; // اكتب الأيقونة بشكل fa-solid fa-users
-          div.innerHTML = `<i class="fa-solid ${iconClass}"></i> ${item.title} ${item.value || ''}`;
-          statsList.appendChild(div);
-        });
-      } else {
-        statsList.innerHTML = '<div class="stat-item">لا توجد إحصائيات حالياً</div>';
-      }
+      [
+        { icon: "fa-users", text: "عدد الأعضاء: 1500" },
+        { icon: "fa-calendar", text: "عدد الفعاليات: 45" },
+        { icon: "fa-trophy", text: "الجوائز الممنوحة: 30" }
+      ].forEach(stat => {
+        const div = document.createElement('div');
+        div.className = 'stat-item';
+        div.innerHTML = `<i class="fa-solid ${stat.icon}"></i> ${stat.text}`;
+        statsList.appendChild(div);
+      });
 
-    } catch (error) {
-      console.error(error);
-      document.getElementById('news-ticker-content').textContent = 'فشل تحميل الأخبار';
-      document.getElementById('news-list').innerHTML = '<li>فشل تحميل الأخبار</li>';
-      document.getElementById('events-list').innerHTML = '<li>فشل تحميل الفعاليات</li>';
-      document.getElementById('stats-list').innerHTML = '<div class="stat-item">فشل تحميل الإحصائيات</div>';
-    }
-  }
-
-  loadData();
+      // تحديث شريط الأخبار المتحرك
+      const ticker = document.getElementById('news-ticker-content');
+      ticker.innerHTML = "افتتاح دورة كرة القدم الصيفية - حفل تكريم الأبطال المحليين - بدء التسجيل في الأنشطة الصيفية";
+    }, 2000);
+  });
 </script>
 
 </body>
