@@ -354,7 +354,7 @@
         <td>${m["النوع"] || "-"}</td>
         <td>${m["التجديد"] || "-"}</td>
         <td>${m["حق حضور الجمعية العمومية"] || "-"}</td>
-        <td class="img-cell"><img src="${m["صورة العضو"] || 'https://via.placeholder.com/55'}" alt="صورة ${m["الاسم"] || 'عضو'}" /></td>
+        <td class="img-cell"><img src="${imageLink}" alt="صورة ${m["الاسم"] || 'عضو'}" />
       </tr>`;
     });
 
@@ -403,7 +403,7 @@
     allResults.forEach((m, idx) => {
       const serial = idx + 1;
       // صورة في الاكسل عادة غير مدعومة، سنعرض الرابط فقط
-      const imageLink = m["صورة العضو"] ? m["صورة العضو"] : '';
+      const imageLink = (m["صورة العضو"] || "").replace(/&amp;/g, "&");
       excelHtml += `<tr>
         <td>${serial}</td>
         <td>${m["رقم العضوية"] || "-"}</td>
