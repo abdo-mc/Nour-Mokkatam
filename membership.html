@@ -344,6 +344,8 @@
 
     pageItems.forEach((m, idx) => {
       const serial = start + idx + 1;
+      console.log("رابط الصورة:", m["صورة العضو"]);
+
       html += `<tr>
         <td>${serial}</td>
         <td>${m["رقم العضوية"] || "-"}</td>
