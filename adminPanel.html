@@ -89,24 +89,96 @@
 
     .top-actions {
       margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 20px 10px;
-      }
-      header {
-        font-size: 1.2rem;
-      }
-      table th, table td {
-        font-size: 0.9rem;
-        padding: 6px;
-      }
-      .btn {
-        padding: 6px 10px;
-        font-size: 0.9rem;
-      }
+    #searchInput {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      width: 250px;
     }
+
+    /* مودال */
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1000; 
+      left: 0;
+      top: 0;
+      width: 100%; 
+      height: 100%; 
+      overflow: auto; 
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 10% auto; 
+      padding: 20px;
+      border: 1px solid #888;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+      color: #004080;
+    }
+
+    .modal-content label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .modal-content input, .modal-content select {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+
+    .modal-buttons {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .modal-buttons button {
+      min-width: 100px;
+      margin: 0 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .close-btn:hover {
+      color: #000;
+    }
+
+    /* رسائل الخطأ */
+    .error-msg {
+      color: #dc3545;
+      margin-top: 10px;
+      font-weight: bold;
+      text-align: center;
+    }
+
   </style>
 </head>
 <body>
@@ -118,172 +190,348 @@
     <div class="card">
       <h2>👥 المستخدمين</h2>
       <div class="top-actions">
-        <button class="btn" onclick="openAddUser()">إضافة مستخدم جديد</button>
+        <input type="text" id="searchInput" placeholder="ابحث باسم المستخدم أو الاسم" />
+        <button class="btn" id="addUserBtn">➕ إضافة مستخدم</button>
       </div>
       <table id="usersTable">
         <thead>
           <tr>
-            <th>الاسم</th>
             <th>اسم المستخدم</th>
+            <th>الاسم</th>
             <th>الدور</th>
-            <th>الإجراء</th>
+            <th>إجراءات</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- يملأها السكريبت -->
+        <tbody id="usersTableBody">
+          <!-- سيتم إضافة المستخدمين هنا -->
         </tbody>
       </table>
+      <div id="userError" class="error-msg"></div>
     </div>
 
     <!-- قسم سجل الدخول -->
     <div class="card">
-      <h2>🕵️‍♂️ سجل الدخول</h2>
-      <p>عرض محاولات تسجيل الدخول.</p>
+      <h2>🕒 سجل الدخول</h2>
+      <div class="top-actions">
+        <input type="text" id="logSearchInput" placeholder="ابحث باسم المستخدم في السجل" />
+        <button class="btn" id="refreshLogBtn">🔄 تحديث السجل</button>
+      </div>
       <table id="logTable">
         <thead>
           <tr>
             <th>المستخدم</th>
             <th>كلمة المرور</th>
-            <th>الوقت</th>
+            <th>التاريخ والوقت</th>
             <th>الحالة</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- يملأها السكريبت -->
+        <tbody id="logTableBody">
+          <!-- سيتم إضافة السجلات هنا -->
         </tbody>
       </table>
+      <div id="logError" class="error-msg"></div>
     </div>
+  </div>
 
-    <button class="btn danger" onclick="logout()">🚪 تسجيل الخروج</button>
+  <!-- مودال الإضافة / التعديل -->
+  <div id="userModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <h3 id="modalTitle">إضافة مستخدم</h3>
+
+      <label for="modalUsername">اسم المستخدم</label>
+      <input type="text" id="modalUsername" placeholder="مثال: user123" />
+
+      <label for="modalPassword">كلمة المرور</label>
+      <input type="password" id="modalPassword" placeholder="********" />
+
+      <label for="modalConfirmPassword">تأكيد كلمة المرور</label>
+      <input type="password" id="modalConfirmPassword" placeholder="********" />
+
+      <label for="modalName">الاسم</label>
+      <input type="text" id="modalName" placeholder="الاسم الكامل" />
+
+      <label for="modalRole">الدور</label>
+      <select id="modalRole">
+        <option value="">اختر الدور</option>
+        <option value="admin">مدير</option>
+        <option value="user">مستخدم</option>
+        <option value="guest">ضيف</option>
+      </select>
+
+      <div id="modalError" class="error-msg"></div>
+
+      <div class="modal-buttons">
+        <button class="btn" id="saveUserBtn">حفظ</button>
+        <button class="btn danger" id="cancelBtn">إلغاء</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    const username = localStorage.getItem("username");
-    const role = localStorage.getItem("role");
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQcRiiS0vz1O0vmxZXjTJWI6weTGLPsaJ0ZxXoEAKe3ZVhz5uKNzaNNkbFQeNo9YPh8Q/exec'; // ضع هنا رابط نشر السكريبت
 
-    if (!username || role !== "admin") {
-      alert("ليس لديك صلاحية لدخول هذه الصفحة");
-      window.location.href = "Main.html";
-    }
+    // عناصر واجهة المستخدم
+    const usersTableBody = document.getElementById('usersTableBody');
+    const userError = document.getElementById('userError');
+    const searchInput = document.getElementById('searchInput');
 
-    const apiUrl = "https://script.google.com/macros/s/AKfycbwQcRiiS0vz1O0vmxZXjTJWI6weTGLPsaJ0ZxXoEAKe3ZVhz5uKNzaNNkbFQeNo9YPh8Q/exec";
+    const logTableBody = document.getElementById('logTableBody');
+    const logError = document.getElementById('logError');
+    const logSearchInput = document.getElementById('logSearchInput');
 
-    function fetchUsers() {
-      fetch(`${apiUrl}?action=getUsers`)
-        .then(res => res.json())
-        .then(data => {
-          const tbody = document.querySelector("#usersTable tbody");
-          tbody.innerHTML = "";
-          data.users.forEach(user => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td>${user.name}</td>
-              <td>${user.username}</td>
-              <td>${user.role}</td>
-              <td>
-                <button class="btn edit" onclick="editUser('${user.username}')">تعديل</button>
-                <button class="btn danger" onclick="deleteUser('${user.username}')">حذف</button>
-              </td>
-            `;
-            tbody.appendChild(tr);
-          });
-        });
-    }
+    const addUserBtn = document.getElementById('addUserBtn');
+    const userModal = document.getElementById('userModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const saveUserBtn = document.getElementById('saveUserBtn');
 
-    function fetchLogs() {
-      fetch(`${apiUrl}?action=getLogs`)
-        .then(res => res.json())
-        .then(data => {
-          const tbody = document.querySelector("#logTable tbody");
-          tbody.innerHTML = "";
-          data.logs.forEach(log => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td>${log.user}</td>
-              <td>${log.passwrd}</td>
-              <td>${log.timestamp}</td>
-              <td style="color: ${log.case === 'نجحت' ? 'green' : 'red'}">${log.case}</td>
-            `;
-            tbody.appendChild(tr);
-          });
-        });
-    }
+    const modalTitle = document.getElementById('modalTitle');
+    const modalUsername = document.getElementById('modalUsername');
+    const modalPassword = document.getElementById('modalPassword');
+    const modalConfirmPassword = document.getElementById('modalConfirmPassword');
+    const modalName = document.getElementById('modalName');
+    const modalRole = document.getElementById('modalRole');
+    const modalError = document.getElementById('modalError');
 
-    function logout() {
-      localStorage.clear();
-      window.location.href = "Main.html";
-    }
+    let usersData = [];
+    let isEditing = false; // هل نعدل مستخدم أم نضيف جديد
+    let editingUsername = null;
 
-    // ---- أزرار التعديل والإضافة ----
-
-    function openAddUser() {
-      const name = prompt("أدخل الاسم الكامل للمستخدم الجديد:");
-      if (!name) return alert("الاسم مطلوب.");
-
-      const username = prompt("أدخل اسم المستخدم:");
-      if (!username) return alert("اسم المستخدم مطلوب.");
-
-      const password = prompt("أدخل كلمة المرور:");
-      if (!password) return alert("كلمة المرور مطلوبة.");
-
-      const role = prompt("أدخل الدور (admin أو user):", "user");
-      if (!role || (role !== 'admin' && role !== 'user')) return alert("الدور يجب أن يكون 'admin' أو 'user'.");
-
-      // طلب إضافة المستخدم للسيرفر
-      fetch(`${apiUrl}?action=addUser&name=${encodeURIComponent(name)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&role=${encodeURIComponent(role)}`)
-      .then(res => res.json())
-      .then(data => {
-        if(data.success){
-          alert("تمت إضافة المستخدم بنجاح.");
-          fetchUsers();
+    // تحميل المستخدمين من السكريبت
+    async function loadUsers() {
+      userError.textContent = '';
+      try {
+        const response = await fetch(SCRIPT_URL + '?action=getUsers');
+        const data = await response.json();
+        if (data.success) {
+          usersData = data.users;
+          renderUsersTable(usersData);
         } else {
-          alert("حدث خطأ: " + data.error);
+          userError.textContent = data.error || 'حدث خطأ في تحميل المستخدمين';
         }
-      }).catch(() => alert("خطأ في الاتصال بالسيرفر."));
+      } catch (error) {
+        userError.textContent = 'فشل الاتصال بالخادم';
+      }
     }
 
-    function editUser(username) {
-      // نطلب بيانات جديدة للتعديل
-      const newName = prompt("تعديل الاسم الكامل:", "");
-      if (!newName) return alert("الاسم مطلوب.");
+    // عرض المستخدمين في الجدول مع فلترة البحث
+    function renderUsersTable(users) {
+      const filterText = searchInput.value.trim().toLowerCase();
+      const filtered = users.filter(u => 
+        u.username.toLowerCase().includes(filterText) || u.name.toLowerCase().includes(filterText)
+      );
 
-      const newPassword = prompt("تعديل كلمة المرور (اتركه فارغًا إذا لا تريد التغيير):", "");
+      usersTableBody.innerHTML = '';
+      if (filtered.length === 0) {
+        usersTableBody.innerHTML = '<tr><td colspan="4">لا يوجد مستخدمين مطابقين</td></tr>';
+        return;
+      }
 
-      const newRole = prompt("تعديل الدور (admin أو user):", "user");
-      if (!newRole || (newRole !== 'admin' && newRole !== 'user')) return alert("الدور يجب أن يكون 'admin' أو 'user'.");
+      for (const user of filtered) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${user.username}</td>
+          <td>${user.name}</td>
+          <td>${user.role}</td>
+          <td>
+            <button class="btn edit" data-username="${user.username}">تعديل</button>
+            <button class="btn danger" data-username="${user.username}">حذف</button>
+          </td>
+        `;
+        usersTableBody.appendChild(tr);
+      }
+    }
 
-      let url = `${apiUrl}?action=editUser&username=${encodeURIComponent(username)}&name=${encodeURIComponent(newName)}&role=${encodeURIComponent(newRole)}`;
-      if(newPassword) url += `&password=${encodeURIComponent(newPassword)}`;
+    // فتح مودال الإضافة
+    function openAddUserModal() {
+      isEditing = false;
+      editingUsername = null;
+      modalTitle.textContent = 'إضافة مستخدم';
+      modalUsername.disabled = false;
+      modalUsername.value = '';
+      modalPassword.value = '';
+      modalConfirmPassword.value = '';
+      modalName.value = '';
+      modalRole.value = '';
+      modalError.textContent = '';
+      userModal.style.display = 'block';
+    }
 
-      fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        if(data.success){
-          alert("تم تعديل بيانات المستخدم.");
-          fetchUsers();
+    // فتح مودال التعديل
+    function openEditUserModal(username) {
+      isEditing = true;
+      editingUsername = username;
+      modalTitle.textContent = 'تعديل مستخدم';
+      modalError.textContent = '';
+      const user = usersData.find(u => u.username === username);
+      if (!user) return alert('المستخدم غير موجود');
+
+      modalUsername.value = user.username;
+      modalUsername.disabled = true;
+      modalPassword.value = '';
+      modalConfirmPassword.value = '';
+      modalName.value = user.name;
+      modalRole.value = user.role;
+      userModal.style.display = 'block';
+    }
+
+    // إغلاق المودال
+    function closeModal() {
+      userModal.style.display = 'none';
+    }
+
+    // حفظ المستخدم (إضافة أو تعديل)
+    async function saveUser() {
+      modalError.textContent = '';
+      const username = modalUsername.value.trim();
+      const password = modalPassword.value;
+      const confirmPassword = modalConfirmPassword.value;
+      const name = modalName.value.trim();
+      const role = modalRole.value;
+
+      if (!username || !name || !role) {
+        modalError.textContent = 'جميع الحقول باستثناء كلمة المرور مطلوبة';
+        return;
+      }
+
+      if (!isEditing) {
+        // إضافة مستخدم جديد، كلمة المرور مطلوبة
+        if (!password) {
+          modalError.textContent = 'كلمة المرور مطلوبة عند الإضافة';
+          return;
+        }
+        if (password !== confirmPassword) {
+          modalError.textContent = 'كلمتا المرور غير متطابقتين';
+          return;
+        }
+      } else {
+        // تعديل مستخدم، كلمة المرور اختيارية
+        if (password && password !== confirmPassword) {
+          modalError.textContent = 'كلمتا المرور غير متطابقتين';
+          return;
+        }
+      }
+
+      // بناء رابط الطلب
+      let url = SCRIPT_URL + (isEditing ? `?action=editUser` : `?action=addUser`);
+      url += `&username=${encodeURIComponent(username)}`;
+      url += `&name=${encodeURIComponent(name)}`;
+      url += `&role=${encodeURIComponent(role)}`;
+      if (password) {
+        url += `&password=${encodeURIComponent(password)}`;
+      }
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.success) {
+          alert(isEditing ? 'تم تحديث المستخدم' : 'تم إضافة المستخدم');
+          closeModal();
+          loadUsers();
         } else {
-          alert("حدث خطأ: " + data.error);
+          modalError.textContent = data.error || 'حدث خطأ أثناء العملية';
         }
-      }).catch(() => alert("خطأ في الاتصال بالسيرفر."));
+      } catch (error) {
+        modalError.textContent = 'فشل الاتصال بالخادم';
+      }
     }
 
-    function deleteUser(username) {
+    // حذف مستخدم
+    async function deleteUser(username) {
       if (!confirm(`هل أنت متأكد من حذف المستخدم "${username}"؟`)) return;
-      fetch(`${apiUrl}?action=deleteUser&username=${encodeURIComponent(username)}`)
-      .then(res => res.json())
-      .then(data => {
-        if(data.success){
-          alert("تم حذف المستخدم.");
-          fetchUsers();
+      try {
+        const response = await fetch(SCRIPT_URL + `?action=deleteUser&username=${encodeURIComponent(username)}`);
+        const data = await response.json();
+        if (data.success) {
+          alert('تم حذف المستخدم');
+          loadUsers();
         } else {
-          alert("حدث خطأ: " + data.error);
+          alert(data.error || 'حدث خطأ أثناء الحذف');
         }
-      }).catch(() => alert("خطأ في الاتصال بالسيرفر."));
+      } catch {
+        alert('فشل الاتصال بالخادم');
+      }
     }
 
-    // تنفيذ جلب البيانات عند تحميل الصفحة
-    fetchUsers();
-    fetchLogs();
+    // تحميل سجل الدخول
+    async function loadLogHistory(filterUser = '') {
+      logError.textContent = '';
+      let url = SCRIPT_URL + '?action=getLogHistory';
+      if (filterUser) url += `&username=${encodeURIComponent(filterUser)}`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.success) {
+          renderLogTable(data.logs);
+        } else {
+          logError.textContent = data.error || 'حدث خطأ في تحميل سجل الدخول';
+        }
+      } catch {
+        logError.textContent = 'فشل الاتصال بالخادم';
+      }
+    }
+
+    // عرض سجل الدخول في الجدول
+    function renderLogTable(logs) {
+      logTableBody.innerHTML = '';
+      if (!logs.length) {
+        logTableBody.innerHTML = '<tr><td colspan="4">لا توجد سجلات مطابقة</td></tr>';
+        return;
+      }
+      for (const log of logs) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${log.user || ''}</td>
+          <td>${log.password || ''}</td>
+          <td>${log.timestamp || ''}</td>
+          <td>${log.case || ''}</td>
+        `;
+        logTableBody.appendChild(tr);
+      }
+    }
+
+    // أحداث
+    addUserBtn.addEventListener('click', openAddUserModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    saveUserBtn.addEventListener('click', saveUser);
+
+    usersTableBody.addEventListener('click', (e) => {
+      if (e.target.tagName !== 'BUTTON') return;
+      const username = e.target.dataset.username;
+      if (e.target.classList.contains('edit')) {
+        openEditUserModal(username);
+      }
+      if (e.target.classList.contains('danger')) {
+        deleteUser(username);
+      }
+    });
+
+    searchInput.addEventListener('input', () => {
+      renderUsersTable(usersData);
+    });
+
+    document.getElementById('refreshLogBtn').addEventListener('click', () => {
+      loadLogHistory(logSearchInput.value.trim());
+    });
+
+    logSearchInput.addEventListener('input', () => {
+      loadLogHistory(logSearchInput.value.trim());
+    });
+
+    // إغلاق المودال عند الضغط خارج المحتوى
+    window.addEventListener('click', (e) => {
+      if (e.target === userModal) {
+        closeModal();
+      }
+    });
+
+    // تحميل البيانات عند بداية التحميل
+    loadUsers();
+    loadLogHistory();
+
   </script>
 </body>
 </html>
