@@ -2,19 +2,23 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <title>Home - مركز شباب نور المقطم</title>
+  <title>الصفحة الرئيسية - مركز شباب نور المقطم</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
     body {
       font-family: 'Cairo', sans-serif;
       margin: 0;
       padding: 0;
       direction: rtl;
-      background: #f0f4f8;
+      background: linear-gradient(135deg, #f8fbff 0%, #e0ecf7 100%);
       color: #333;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      background-attachment: fixed;
     }
 
     header {
@@ -37,9 +41,8 @@
       font-size: 1.4rem;
     }
 
-    /* زر تسجيل الخروج */
     .logout-btn {
-      background-color: #dc3545; /* أحمر */
+      background-color: #dc3545;
       border: none;
       color: white;
       padding: 8px 16px;
@@ -54,12 +57,11 @@
       background-color: #b02a37;
     }
 
-    /* الترحيب */
     .welcome {
       font-weight: 600;
       font-size: 1rem;
       color: #ffffffcc;
-      text-align: right; /* الترحيب على اليمين */
+      text-align: right;
       flex-grow: 1;
     }
 
@@ -71,14 +73,30 @@
       padding: 40px 20px 60px;
     }
 
-    /* قائمة الأقسام */
+    .welcome-card {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 600px;
+      margin-bottom: 30px;
+      width: 100%;
+    }
+
+    .welcome-card h2 {
+      color: #004080;
+      margin: 0 0 10px;
+      font-size: 1.8rem;
+    }
+
     .sections-nav {
       display: flex;
       justify-content: center;
       gap: 40px;
       padding: 20px 0;
       flex-wrap: wrap;
-      max-width: 700px;
+      max-width: 800px;
       width: 100%;
     }
 
@@ -87,58 +105,113 @@
       font-size: 1.2rem;
       color: #004080;
       text-decoration: none;
-      border-bottom: 2px solid transparent;
       padding-bottom: 4px;
-      cursor: pointer;
-      transition: border-color 0.3s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .sections-nav a:hover {
-      border-bottom: 2px solid #004080;
+    .sections-nav a::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      width: 0%;
+      background-color: #004080;
+      transition: width 0.3s ease;
     }
 
-    @media (max-width: 480px) {
-      .sections-nav {
-        gap: 20px;
+    .sections-nav a:hover::after {
+      width: 100%;
+    }
+
+    /* ✅ ميديا كويري للموبايل */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+        padding: 20px;
       }
-      .sections-nav a {
+
+      .header-center {
+        position: static;
+        transform: none;
+        font-size: 1.3rem;
+      }
+
+      .logout-btn {
+        width: 100%;
         font-size: 1rem;
+        padding: 10px;
+      }
+
+      .welcome-card {
+        padding: 20px;
+      }
+
+      .welcome-card h2 {
+        font-size: 1.4rem;
+      }
+
+      .sections-nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .sections-nav a {
+        font-size: 1.1rem;
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="welcome" id="welcomeUser">مرحبا بك يا ...</div>
+    <div class="welcome" id="welcomeUser">مرحبًا بك يا ...</div>
     <div class="header-center">الصفحة الرئيسية</div>
     <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
   </header>
 
   <main>
+    <div class="welcome-card">
+      <h2>👋 مرحبًا بك في مركز شباب نور المقطم</h2>
+      <p>اختر القسم الذي تريد زيارته من القائمة التالية.</p>
+    </div>
+
     <nav class="sections-nav">
-      <a href="membership.html">العضوية</a>
-      <a href="bus.html">الرحلات</a>
-      <a href="social.html">النشاط الاجتماعي</a>
-      <a href="generalAssembly.html">الجمعية العمومية</a>
+      <a href="membership.html"><i class="fa fa-id-card"></i> العضوية</a>
+      <a href="bus.html"><i class="fa fa-bus"></i> الرحلات</a>
+      <a href="social.html"><i class="fa fa-people-group"></i> النشاط الاجتماعي</a>
+      <a href="generalAssembly.html"><i class="fa fa-users"></i> الجمعية العمومية</a>
+      <span id="adminLink" style="display:none">
+        <a href="adminPanel.html"><i class="fa fa-lock"></i> لوحة التحكم</a>
+      </span>
     </nav>
   </main>
 
   <script>
-    // تحقق من تسجيل الدخول
     const username = localStorage.getItem('username');
     const name = localStorage.getItem('name');
+    const role = localStorage.getItem('role');
 
     if (!username) {
-      // لو مش مسجل دخول رجّع على Main
       window.location.href = 'Main.html';
     } else {
-      // عرض الترحيب بالاسم
-      document.getElementById('welcomeUser').textContent = `مرحبا بك يا ${name}`;
+      document.getElementById('welcomeUser').textContent = `مرحبًا بك يا ${name}`;
+      document.title = `الصفحة الرئيسية - ${name}`;
+      if (role === 'admin') {
+        document.getElementById('adminLink').style.display = 'inline-block';
+      }
     }
 
     function logout() {
-      localStorage.clear();
-      window.location.href = 'Main.html';
+      if (confirm("هل تريد تسجيل الخروج؟")) {
+        localStorage.clear();
+        window.location.href = 'Main.html';
+      }
     }
   </script>
 </body>
