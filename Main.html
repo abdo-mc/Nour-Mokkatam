@@ -4,73 +4,49 @@
 <meta charset="UTF-8" />
 <title>الصفحة الرئيسية - مركز شباب نور المقطم</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <style>
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
   body {
     font-family: 'Cairo', sans-serif;
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     direction: rtl;
     background: #f0f4f8;
     color: #004080;
+    flex-direction: column;
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
   }
   header {
     width: 100%;
-    max-width: none; /* عشان يملأ العرض */
-    margin: 0 auto;
     padding: 20px 40px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
-  header img {
-    max-height: 150px;
-    height: auto;
-    width: auto;
-  }
-  /* البانر الرئيسي */
+  header img { max-height: 150px; height: auto; }
   .banner {
     background: linear-gradient(90deg, #004080, #007bff);
     color: white;
     padding: 40px 20px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
   }
-  .banner h1 {
-    margin: 0;
-    font-size: 3rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-  }
-  /* شريط الأخبار المتحرك */
+  .banner h1 { margin: 0; font-size: 3rem; font-weight: 900; }
   .news-ticker {
-    background: #003366;
-    color: #fff;
+    background: #003366; color: #fff;
     padding: 12px 20px;
     font-weight: 700;
     font-size: 1.3rem;
     overflow: hidden;
-    position: relative;
     white-space: nowrap;
+    cursor: pointer;
     border-top: 3px solid #007bff;
     border-bottom: 3px solid #007bff;
-    cursor: pointer;
   }
-  .news-ticker .ticker-content {
+  .ticker-content {
     display: inline-block;
-    white-space: nowrap;
     padding-left: 100%;
     animation: ticker 30s linear infinite;
   }
@@ -81,18 +57,17 @@
     0% { transform: translateX(0); }
     100% { transform: translateX(-100%); }
   }
-  /* زرائر التنقل */
+
   .container {
-    max-width: 100vw;
-    padding: 0 40px 60px;
     flex-grow: 1;
-    background: #f0f4f8;
+    padding: 20px 40px 60px;
+    max-width: 100vw;
   }
   .buttons-row {
     display: flex;
-    justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
+    justify-content: center;
     margin-top: 30px;
   }
   button {
@@ -106,33 +81,28 @@
     color: #fff;
     border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 5px 15px rgba(0,123,255,0.5);
     transition: all 0.3s ease;
-    user-select: none;
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 12px;
-    min-width: 200px;
+    justify-content: center;
+    gap: 10px;
   }
   button:hover {
     background: linear-gradient(90deg, #005bb5, #003d7a);
-    box-shadow: 0 8px 25px rgba(0, 74, 179, 0.7);
+    box-shadow: 0 8px 25px rgba(0,74,179,0.7);
     transform: translateY(-3px);
   }
   button:active {
     transform: translateY(-1px);
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 5px 15px rgba(0,123,255,0.5);
   }
-  i.fa {
-    font-size: 1.4rem;
-  }
-  /* كروت الفعاليات والإحصائيات */
+
   .cards {
     display: flex;
     gap: 25px;
-    margin-top: 40px;
     flex-wrap: wrap;
+    margin-top: 40px;
     justify-content: center;
   }
   .card {
@@ -142,27 +112,23 @@
     flex: 1 1 420px;
     max-width: 480px;
     padding: 20px 25px;
-    color: #004080;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
     max-height: 400px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
   }
   .card h3 {
-    margin-top: 0;
+    margin: 0 0 15px;
+    font-size: 1.4rem;
+    font-weight: 800;
     border-bottom: 3px solid #005bb5;
     padding-bottom: 8px;
-    margin-bottom: 15px;
-    font-weight: 800;
-    font-size: 1.4rem;
     color: #004080;
   }
   .card ul {
-    padding-right: 15px;
     list-style-type: disc;
+    padding-right: 15px;
     margin: 0;
-    font-size: 1rem;
     line-height: 1.5;
   }
   .card ul li {
@@ -178,11 +144,11 @@
     color: white;
     padding: 10px 14px;
     border-radius: 12px;
-    flex: 1 1 45%;
-    font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
+    flex: 1 1 45%;
+    font-weight: 700;
     justify-content: center;
     transition: background-color 0.3s ease;
   }
@@ -190,41 +156,20 @@
     background-color: #004080;
   }
 
-  /* تجاوب */
   @media (max-width: 850px) {
-    .cards {
-      flex-direction: column;
-      align-items: center;
-    }
-    .stat-item {
-      flex: 1 1 100%;
-    }
-  }
-  @media (max-width: 650px) {
-    .buttons-row {
-      flex-direction: column;
-      gap: 18px;
-    }
-    button {
-      max-width: 100%;
-      min-width: auto;
-    }
+    .cards { flex-direction: column; }
+    .stat-item { flex: 1 1 100%; }
   }
 
-  /* الفوتر */
   footer {
     background: #003366;
     color: #ccc;
     text-align: center;
     padding: 20px 40px;
-    font-size: 0.9rem;
     border-top: 3px solid #007bff;
   }
-  footer p {
-    margin: 6px 0;
-  }
   footer a {
-    color: #77aaff;
+    color: #79aaff;
     text-decoration: none;
     margin: 0 8px;
   }
@@ -235,200 +180,100 @@
     margin-top: 10px;
   }
   .social-icons a {
-    color: #77aaff;
-    margin: 0 10px;
-    font-size: 1.4rem;
-    transition: color 0.3s ease;
+    margin: 0 8px;
+    color: #79aaff;
+    font-size: 1.5rem;
   }
   .social-icons a:hover {
     color: white;
   }
-
 </style>
 </head>
 <body>
 
 <header>
-  <img src="https://drive.google.com/thumbnail?id=19ArNiOiblQdq0vIfGXWP4u1w1fZu_UWF&sz=w1400" alt="وزارة الشباب والرياضة" />
-  <img src="https://drive.google.com/thumbnail?id=1kgHdRe8f6Lwi-x12GFzEGVO7XVr6PQsB&sz=w1400" alt="مركز شباب نور المقطم" />
+  <img src="..." alt="وزارة الشباب والرياضة" />
+  <img src="..." alt="مركز شباب نور المقطم" />
 </header>
 
-<!-- البانر -->
 <section class="banner">
   <h1>مرحبًا بك في مركز شباب نور المقطم</h1>
 </section>
 
-<!-- شريط الأخبار المتحرك -->
-<div class="news-ticker" title="مرر فوق هنا لإيقاف التمرير">
+<div class="news-ticker">
   <div class="ticker-content" id="news-ticker-content">
     جاري تحميل الأخبار...
   </div>
 </div>
 
 <div class="container">
-  <!-- أزرار التنقل -->
   <div class="buttons-row">
-    <button onclick="location.href='login.html'">
-      <i class="fa-solid fa-key"></i> تسجيل دخول
-    </button>
-    <button onclick="location.href='bus.html'">
-      <i class="fa-solid fa-magnifying-glass"></i> استعلام عن الرحلة
-    </button>
-    <button onclick="location.href='trainings.html'">
-      <i class="fa-solid fa-briefcase"></i> الأنشطة
-    </button>
-    <button onclick="location.href='trainings.html'">
-      <i class="fa-solid fa-dumbbell"></i> التدريبات
-    </button>
-    <button onclick="location.href='gallery.html'">
-      <i class="fa-solid fa-image"></i> معرض الصور
-    </button>
-    <button onclick="location.href='contact.html'">
-      <i class="fa-solid fa-envelope"></i> تواصل معنا
-    </button>
+    <button onclick="location.href='login.html'"><i class="fa-solid fa-key"></i> تسجيل دخول</button>
+    <button onclick="location.href='bus.html'"><i class="fa-solid fa-magnifying-glass"></i> استعلام الرحلة</button>
+    <button onclick="location.href='trainings.html'"><i class="fa-solid fa-briefcase"></i> الأنشطة</button>
+    <button onclick="location.href='trainings.html'"><i class="fa-solid fa-dumbbell"></i> التدريبات</button>
+    <button onclick="location.href='gallery.html'"><i class="fa-solid fa-image"></i> معرض الصور</button>
+    <button onclick="location.href='contact.html'"><i class="fa-solid fa-envelope"></i> تواصل معنا</button>
   </div>
 
-  <!-- كروت الفعاليات والإحصائيات -->
   <div class="cards">
     <div class="card" id="events-card">
       <h3>الفعاليات القادمة</h3>
-      <ul id="events-list">
-        <li>جاري تحميل الفعاليات...</li>
-      </ul>
+      <ul id="events-list"><li>جارِ التحميل...</li></ul>
     </div>
     <div class="card" id="stats-card">
       <h3>إحصائيات سريعة</h3>
-      <div class="stats" id="stats-list">
-        جاري تحميل الإحصائيات...
-      </div>
+      <div id="stats-list" class="stats">جارِ التحميل...</div>
     </div>
   </div>
 </div>
 
-<!-- الفوتر -->
 <footer>
   <p>© 2025 مركز شباب نور المقطم - جميع الحقوق محفوظة</p>
   <p>تواصل معنا عبر:</p>
   <div class="social-icons">
-    <a href="https://www.facebook.com/yourpage" target="_blank" aria-label="فيسبوك">
-      <i class="fab fa-facebook"></i>
-    </a>
-    <a href="https://twitter.com/yourpage" target="_blank" aria-label="تويتر">
-      <i class="fab fa-twitter"></i>
-    </a>
-    <a href="https://instagram.com/yourpage" target="_blank" aria-label="إنستجرام">
-      <i class="fab fa-instagram"></i>
-    </a>
-    <a href="mailto:support@yoursite.com" aria-label="البريد الإلكتروني">
-      <i class="fa-solid fa-envelope"></i>
-    </a>
+    <a href="#" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+    <a href="#" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+    <a href="#" aria-label="إنستجرام"><i class="fab fa-instagram"></i></a>
+    <a href="mailto:support@your.org"><i class="fa-solid fa-envelope"></i></a>
   </div>
-  <p>
-    <a href="support.html">ارفع تذاكر الدعم</a> | <a href="privacy.html">سياسة الخصوصية</a>
-  </p>
+  <p><a href="support.html">ارفع تذاكر الدعم</a> | <a href="privacy.html">سياسة الخصوصية</a></p>
 </footer>
 
 <script>
-  // روابط CSV العامة من Google Sheets (يتم تحويل الرابط للنص بتاع CSV)
-  const eventsCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqqNkd7P9NOGWCdk7xs-zIDpJHA4noST23Yp1ks_6dUpuu6sSTjhn5YwYD47ZOJ5IMs4kJGXY5qH8B/pub?gid=2060456841&single=true&output=csv';
-  // لو عندك شريط أخبار في نفس الجدول غير متأكد، ممكن تضيف رابط ثاني لشريط الأخبار لو في صفحة تانية
+  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqqNkd7P9NOGWCdk7xs-zIDpJHA4noST23Yp1ks_6dUpuu6sSTjhn5YwYD47ZOJ5IMs4kJGXY5qH8B/pub?gid=2060456841&single=true&output=csv';
 
-  // دالة لتحويل CSV إلى مصفوفة أوبجكتس
-  function csvToArray(str, delimiter = ',') {
-    const headers = str.slice(0, str.indexOf('\n')).split(delimiter);
-    const rows = str.slice(str.indexOf('\n') + 1).split('\n');
-    const arr = rows.map(row => {
-      const values = row.split(delimiter);
-      const obj = {};
-      headers.forEach((header, i) => {
-        obj[header.trim()] = values[i]?.trim() || '';
-      });
-      return obj;
+  async function fetchCSV() {
+    const res = await fetch(csvUrl);
+    const txt = await res.text();
+    return txt.trim().split('\n').map((line,i,rows) => {
+      if (i===0) return rows[0].split(',');
+      const parts = line.split(',');
+      return parts.reduce((a,val,j) => (a[rows[0].split(',')[j]] = val, a), {});
+    }).slice(1);
+  }
+
+  function render(data){
+    const news = [], events = [], stats = [];
+    data.forEach(item => {
+      if(item.type === 'news') news.push(item.title);
+      if(item.type === 'event') events.push(`${item.title}${item.date ? ' - '+item.date : ''}`);
+      if(item.type === 'stat') stats.push(item);
     });
-    return arr.filter(obj => Object.values(obj).some(val => val !== ''));
+
+    document.getElementById('news-ticker-content').innerHTML = news.map(n=>`• ${n}    `).join('');
+    const elEv = document.getElementById('events-list');
+    elEv.innerHTML = events.length? events.map(e=>`<li>${e}</li>`).join('') : '<li>لا توجد فعاليات حالياً</li>';
+
+    const elSt = document.getElementById('stats-list');
+    elSt.innerHTML = stats.length? stats.map(s=>
+      `<div class="stat-item"><i class="fa-solid ${s.icon}"></i> ${s.title} ${s.value|| ''}</div>`
+    ).join('') : 'لا توجد إحصائيات حالياً';
   }
 
-  // تحميل الفعاليات من CSV وعرضها
-  async function loadEvents() {
-    try {
-      const res = await fetch(eventsCSV);
-      if (!res.ok) throw new Error('خطأ في تحميل البيانات');
-      const text = await res.text();
-      const data = csvToArray(text);
-
-      const eventsList = document.getElementById('events-list');
-      eventsList.innerHTML = ''; // مسح المحتوى القديم
-
-      if (data.length === 0) {
-        eventsList.innerHTML = '<li>لا توجد فعاليات حالياً</li>';
-        return;
-      }
-
-      data.forEach(event => {
-        // افتراضياً بيانات الفعالية هي: "الفعالية" و "التاريخ"
-        const li = document.createElement('li');
-        li.textContent = `${event['الفعالية'] || 'فعالية'} - ${event['التاريخ'] || ''}`;
-        eventsList.appendChild(li);
-      });
-    } catch (error) {
-      console.error(error);
-      document.getElementById('events-list').innerHTML = '<li>فشل تحميل الفعاليات.</li>';
-    }
-  }
-
-  // تحميل الإحصائيات من CSV وعرضها
-  async function loadStats() {
-    try {
-      const res = await fetch(eventsCSV);
-      if (!res.ok) throw new Error('خطأ في تحميل البيانات');
-      const text = await res.text();
-      const data = csvToArray(text);
-
-      // هنا بعمل فلترة لأسماء الإحصائيات بناءً على عمود معين، افترض مثلاً أن الإحصائيات تحت عمود 'نوع'
-      // لو مفيش عمود مخصص للإحصائيات، ممكن نغير الطريقة حسب جدولك
-      // هنا نفترض الإحصائيات هي الصفوف اللي نوعها 'إحصائية'
-      const statsList = document.getElementById('stats-list');
-      statsList.innerHTML = ''; // مسح القديم
-
-      const stats = data.filter(row => row['نوع'] && row['نوع'].toLowerCase() === 'إحصائية');
-
-      if (stats.length === 0) {
-        statsList.textContent = 'لا توجد إحصائيات حالياً';
-        return;
-      }
-
-      statsList.innerHTML = '';
-      stats.forEach(stat => {
-        const div = document.createElement('div');
-        div.classList.add('stat-item');
-        div.textContent = `${stat['اسم'] || 'اسم'}: ${stat['قيمة'] || ''}`;
-        statsList.appendChild(div);
-      });
-    } catch (error) {
-      console.error(error);
-      document.getElementById('stats-list').textContent = 'فشل تحميل الإحصائيات.';
-    }
-  }
-
-  // بيانات شريط الأخبار ثابتة مؤقتاً — ممكن تضيف رابط CSV ثاني لو في أخبار حقيقية في Google Sheets
-  const newsData = [
-    'اجتماع الجمعية العمومية يوم السبت القادم',
-    'انطلاق بطولة كرة القدم يوم الجمعة 21 يوليو',
-    'ورشة عمل التنمية الذاتية يوم الثلاثاء المقبل',
-    'حملة النظافة الشهرية ستبدأ يوم الأحد',
-  ];
-
-  function loadNewsTicker() {
-    const tickerContent = document.getElementById('news-ticker-content');
-    tickerContent.innerHTML = newsData.map(item => `• ${item}     `).join('');
-  }
-
-  // تحميل جميع البيانات
-  window.onload = () => {
-    loadNewsTicker();
-    loadEvents();
-    loadStats();
-  };
+  window.onload = () => { fetchCSV().then(render).catch(err=>{
+    console.error(err);
+  }); };
 </script>
 
 </body>
