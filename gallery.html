@@ -5,27 +5,26 @@
   <title>📷 معرض الصور | نور المقطم</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <!-- استدعاء مكتبات Fancybox 4 CSS و JS -->
+  <!-- Fancybox -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
 
   <style>
     :root {
-      --bg-light: #e7f1fb;
       --bg-dark: #121212;
-      --card-light: #fff;
       --card-dark: #1f1f1f;
-      --text-light: #222;
       --text-dark: #eee;
       --accent: #007bff;
     }
+    /* الوضع الليلي هو الوضع الافتراضي */
     body {
       font-family: 'Cairo', sans-serif;
       margin: 0; padding: 20px;
       background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
       background-size: cover;
       position: relative;
-      color: var(--text-light);
+      color: var(--text-dark);
+      background-color: var(--bg-dark);
       transition: background 0.3s, color 0.3s;
       min-height: 100vh;
       box-sizing: border-box;
@@ -34,20 +33,8 @@
       content: "";
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255,255,255,0.85);
+      background: rgba(0,0,0,0.85);
       z-index: -1;
-    }
-    body.dark {
-      color: var(--text-dark);
-    }
-    .toggle {
-      position: fixed; top: 15px; left: 15px;
-      background: var(--accent);
-      color: white;
-      padding: 8px 16px;
-      border: none; border-radius: 5px;
-      cursor: pointer;
-      z-index: 1000;
     }
     .btn-back {
       background: var(--accent);
@@ -79,30 +66,51 @@
       position: relative;
       z-index: 100;
     }
+    #filter-sort {
+      max-width: 900px;
+      margin: 0 auto 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+      user-select: none;
+    }
+    #filter-sort > * {
+      flex: 1 1 200px;
+      min-width: 150px;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      background: var(--card-dark);
+      color: var(--text-dark);
+      box-sizing: border-box;
+    }
     #gallery-container {
       width: 100%;
       margin: 0 auto;
       padding: 0 15px;
       display: grid;
       gap: 30px;
-      grid-template-columns: repeat(4, 1fr); /* 4 أعمدة */
+      grid-template-columns: repeat(4, 1fr); /* 4 أعمدة ثابتة */
       box-sizing: border-box;
       z-index: 100;
       position: relative;
     }
     .album {
-      background: var(--card-light);
+      background: var(--card-dark);
       border-radius: 10px;
       padding: 15px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
       transition: background 0.3s;
       cursor: pointer;
       user-select: none;
       position: relative;
       overflow: hidden;
-    }
-    body.dark .album {
-      background: var(--card-dark);
     }
     .album-header {
       margin-bottom: 10px;
@@ -117,6 +125,7 @@
       overflow: hidden;
       border-radius: 8px;
       height: 270px;
+      touch-action: pan-y;
     }
     .slider img {
       width: 100%;
@@ -128,10 +137,13 @@
       pointer-events: none;
       position: absolute;
       top: 0; left: 0;
+      transition: opacity 0.3s ease;
+      opacity: 0;
     }
     .slider img.active {
       display: block;
       position: relative;
+      opacity: 1;
     }
     #loading {
       text-align: center;
@@ -143,7 +155,7 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.6);
       border: none;
       color: white;
       padding: 8px 14px;
@@ -156,31 +168,53 @@
       line-height: 1;
     }
     .slider button:hover {
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.85);
     }
     .slider .prev {
-      left: 10px; /* زر ‹ على اليسار */
+      left: 10px;
     }
     .slider .next {
-      right: 10px; /* زر › على اليمين */
+      right: 10px;
     }
     footer {
       text-align: center;
       padding: 12px 0;
       font-size: 0.9rem;
-      color: #666;
+      color: #999;
       user-select: none;
       margin-top: 30px;
-      background: rgba(255 255 255 / 0.8);
-      border-top: 1px solid #ccc;
+      background: rgba(0 0 0 / 0.6);
+      border-top: 1px solid #333;
       position: relative;
       z-index: 100;
+    }
+    /* Responsive للهواتف */
+    @media (max-width: 900px) {
+      #gallery-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 500px) {
+      #gallery-container {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
-<button class="toggle" onclick="toggleTheme()">🌓</button>
+<!-- إزالة زر التبديل الوضع الليلي -->
+<!-- إضافة فلترة وفرز -->
+<div id="filter-sort">
+  <input type="text" id="search-input" placeholder="ابحث عن ألبوم..." aria-label="بحث في الألبومات" />
+  <select id="sort-select" aria-label="فرز الألبومات">
+    <option value="default">ترتيب افتراضي</option>
+    <option value="name-asc">الاسم (أ - ي)</option>
+    <option value="name-desc">الاسم (ي - أ)</option>
+    <option value="pics-asc">عدد الصور (تصاعدي)</option>
+    <option value="pics-desc">عدد الصور (تنازلي)</option>
+  </select>
+</div>
 
 <button class="btn-back" onclick="location.href='Main.html'">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
@@ -189,26 +223,35 @@
 
 <h1>📸 معرض الصور</h1>
 
-<div id="gallery-container"></div>
+<!-- خانة رفع الصور تم حذفها -->
+
+<div id="gallery-container" aria-live="polite" aria-atomic="true"></div>
 <div id="loading">⏳ جاري التحميل...</div>
 
 <script>
   const API = 'https://script.google.com/macros/s/AKfycbzno9JeoaH3aL8TeoSmx0adr1cbgoLVWKBq82MhSn-S_k70z69rpHJL31oCFKZYcn2B/exec';
 
-  function toggleTheme() {
-    document.body.classList.toggle('dark');
-  }
+  // تخزين البيانات الأصلية لتسهيل الفلترة والفرز
+  let originalData = null;
 
   async function loadGallery() {
     const res = await fetch(API);
     const data = await res.json();
+    originalData = data.albums;
     document.getElementById('loading').style.display = 'none';
+    filterAndSort();
+  }
 
+  // توليد الألبومات مع السلايدر
+  function renderGallery(albums) {
     const container = document.getElementById('gallery-container');
+    container.innerHTML = '';
 
-    data.albums.forEach(album => {
+    // هنا نعرض كل الألبومات بدون تحديد عدد محدود
+    albums.forEach(album => {
       const div = document.createElement('div');
       div.className = 'album';
+      div.setAttribute('tabindex', '0'); // قابلية الوصول للوحة المفاتيح
 
       const header = document.createElement('div');
       header.className = 'album-header';
@@ -223,17 +266,20 @@
       album.pics.forEach((pic, i) => {
         const img = document.createElement('img');
         img.src = pic.thumbnail;
+        img.alt = pic.filename || `صورة من ألبوم ${album.name}`;
         img.className = i === 0 ? 'active' : '';
         slider.appendChild(img);
       });
 
-      // أزرار التنقل (تم تعديلها بحيث ‹ على اليسار و › على اليمين)
+      // أزرار التنقل
       const prevBtn = document.createElement('button');
       prevBtn.className = 'prev';
+      prevBtn.setAttribute('aria-label', 'الصورة السابقة');
       prevBtn.innerHTML = '‹';
 
       const nextBtn = document.createElement('button');
       nextBtn.className = 'next';
+      nextBtn.setAttribute('aria-label', 'الصورة التالية');
       nextBtn.innerHTML = '›';
 
       slider.appendChild(prevBtn);
@@ -244,55 +290,111 @@
 
       const imgs = slider.querySelectorAll('img');
 
+      function showImage(index) {
+        imgs.forEach(img => img.classList.remove('active'));
+        imgs[index].classList.add('active');
+      }
+
       prevBtn.addEventListener('click', e => {
         e.stopPropagation();
-        imgs[currentIndex].classList.remove('active');
         currentIndex = (currentIndex - 1 + imgs.length) % imgs.length;
-        imgs[currentIndex].classList.add('active');
+        showImage(currentIndex);
       });
 
       nextBtn.addEventListener('click', e => {
         e.stopPropagation();
-        imgs[currentIndex].classList.remove('active');
         currentIndex = (currentIndex + 1) % imgs.length;
-        imgs[currentIndex].classList.add('active');
+        showImage(currentIndex);
+      });
+
+      // دعم السحب باللمس (Swipe)
+      let startX = 0;
+      slider.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+      });
+      slider.addEventListener('touchend', e => {
+        let endX = e.changedTouches[0].clientX;
+        let diff = endX - startX;
+        if (diff > 50) { // سحب يمين
+          currentIndex = (currentIndex - 1 + imgs.length) % imgs.length;
+          showImage(currentIndex);
+        } else if (diff < -50) { // سحب يسار
+          currentIndex = (currentIndex + 1) % imgs.length;
+          showImage(currentIndex);
+        }
       });
 
       // دورة تلقائية أبطأ
       setInterval(() => {
-        imgs[currentIndex].classList.remove('active');
         currentIndex = (currentIndex + 1) % imgs.length;
-        imgs[currentIndex].classList.add('active');
+        showImage(currentIndex);
       }, 6000);
 
-      // عند الضغط على الألبوم، افتح اللايت بوكس باستخدام Fancybox
+      // عند الضغط على الألبوم، افتح اللايت بوكس
       div.addEventListener('click', () => {
         openLightbox(album);
+      });
+
+      // دعم فتح عبر لوحة المفاتيح (Enter)
+      div.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(album);
+        }
       });
     });
   }
 
   function openLightbox(album) {
-    // إنشاء مصفوفة عناصر Fancybox
     const items = album.pics.map(p => ({
-      src: p.url,
+      src: p.thumbnail,
       thumb: p.thumbnail,
       caption: p.filename
     }));
 
-    // فتح Fancybox مع الصور
     Fancybox.show(items, {
       infinite: true,
-      Thumbs: {
-        autoStart: true,
-      },
+      Thumbs: { autoStart: true },
     });
   }
+
+  // فلترة وفرز
+  const searchInput = document.getElementById('search-input');
+  const sortSelect = document.getElementById('sort-select');
+
+  function filterAndSort() {
+    let filtered = originalData.filter(album =>
+      album.name.toLowerCase().includes(searchInput.value.toLowerCase())
+    );
+
+    switch (sortSelect.value) {
+      case 'name-asc':
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'name-desc':
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case 'pics-asc':
+        filtered.sort((a, b) => a.pics.length - b.pics.length);
+        break;
+      case 'pics-desc':
+        filtered.sort((a, b) => b.pics.length - a.pics.length);
+        break;
+    }
+
+    // نعرض كل الألبومات بدون تحديد عدد
+    renderGallery(filtered);
+  }
+
+  searchInput.addEventListener('input', filterAndSort);
+  sortSelect.addEventListener('change', filterAndSort);
 
   loadGallery();
 </script>
 
-<footer>© 2025 نور المقطم - جميع الحقوق محفوظة</footer>
+<footer>
+  جميع الحقوق محفوظة &copy; 2025
+</footer>
 
 </body>
 </html>
