@@ -3,183 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <title>📷 معرض الصور | نور المقطم</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.0/css/lightgallery.min.css" rel="stylesheet">
   <style>
-    :root {
-      --bg-light: #f5f7f8;
-      --text-light: #222;
-      --bg-dark: #121212;
-      --text-dark: #eee;
-      --accent: #00bfa5;
-    }
-
-    body {
-      font-family: 'Cairo', sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: var(--bg-light);
-      color: var(--text-light);
-      transition: background 0.3s, color 0.3s;
-    }
-
-    body.dark {
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    header h1 {
-      font-size: 2rem;
-      margin-bottom: 5px;
-      color: var(--accent);
-    }
-
-    header p {
-      font-size: 1rem;
-    }
-
-    .toggle {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      background: var(--accent);
-      border: none;
-      color: white;
-      font-weight: bold;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-
-    .album {
-      margin-bottom: 50px;
-      animation: fadeInUp 0.6s;
-    }
-
-    .album h2 {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      border-right: 5px solid var(--accent);
-      padding-right: 10px;
-    }
-
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 12px;
-    }
-
-    .gallery a img {
-      width: 100%;
-      border-radius: 10px;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .gallery a:hover img {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
-
-    #loading {
-      text-align: center;
-      font-size: 1.2rem;
-      margin-top: 40px;
-    }
-
-    .error {
-      color: red;
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 600px) {
-      .toggle {
-        left: 50%;
-        transform: translateX(-50%);
-      }
-    }
+    body { font-family: 'Cairo', sans-serif; margin:0; padding:20px; background:#f5f7f8; color:#222; }
+    .btn-back { background:#00bfa5; color:#fff; padding:8px 16px; border:none; border-radius:5px; cursor:pointer; margin-bottom:20px; }
+    .album { margin-bottom:50px; }
+    .album-header { display:flex; justify-content: space-between; align-items:center; margin-bottom:10px; }
+    .album-header h2 { margin:0; border-right:5px solid #00bfa5; padding-right:10px; }
+    .gallery { column-count: auto; column-width: 200px; column-gap:12px; }
+    .item { position: relative; margin-bottom:12px; break-inside: avoid; cursor: pointer; }
+    .item img { width:100%; border-radius:10px; transition: transform .3s; display: block; }
+    .item:hover img { transform:scale(1.05); }
+    .map { width:100%; height:200px; margin-bottom:30px; background:#e0e0e0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#666; }
   </style>
 </head>
 <body>
 
-  <button class="toggle" onclick="toggleTheme()">🌓 وضع ليلي</button>
+<button class="btn-back" onclick="location.href='index.html'">⬅ العودة للرئيسية</button>
 
-  <header>
-    <h1>📸 معرض الصور</h1>
-    <p>مشاريع وفعاليات مركز شباب نور المقطم</p>
-  </header>
+<div id="gallery-container"></div>
 
-  <div id="loading">⏳ جاري تحميل الصور...</div>
-  <div id="content"></div>
-  <div id="error" class="error" style="display:none;"></div>
+<template id="album-template">
+  <div class="album">
+    <div class="album-header">
+      <h2></h2>
+    </div>
+    <div class="gallery"></div>
+  </div>
+</template>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
-  <script>
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbzno9JeoaH3aL8TeoSmx0adr1cbgoLVWKBq82MhSn-S_k70z69rpHJL31oCFKZYcn2B/exec';
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.0/lightgallery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.0/plugins/thumbnail/lg-thumbnail.min.js"></script>
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbzno9JeoaH3aL8TeoSmx0adr1cbgoLVWKBq82MhSn-S_k70z69rpHJL31oCFKZYcn2B/exec';
+async function load() {
+  const res = await fetch(API);
+  const { albums } = await res.json();
 
-    function toggleTheme() {
-      document.body.classList.toggle('dark');
-    }
+  const container = document.getElementById('gallery-container');
+  const observer = lozad('.lozad', { rootMargin: '200px 0px' });
 
-    async function loadGallery() {
-      try {
-        const res = await fetch(apiUrl);
-        if (!res.ok) throw new Error('فشل الاتصال بالخادم');
-        const data = await res.json();
-        if (!data.albums) throw new Error('لا توجد بيانات صالحة');
+  albums.forEach(album => {
+    const tmpl = document.getElementById('album-template').content.cloneNode(true);
+    tmpl.querySelector('h2').textContent = album.name;
+    const gal = tmpl.querySelector('.gallery');
 
-        document.getElementById('loading').style.display = 'none';
-        const content = document.getElementById('content');
+    // Add placeholder for map (issue 3)
+    const mapDiv = document.createElement('div'); mapDiv.className = 'map';
+    mapDiv.textContent = '🔍 خريطة المشروع هنا';
+    tmpl.querySelector('.album').prepend(mapDiv);
 
-        data.albums.forEach(album => {
-          const section = document.createElement('div');
-          section.className = 'album';
+    album.pics.forEach(pic => {
+      const div = document.createElement('div'); div.className = 'item';
+      const img = document.createElement('img');
+      img.setAttribute('data-src', pic.thumbnail);
+      img.className = 'lozad';
+      img.alt = pic.filename;
+      div.appendChild(img);
+      div.addEventListener('click', () => {
+        lg.openGalleryLightbox(div);
+      });
+      gal.appendChild(div);
+    });
 
-          const title = document.createElement('h2');
-          title.textContent = album.name;
-          section.appendChild(title);
+    container.appendChild(tmpl);
+  });
 
-          const gallery = document.createElement('div');
-          gallery.className = 'gallery';
+  observer.observe();
 
-          album.pics.forEach(pic => {
-            const link = document.createElement('a');
-            link.href = pic.url;
-            link.setAttribute('data-lightbox', album.id);
-            link.setAttribute('data-title', pic.filename);
+  // initialize lightGallery
+  const lg = lightGallery(document.body, {
+    selector: '.item',
+    plugins: [lgThumbnail],
+    download: false,
+    getCaptionFromTitleOrAlt: false,
+    dynamic: true,
+    dynamicEl: albums.flatMap(a => a.pics.map(p => ({
+      src: p.url, thumb: p.thumbnail, subHtml: `<h4>${p.filename}</h4>`
+    })))
+  });
+}
 
-            const img = document.createElement('img');
-            img.src = pic.thumbnail;
-            img.alt = pic.filename;
-
-            link.appendChild(img);
-            gallery.appendChild(link);
-          });
-
-          section.appendChild(gallery);
-          content.appendChild(section);
-        });
-      } catch (err) {
-        document.getElementById('loading').style.display = 'none';
-        const errBox = document.getElementById('error');
-        errBox.textContent = '⚠️ خطأ: ' + err.message;
-        errBox.style.display = 'block';
-      }
-    }
-
-    loadGallery();
-  </script>
+load();
+</script>
 </body>
 </html>
