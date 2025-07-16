@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>استعلام انتخابات مركز شباب نور المقطم</title>
   <style>
-    /* ... نفس التنسيقات اللي عندك ... */
     body {
       font-family: 'Cairo', sans-serif;
       background: #f9f9f9;
@@ -188,7 +187,18 @@
     document.getElementById('result').innerHTML = `<div class="error">❌ ${message}</div>`;
   }
 
-  // بحث برقم العضوية فقط
+  function formatDate(dateStr) {
+    try {
+      const date = new Date(dateStr);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    } catch {
+      return dateStr; // fallback إذا فشل التحويل
+    }
+  }
+
   function search() {
     const id = document.getElementById('searchInput').value.trim();
     if (!id) {
@@ -205,6 +215,7 @@
           showError(data.error);
         } else {
           const d = data;
+          const birth = formatDate(d.birth);
           document.getElementById('result').innerHTML = `
             <h3>بيانات العضو</h3>
             <table>
@@ -212,7 +223,7 @@
               <tr><th>رقم العضوية</th><td>${d.id}</td></tr>
               <tr><th>اللجنة</th><td>${d.committee}</td></tr>
               <tr><th>الرقم في الكشف</th><td>${d.order}</td></tr>
-              <tr><th>تاريخ الميلاد</th><td>${d.birth}</td></tr>
+              <tr><th>تاريخ الميلاد</th><td>${birth}</td></tr>
             </table>
           `;
         }
@@ -220,7 +231,6 @@
       .catch(() => showError("حدث خطأ في الاتصال."));
   }
 
-  // تحميل كل أعضاء اللجنة
   function loadCommittee(num) {
     document.getElementById('result').textContent = "جاري تحميل بيانات اللجنة...";
 
@@ -238,7 +248,7 @@
             <td>${row.id}</td>
             <td>${row.committee}</td>
             <td>${row.order}</td>
-            <td>${row.birth}</td>
+            <td>${formatDate(row.birth)}</td>
           </tr>
         `).join('');
 
