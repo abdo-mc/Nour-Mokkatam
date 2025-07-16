@@ -37,60 +37,59 @@
       margin-bottom: 30px;
       user-select: none;
     }
-    form {
+    section.contact-info {
       max-width: 500px;
       margin: 0 auto;
       background: var(--card-dark);
-      padding: 25px 30px;
+      padding: 30px 30px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.7);
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--accent);
+      color: var(--text-dark);
       user-select: none;
     }
-    input[type="text"],
-    input[type="email"],
-    textarea {
-      width: 100%;
-      padding: 10px 12px;
-      margin-bottom: 20px;
-      border: none;
-      border-radius: 6px;
-      background: #2a2a2a;
-      color: var(--text-dark);
-      font-size: 1rem;
-      resize: vertical;
-      box-sizing: border-box;
-      outline: none;
-      transition: background 0.3s;
+    section.contact-info h2 {
+      color: var(--accent);
+      margin-bottom: 15px;
     }
-    input[type="text"]:focus,
-    input[type="email"]:focus,
-    textarea:focus {
-      background: #3a3a3a;
+    section.contact-info p {
+      margin: 10px 0;
+      font-size: 1.1rem;
     }
-    textarea {
-      min-height: 120px;
+    section.contact-info a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.3s;
     }
-    button {
+    section.contact-info a:hover {
+      color: #0056b3;
+    }
+    .contact-buttons {
+      margin-top: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .contact-buttons a {
       background: var(--accent);
       color: white;
-      border: none;
       padding: 12px 20px;
       border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
       font-weight: 600;
-      user-select: none;
-      width: 100%;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       transition: background 0.3s;
     }
-    button:hover {
+    .contact-buttons a:hover {
       background: #0056b3;
+    }
+    .contact-buttons img,
+    .contact-buttons svg {
+      width: 20px;
+      height: 20px;
+      filter: brightness(0) invert(1);
     }
     .btn-back {
       background: var(--accent);
@@ -136,52 +135,34 @@
 
 <h1>تواصل معنا</h1>
 
-<form id="contact-form" novalidate>
-  <label for="name">الاسم الكامل</label>
-  <input type="text" id="name" name="name" placeholder="اكتب اسمك الكامل" required aria-required="true" />
+<section class="contact-info" aria-label="بيانات الاتصال">
+  <h2>بيانات الاتصال</h2>
+  <p><strong>رقم التليفون:</strong> <a href="tel:+201234567890">+20 123 456 7890</a></p>
+  <p><strong>البريد الإلكتروني:</strong> <a href="mailto:info@noormokatam.com">info@noormokatam.com</a></p>
 
-  <label for="email">البريد الإلكتروني</label>
-  <input type="email" id="email" name="email" placeholder="example@example.com" required aria-required="true" />
+  <div class="contact-buttons">
+    <a href="https://wa.me/201234567891" target="_blank" rel="noopener" aria-label="واتساب مدير المركز">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
+      واتساب - مدير المركز
+    </a>
 
-  <label for="message">رسالتك</label>
-  <textarea id="message" name="message" placeholder="اكتب رسالتك هنا..." required aria-required="true"></textarea>
+    <a href="https://wa.me/201234567892" target="_blank" rel="noopener" aria-label="واتساب موظف الدعم">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
+      واتساب - موظف الدعم
+    </a>
 
-  <button type="submit">إرسال</button>
-</form>
+    <a href="https://www.facebook.com/yourpage" target="_blank" rel="noopener" aria-label="فيسبوك نور المقطم">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" >
+        <path d="M22.675 0h-21.35C.6 0 0 .6 0 1.325v21.351C0 23.4.6 24 1.325 24h11.494v-9.294H9.69v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.466.099 2.797.143v3.24h-1.918c-1.504 0-1.796.715-1.796 1.763v2.313h3.59l-.467 3.622h-3.123V24h6.116C23.4 24 24 23.4 24 22.676V1.325C24 .6 23.4 0 22.675 0z"/>
+      </svg>
+      الفيسبوك
+    </a>
+  </div>
+</section>
 
 <footer>
   جميع الحقوق محفوظة &copy; 2025
 </footer>
-
-<script>
-  const form = document.getElementById('contact-form');
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-
-    // تحقق بسيط من صحة البيانات
-    const name = form.name.value.trim();
-    const email = form.email.value.trim();
-    const message = form.message.value.trim();
-
-    if (!name || !email || !message) {
-      alert('يرجى ملء جميع الحقول!');
-      return;
-    }
-
-    // تحقق من البريد الإلكتروني بشكل بسيط
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-      alert('يرجى إدخال بريد إلكتروني صالح!');
-      return;
-    }
-
-    // هنا ممكن تضيف إرسال البيانات إلى سيرفر أو API أو خدمة بريد إلكتروني
-
-    alert('شكرًا لتواصلك معنا! سنتواصل معك قريبًا.');
-    form.reset();
-  });
-</script>
 
 </body>
 </html>
