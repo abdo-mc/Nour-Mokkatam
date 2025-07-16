@@ -3,199 +3,240 @@
 <head>
   <meta charset="UTF-8" />
   <title>تواصل معنا | نور المقطم</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+
     :root {
-      --bg-dark: #121212;
-      --card-dark: #1f1f1f;
-      --text-dark: #eee;
-      --accent: #007bff;
-      --btn-bg: var(--accent);
-      --btn-hover: #0056b3;
+      --bg-color: #121417;
+      --card-bg: #1e2429;
+      --text-primary: #f0f0f0;
+      --accent-color: #4e94f3;
+      --accent-hover: #3a74d1;
+      --btn-bg: #4e94f3;
+      --btn-hover: #3a74d1;
       --btn-text: #fff;
+      --shadow-color: rgba(0, 73, 185, 0.4);
     }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Cairo', sans-serif;
-      margin: 0; padding: 20px;
-      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
-      background-size: cover;
-      color: var(--text-dark);
-      background-color: var(--bg-dark);
+      background: var(--bg-color);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 20px;
       min-height: 100vh;
-      box-sizing: border-box;
-      position: relative;
-      transition: background 0.3s, color 0.3s;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: -1;
-    }
-    h1 {
-      text-align: center;
-      color: var(--accent);
-      margin-bottom: 30px;
-      user-select: none;
-    }
-    section.contact-info {
-      max-width: 500px;
-      margin: 0 auto 30px;
-      background: var(--card-dark);
-      padding: 30px 30px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
-      color: var(--text-dark);
-      user-select: none;
-    }
-    section.contact-info h2 {
-      color: var(--accent);
-      margin-bottom: 15px;
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 8px;
-    }
-    section.contact-info p {
-      margin: 10px 0;
-      font-size: 1.1rem;
-    }
-    section.contact-info a {
-      color: var(--accent);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    section.contact-info a:hover {
-      color: var(--btn-hover);
-    }
-    .contact-buttons {
-      margin-top: 20px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
     }
-    .contact-buttons a {
+
+    h1 {
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: var(--accent-color);
+      user-select: none;
+      font-size: 2.4rem;
+      text-align: center;
+    }
+
+    .btn-back {
       background: var(--btn-bg);
       color: var(--btn-text);
-      padding: 12px 22px;
+      padding: 10px 18px;
       border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      box-shadow: 0 4px 12px var(--shadow-color);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 30px;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .btn-back:hover {
+      background: var(--btn-hover);
+      box-shadow: 0 6px 18px rgba(0, 60, 140, 0.6);
+    }
+
+    .btn-back svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--btn-text);
+      flex-shrink: 0;
+    }
+
+    .container {
+      max-width: 540px;
+      width: 100%;
+    }
+
+    section.contact-block {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 25px 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    }
+
+    section.contact-block h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      border-bottom: 3px solid var(--accent-color);
+      padding-bottom: 6px;
+      user-select: none;
+    }
+
+    .info-item {
+      font-size: 1.15rem;
+      margin-bottom: 15px;
+      user-select: text;
+    }
+
+    .info-item strong {
+      display: inline-block;
+      min-width: 110px;
+      color: var(--accent-color);
+    }
+
+    .info-item a {
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+
+    .info-item a:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    .buttons-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+    }
+
+    .btn-contact {
+      background-color: var(--btn-bg);
+      color: var(--btn-text);
+      border-radius: 10px;
+      padding: 12px 22px;
       font-weight: 700;
       text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      box-shadow: 0 4px 10px var(--shadow-color);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      min-width: 180px;
+      justify-content: center;
       font-size: 1rem;
-      box-shadow: 0 3px 8px rgba(0,123,255,0.5);
-      transition: background 0.3s, box-shadow 0.3s;
+      user-select: none;
     }
-    .contact-buttons a:hover {
-      background: var(--btn-hover);
-      box-shadow: 0 5px 12px rgba(0,86,179,0.7);
+
+    .btn-contact:hover {
+      background-color: var(--btn-hover);
+      box-shadow: 0 6px 14px rgba(0, 60, 140, 0.7);
     }
-    .contact-buttons img,
-    .contact-buttons svg {
+
+    .btn-contact img,
+    .btn-contact svg {
       width: 22px;
       height: 22px;
       filter: brightness(0) invert(1);
       flex-shrink: 0;
     }
-    .btn-back {
-      background: var(--accent);
-      color: white;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-bottom: 25px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      font-size: 1rem;
-      user-select: none;
-      z-index: 100;
-      box-shadow: 0 2px 6px rgba(0,123,255,0.8);
-      transition: background 0.3s, box-shadow 0.3s;
-    }
-    .btn-back:hover {
-      background: var(--btn-hover);
-      box-shadow: 0 4px 10px rgba(0,86,179,0.9);
-    }
-    .btn-back svg {
-      width: 18px;
-      height: 18px;
-      fill: white;
-    }
+
     footer {
+      margin-top: auto;
       text-align: center;
-      padding: 12px 0;
+      padding: 15px 10px;
+      color: #777;
       font-size: 0.9rem;
-      color: #999;
       user-select: none;
-      margin-top: 30px;
-      background: rgba(0 0 0 / 0.6);
-      border-top: 1px solid #333;
-      position: relative;
-      z-index: 100;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 480px) {
+      .btn-contact {
+        min-width: 140px;
+        font-size: 0.9rem;
+        padding: 10px 16px;
+      }
     }
   </style>
 </head>
 <body>
 
-<button class="btn-back" onclick="location.href='Main.html'">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-  العودة للصفحة الرئيسية
-</button>
+  <a href="Main.html" class="btn-back" aria-label="العودة للصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" >
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+    العودة للصفحة الرئيسية
+  </a>
 
-<h1>تواصل معنا</h1>
+  <h1>تواصل معنا</h1>
 
-<section class="contact-info" aria-label="بيانات الاتصال">
-  <h2>بيانات الاتصال</h2>
-  <p><strong>رقم التليفون:</strong> <a href="tel:+201234567890">+20 123 456 7890</a></p>
-  <p><strong>البريد الإلكتروني:</strong> <a href="mailto:info@noormokatam.com">info@noormokatam.com</a></p>
-</section>
+  <div class="container">
 
-<section class="contact-info" aria-label="تواصل واتساب">
-  <h2>تواصل واتساب فقط</h2>
-  <div class="contact-buttons">
-    <a href="https://wa.me/201234567891" target="_blank" rel="noopener" aria-label="واتساب مدير المركز">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
-      مدير المركز
-    </a>
+    <section class="contact-block" aria-label="بيانات الاتصال">
+      <h2>بيانات الاتصال</h2>
+      <p class="info-item"><strong>رقم التليفون:</strong> <a href="tel:+201234567890">+20 123 456 7890</a></p>
+      <p class="info-item"><strong>البريد الإلكتروني:</strong> <a href="mailto:info@noormokatam.com">info@noormokatam.com</a></p>
+    </section>
 
-    <a href="https://wa.me/201234567892" target="_blank" rel="noopener" aria-label="واتساب مسؤول العضوية">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
-      مسؤول العضوية
-    </a>
+    <section class="contact-block" aria-label="تواصل واتساب فقط">
+      <h2>تواصل واتساب فقط</h2>
+      <div class="buttons-group">
+        <a href="https://wa.me/201234567891" target="_blank" rel="noopener" class="btn-contact" aria-label="واتساب مدير المركز">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
+          مدير المركز
+        </a>
+        <a href="https://wa.me/201234567892" target="_blank" rel="noopener" class="btn-contact" aria-label="واتساب مسؤول العضوية">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
+          مسؤول العضوية
+        </a>
+        <a href="https://wa.me/201234567893" target="_blank" rel="noopener" class="btn-contact" aria-label="واتساب مسؤول النشاط الاجتماعي">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
+          مسؤول النشاط الاجتماعي
+        </a>
+        <a href="https://wa.me/201234567894" target="_blank" rel="noopener" class="btn-contact" aria-label="واتساب مسؤول النشاط الرياضة">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
+          مسؤول النشاط الرياضة
+        </a>
+      </div>
+    </section>
 
-    <a href="https://wa.me/201234567893" target="_blank" rel="noopener" aria-label="واتساب مسؤول النشاط الاجتماعي">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
-      مسؤول النشاط الاجتماعي
-    </a>
+    <section class="contact-block" aria-label="فيسبوك">
+      <h2>فيسبوك</h2>
+      <div class="buttons-group" style="justify-content: center;">
+        <a href="https://www.facebook.com/yourpage" target="_blank" rel="noopener" class="btn-contact" aria-label="فيسبوك نور المقطم">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" >
+            <path d="M22.675 0h-21.35C.6 0 0 .6 0 1.325v21.351C0 23.4.6 24 1.325 24h11.494v-9.294H9.69v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.466.099 2.797.143v3.24h-1.918c-1.504 0-1.796.715-1.796 1.763v2.313h3.59l-.467 3.622h-3.123V24h6.116C23.4 24 24 23.4 24 22.676V1.325C24 .6 23.4 0 22.675 0z"/>
+          </svg>
+          نور المقطم
+        </a>
+      </div>
+    </section>
 
-    <a href="https://wa.me/201234567894" target="_blank" rel="noopener" aria-label="واتساب مسؤول النشاط الرياضة">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
-      مسؤول النشاط الرياضة
-    </a>
   </div>
-</section>
 
-<section class="contact-info" aria-label="فيسبوك">
-  <h2>فيسبوك</h2>
-  <div class="contact-buttons" style="justify-content: center;">
-    <a href="https://www.facebook.com/yourpage" target="_blank" rel="noopener" aria-label="فيسبوك نور المقطم">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" >
-        <path d="M22.675 0h-21.35C.6 0 0 .6 0 1.325v21.351C0 23.4.6 24 1.325 24h11.494v-9.294H9.69v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.466.099 2.797.143v3.24h-1.918c-1.504 0-1.796.715-1.796 1.763v2.313h3.59l-.467 3.622h-3.123V24h6.116C23.4 24 24 23.4 24 22.676V1.325C24 .6 23.4 0 22.675 0z"/>
-      </svg>
-      نور المقطم
-    </a>
-  </div>
-</section>
-
-<footer>
-  جميع الحقوق محفوظة &copy; 2025
-</footer>
+  <footer>
+    جميع الحقوق محفوظة &copy; 2025
+  </footer>
 
 </body>
 </html>
