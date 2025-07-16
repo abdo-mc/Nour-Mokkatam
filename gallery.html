@@ -1,92 +1,297 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>📷 معرض الصور | نور المقطم</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.0/css/lightgallery.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.0/css/lightgallery.min.css" rel="stylesheet" />
   <style>
-    body { font-family: 'Cairo', sans-serif; margin:0; padding:20px; background:#f5f7f8; color:#222; }
-    .btn-back { background:#00bfa5; color:#fff; padding:8px 16px; border:none; border-radius:5px; cursor:pointer; margin-bottom:20px; }
-    .album { margin-bottom:50px; }
-    .album-header { display:flex; justify-content: space-between; align-items:center; margin-bottom:10px; }
-    .album-header h2 { margin:0; border-right:5px solid #00bfa5; padding-right:10px; }
-    .gallery { column-count: auto; column-width: 200px; column-gap:12px; }
-    .item { position: relative; margin-bottom:12px; break-inside: avoid; cursor: pointer; }
-    .item img { width:100%; border-radius:10px; transition: transform .3s; display: block; }
-    .item:hover img { transform:scale(1.05); }
-    .map { width:100%; height:200px; margin-bottom:30px; background:#e0e0e0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#666; }
+    :root {
+      --bg-light: #e7f1fb;
+      --bg-dark: #121212;
+      --card-light: #fff;
+      --card-dark: #1f1f1f;
+      --text-light: #222;
+      --text-dark: #eee;
+      --accent: #007bff;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0; padding: 20px;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      color: var(--text-light);
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.85);
+      z-index: -1;
+    }
+    body.dark {
+      color: var(--text-dark);
+    }
+    .toggle {
+      position: fixed; top: 15px; left: 15px;
+      background: var(--accent);
+      color: white;
+      padding: 8px 16px;
+      border: none; border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    .btn-back {
+      background: var(--accent);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 25px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      user-select: none;
+      z-index: 100;
+    }
+    .btn-back svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 8px;
+      color: var(--accent);
+      user-select: none;
+      position: relative;
+      z-index: 100;
+    }
+    #gallery-container {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 15px;
+      display: grid;
+      gap: 30px;
+      grid-template-columns: repeat(4, 1fr); /* 4 أعمدة */
+      box-sizing: border-box;
+      z-index: 100;
+      position: relative;
+    }
+    .album {
+      background: var(--card-light);
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: background 0.3s;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+    body.dark .album {
+      background: var(--card-dark);
+    }
+    .album-header {
+      margin-bottom: 10px;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 1.2rem;
+      text-align: center;
+      user-select: none;
+    }
+    .slider {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      height: 270px;
+    }
+    .slider img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+      border-radius: 6px;
+      user-select: none;
+      pointer-events: none;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    .slider img.active {
+      display: block;
+      position: relative;
+    }
+    #loading {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+    .slider button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.4);
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 20;
+      user-select: none;
+      font-size: 1.4rem;
+      transition: background 0.3s;
+      line-height: 1;
+    }
+    .slider button:hover {
+      background: rgba(0,0,0,0.7);
+    }
+    .slider .prev {
+      left: 10px;
+    }
+    .slider .next {
+      right: 10px;
+    }
+    footer {
+      text-align: center;
+      padding: 12px 0;
+      font-size: 0.9rem;
+      color: #666;
+      user-select: none;
+      margin-top: 30px;
+      background: rgba(255 255 255 / 0.8);
+      border-top: 1px solid #ccc;
+      position: relative;
+      z-index: 100;
+    }
   </style>
 </head>
 <body>
 
-<button class="btn-back" onclick="location.href='index.html'">⬅ العودة للرئيسية</button>
+<button class="toggle" onclick="toggleTheme()">🌓</button>
+
+<button class="btn-back" onclick="location.href='Main.html'">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  العودة للصفحة الرئيسية
+</button>
+
+<h1>📸 معرض الصور</h1>
 
 <div id="gallery-container"></div>
+<div id="loading">⏳ جاري التحميل...</div>
 
-<template id="album-template">
-  <div class="album">
-    <div class="album-header">
-      <h2></h2>
-    </div>
-    <div class="gallery"></div>
-  </div>
-</template>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.0/lightgallery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.8.0/plugins/thumbnail/lg-thumbnail.min.js"></script>
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbzno9JeoaH3aL8TeoSmx0adr1cbgoLVWKBq82MhSn-S_k70z69rpHJL31oCFKZYcn2B/exec';
-async function load() {
-  const res = await fetch(API);
-  const { albums } = await res.json();
+  const API = 'https://script.google.com/macros/s/AKfycbzno9JeoaH3aL8TeoSmx0adr1cbgoLVWKBq82MhSn-S_k70z69rpHJL31oCFKZYcn2B/exec';
 
-  const container = document.getElementById('gallery-container');
-  const observer = lozad('.lozad', { rootMargin: '200px 0px' });
+  let lgInstance = null;
 
-  albums.forEach(album => {
-    const tmpl = document.getElementById('album-template').content.cloneNode(true);
-    tmpl.querySelector('h2').textContent = album.name;
-    const gal = tmpl.querySelector('.gallery');
+  function toggleTheme() {
+    document.body.classList.toggle('dark');
+  }
 
-    // Add placeholder for map (issue 3)
-    const mapDiv = document.createElement('div'); mapDiv.className = 'map';
-    mapDiv.textContent = '🔍 خريطة المشروع هنا';
-    tmpl.querySelector('.album').prepend(mapDiv);
+  async function loadGallery() {
+    const res = await fetch(API);
+    const data = await res.json();
+    document.getElementById('loading').style.display = 'none';
 
-    album.pics.forEach(pic => {
-      const div = document.createElement('div'); div.className = 'item';
-      const img = document.createElement('img');
-      img.setAttribute('data-src', pic.thumbnail);
-      img.className = 'lozad';
-      img.alt = pic.filename;
-      div.appendChild(img);
-      div.addEventListener('click', () => {
-        lg.openGalleryLightbox(div);
+    const container = document.getElementById('gallery-container');
+
+    data.albums.forEach(album => {
+      const div = document.createElement('div');
+      div.className = 'album';
+
+      const header = document.createElement('div');
+      header.className = 'album-header';
+      header.textContent = album.name;
+      div.appendChild(header);
+
+      const slider = document.createElement('div');
+      slider.className = 'slider';
+
+      let currentIndex = 0;
+
+      album.pics.forEach((pic, i) => {
+        const img = document.createElement('img');
+        img.src = pic.thumbnail;
+        img.className = i === 0 ? 'active' : '';
+        slider.appendChild(img);
       });
-      gal.appendChild(div);
+
+      // أزرار التنقل
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'prev';
+      prevBtn.innerHTML = '‹';
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'next';
+      nextBtn.innerHTML = '›';
+
+      slider.appendChild(prevBtn);
+      slider.appendChild(nextBtn);
+
+      div.appendChild(slider);
+      container.appendChild(div);
+
+      const imgs = slider.querySelectorAll('img');
+
+      prevBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        imgs[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex - 1 + imgs.length) % imgs.length;
+        imgs[currentIndex].classList.add('active');
+      });
+
+      nextBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        imgs[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % imgs.length;
+        imgs[currentIndex].classList.add('active');
+      });
+
+      // دورة تلقائية أبطأ
+      setInterval(() => {
+        imgs[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % imgs.length;
+        imgs[currentIndex].classList.add('active');
+      }, 6000);
+
+      // عند الضغط على الألبوم، افتح اللايت جاليري
+      div.addEventListener('click', () => {
+        openLightbox(album);
+      });
     });
 
-    container.appendChild(tmpl);
-  });
+    // أنشئ اللايت جاليري مرة واحدة مع dynamic: true على الـ body
+    lgInstance = lightGallery(document.body, {
+      dynamic: true,
+      plugins: [lgThumbnail],
+      download: false,
+      licenseKey: '0000-0000-000-0000', // يمكنك تركه فارغ إذا لم يكن لديك ترخيص
+    });
+  }
 
-  observer.observe();
+  function openLightbox(album) {
+    const items = album.pics.map(p => ({
+      src: p.url,
+      thumb: p.thumbnail,
+      subHtml: `<h4>${p.filename}</h4>`
+    }));
+    lgInstance.openGallery(items);
+  }
 
-  // initialize lightGallery
-  const lg = lightGallery(document.body, {
-    selector: '.item',
-    plugins: [lgThumbnail],
-    download: false,
-    getCaptionFromTitleOrAlt: false,
-    dynamic: true,
-    dynamicEl: albums.flatMap(a => a.pics.map(p => ({
-      src: p.url, thumb: p.thumbnail, subHtml: `<h4>${p.filename}</h4>`
-    })))
-  });
-}
-
-load();
+  loadGallery();
 </script>
+
+<footer>© 2025 نور المقطم - جميع الحقوق محفوظة</footer>
+
 </body>
 </html>
