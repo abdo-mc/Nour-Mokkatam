@@ -138,6 +138,10 @@
 
     /* الطباعة */
     @media print {
+      @page {
+        size: A4 portrait;
+        margin: 1cm;
+        }
       .back-link, .print-btn {
         display: none;
       }
