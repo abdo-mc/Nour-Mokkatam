@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>معرض الصور | مركز شباب نور المقطم</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" />
+  <style>
+    :root {
+      --primary: #00bfa5;
+      --bg: #f2fefc;
+      --text: #004d40;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0; padding: 20px;
+      background: var(--bg); color: var(--text);
+    }
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { font-size: 2.2rem; color: var(--primary); }
+    .album { margin-bottom: 50px; animation: fadeInUp 0.6s; }
+    .album h2 { font-size: 1.4rem; margin-bottom: 15px;
+                 border-right: 5px solid var(--primary);
+                 padding-right: 10px; }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .gallery a img {
+      width: 100%; border-radius: 10px;
+      transition: transform 0.3s;
+    }
+    .gallery a:hover img {
+      transform: scale(1.05);
+    }
+    #loading { text-align: center; margin-top: 40px; font-size: 1.2rem; }
+    .error { text-align: center; color: red; margin-top: 30px; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📸 معرض الصور – مركز شباب نور المقطم</h1>
+    <p>الصور مصنفة حسب المشروعات أو الفعاليات</p>
+  </header>
+
+  <div id="loading">🚀 جاري تحميل الصور...</div>
+  <div id="content"></div>
+  <div id="error" class="error" style="display:none;"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+  <script>
+    const apiUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+
+    async function loadGallery() {
+      try {
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (!data.albums) throw new Error('بيانات غير صحيحة');
+
+        document.getElementById('loading').style.display = 'none';
+        const cont = document.getElementById('content');
+
+        data.albums.forEach(alb => {
+          const div = document.createElement('div');
+          div.className = 'album';
+
+          const h2 = document.createElement('h2');
+          h2.textContent = alb.name;
+          div.appendChild(h2);
+
+          const gal = document.createElement('div');
+          gal.className = 'gallery';
+
+          alb.pics.forEach(pic => {
+            const a = document.createElement('a');
+            a.href = pic.url;
+            a.setAttribute('data-lightbox', alb.id);
+            a.setAttribute('data-title', pic.filename);
+
+            const img = document.createElement('img');
+            img.src = pic.thumbnail;
+            img.alt = pic.filename;
+
+            a.appendChild(img);
+            gal.appendChild(a);
+          });
+
+          div.appendChild(gal);
+          cont.appendChild(div);
+        });
+      } catch (e) {
+        document.getElementById('loading').style.display = 'none';
+        const err = document.getElementById('error');
+        err.textContent = '⚠️ خطأ في تحميل الصور: ' + e.message;
+        err.style.display = 'block';
+      }
+    }
+
+    loadGallery();
+  </script>
+</body>
+</html>
