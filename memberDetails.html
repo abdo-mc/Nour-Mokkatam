@@ -6,6 +6,7 @@
   <title>تفاصيل العضو</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+
     body {
       font-family: 'Cairo', sans-serif;
       background: #f0f4f8;
@@ -13,17 +14,20 @@
       padding: 20px;
       color: #333;
     }
+
     h1 {
       color: #004080;
       text-align: center;
       margin-bottom: 10px;
     }
+
     .user-info {
       text-align: center;
       color: #555;
       margin-bottom: 30px;
       font-size: 1rem;
     }
+
     .member-info {
       max-width: 450px;
       margin: auto;
@@ -34,6 +38,7 @@
       text-align: center;
       transition: all 0.3s ease;
     }
+
     .member-info img {
       width: 120px;
       height: 120px;
@@ -42,22 +47,26 @@
       margin-bottom: 20px;
       border: 3px solid #004080;
     }
+
     .member-info table {
       width: 100%;
       text-align: right;
       font-size: 1.1rem;
       border-collapse: collapse;
     }
+
     .member-info th,
     .member-info td {
       padding: 10px;
       border-bottom: 1px solid #ddd;
     }
+
     .member-info th {
       color: #004080;
       font-weight: 700;
       width: 40%;
     }
+
     .status {
       font-weight: bold;
       padding: 10px;
@@ -65,22 +74,26 @@
       border-radius: 6px;
       display: inline-block;
     }
+
     .active {
       color: #155724;
       background-color: #d4edda;
       border: 1px solid #c3e6cb;
     }
+
     .inactive {
       color: #721c24;
       background-color: #f8d7da;
       border: 1px solid #f5c6cb;
     }
+
     .error {
       color: red;
       font-weight: bold;
       text-align: center;
       padding: 20px;
     }
+
     .back-link,
     .print-btn {
       display: inline-block;
@@ -95,12 +108,12 @@
       border-radius: 8px;
       transition: background-color 0.3s;
     }
+
     .back-link:hover,
     .print-btn:hover {
       background-color: #0066cc;
     }
 
-    /* Spinner */
     .spinner {
       border: 6px solid #f3f3f3;
       border-top: 6px solid #004080;
@@ -122,14 +135,54 @@
         padding: 20px;
       }
     }
+
+    /* الطباعة */
+    @media print {
+      .back-link, .print-btn {
+        display: none;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: white;
+      }
+
+      .member-info,
+      .member-info table,
+      .member-info tr {
+        page-break-inside: avoid;
+      }
+
+      .member-info {
+        box-shadow: none;
+        border: none;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0 auto;
+      }
+
+      .member-info img {
+        display: block;
+        margin: 0 auto 20px;
+        page-break-inside: avoid;
+      }
+
+      h1, .user-info {
+        text-align: center;
+      }
+    }
   </style>
 </head>
 <body>
 
 <h1>تفاصيل العضو</h1>
 <div class="user-info" id="userInfo">جارٍ التحقق من الجلسة...</div>
+
 <div class="member-info" id="memberInfo">
   <div class="spinner"></div>
+  <div style="text-align:center; color:#555;">جاري تحميل بيانات العضو...</div>
 </div>
 
 <div style="text-align:center;">
@@ -143,7 +196,8 @@
   const userInfo = document.getElementById('userInfo');
   const memberDiv = document.getElementById('memberInfo');
 
-  if (!username) {
+  if (!username || !name) {
+    alert("يرجى تسجيل الدخول أولاً.");
     window.location.href = 'login.html';
   } else {
     userInfo.textContent = `مرحبًا ${name}`;
@@ -167,18 +221,11 @@
           return;
         }
 
-        // تعويض &amp; بـ & لضمان تحميل الصورة
         const imgSrc = (data["صورة العضو"] || 'https://via.placeholder.com/120').replace(/&amp;/g, '&');
 
         const img = document.createElement('img');
         img.src = imgSrc;
         img.alt = `صورة ${data["الاسم"] || 'عضو'}`;
-        img.style.width = '120px';
-        img.style.height = '120px';
-        img.style.borderRadius = '50%';
-        img.style.objectFit = 'cover';
-        img.style.marginBottom = '20px';
-        img.style.border = '3px solid #004080';
 
         const tableHTML = `
           <table>
@@ -199,7 +246,7 @@
         statusDiv.className = `status ${statusClass}`;
         statusDiv.textContent = statusText;
 
-        memberDiv.innerHTML = ''; // تنظيف المحتوى القديم
+        memberDiv.innerHTML = ''; // Clear
         memberDiv.appendChild(img);
         memberDiv.insertAdjacentHTML('beforeend', tableHTML);
         memberDiv.appendChild(statusDiv);
