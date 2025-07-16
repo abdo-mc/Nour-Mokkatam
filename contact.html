@@ -6,59 +6,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-    :root {
-      --primary: #0078ff;
-      --primary-hover: #005fd1;
-      --card-bg: rgba(255, 255, 255, 0.85);
-      --text: #111;
-    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Cairo', sans-serif;
-      background: url('https://images.unsplash.com/photo-1602343167094-b7b8b2545e0e?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+      background: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
       background-size: cover;
-      color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
       position: relative;
+      color: #222;
     }
     body::before {
       content: "";
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.25);
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.75);
       z-index: -1;
     }
     h1 {
       margin: 30px 0 20px;
-      font-size: 2.5rem; color: #fff;
-      font-weight: 700; text-align: center;
+      font-size: 2.5rem;
+      color: #0078ff;
+      font-weight: 700;
+      text-align: center;
     }
     .card {
-      background: var(--card-bg);
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 12px;
       padding: 25px 30px;
       margin: 20px 0;
       width: 100%;
       max-width: 600px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
     }
     .card h2 {
       font-size: 1.6rem;
       margin-bottom: 20px;
-      color: var(--primary);
-    }
-    .item {
-      font-size: 1.1rem;
-      margin-bottom: 12px;
-    }
-    .item a {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 600;
+      color: #0078ff;
     }
     .buttons {
       display: flex;
@@ -68,7 +55,7 @@
       margin-top: 10px;
     }
     .btn {
-      background: var(--primary);
+      background: #0078ff;
       color: white;
       padding: 12px 20px;
       border: none;
@@ -81,77 +68,49 @@
       gap: 10px;
       transition: background 0.3s;
     }
-    .btn:hover { background: var(--primary-hover); }
+    .btn:hover { background: #005fd1; }
     .btn img {
       width: 22px;
       height: 22px;
       filter: brightness(0) invert(1);
     }
-    .modal-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-    .modal {
-      background: #fff;
-      color: #111;
-      border-radius: 10px;
-      padding: 25px;
-      max-width: 500px;
-      width: 90%;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      position: relative;
-    }
-    .modal h3 {
-      margin-bottom: 15px;
-      color: var(--primary);
-      font-size: 1.4rem;
-    }
-    .modal label {
+    label {
       display: block;
       margin-bottom: 6px;
       font-weight: 600;
+      color: #444;
     }
-    .modal input,
-    .modal textarea {
+    input, textarea {
       width: 100%;
-      margin-bottom: 15px;
       padding: 10px;
-      border: 1px solid #ccc;
+      margin-bottom: 15px;
       border-radius: 6px;
+      border: 1px solid #ccc;
       font-size: 1rem;
+      background: #fff;
     }
-    .modal textarea {
+    textarea {
       resize: vertical;
       min-height: 100px;
     }
-    .modal .actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-    .modal .btn {
-      flex: 1;
-      justify-content: center;
-    }
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      left: 15px;
-      font-size: 1.5rem;
-      background: none;
+    .submit-btn {
+      width: 100%;
+      background: #0078ff;
+      color: white;
       border: none;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 6px;
       cursor: pointer;
-      color: #888;
+      transition: background 0.3s;
+    }
+    .submit-btn:hover {
+      background: #005fd1;
     }
     footer {
       margin-top: auto;
-      color: #ccc;
+      color: #666;
       font-size: 0.9rem;
       padding: 20px;
       text-align: center;
@@ -163,13 +122,7 @@
   <h1>تواصل معنا</h1>
 
   <div class="card">
-    <h2>بيانات الاتصال</h2>
-    <div class="item">📞 <a href="tel:+201234567890">+20 123 456 7890</a></div>
-    <div class="item">✉️ <a href="mailto:info@noormokatam.com">info@noormokatam.com</a></div>
-  </div>
-
-  <div class="card">
-    <h2>تواصل مباشر</h2>
+    <h2>بيانات التواصل</h2>
     <div class="buttons">
       <a href="https://wa.me/201234567891" class="btn" target="_blank">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="">
@@ -187,33 +140,23 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="">
         النشاط الرياضي
       </a>
-      <a href="https://www.facebook.com/yourpage" class="btn" target="_blank">
-        <img src="https://www.transparentpng.com/thumb/facebook-logo/facebook-logo-transparent-icons--IWqWQI.png" alt="">
-        فيسبوك
-      </a>
     </div>
   </div>
 
-  <button class="btn" onclick="openModal()">📩 تقديم شكوى</button>
+  <div class="card">
+    <h2>نموذج تقديم شكوى</h2>
+    <form id="complaint-form">
+      <label for="name">الاسم الكامل</label>
+      <input type="text" id="name" name="name" placeholder="اكتب اسمك" required />
 
-  <div class="modal-bg" id="modal-bg">
-    <div class="modal">
-      <button class="close-btn" onclick="closeModal()">×</button>
-      <h3>نموذج الشكوى</h3>
-      <label for="name">الاسم</label>
-      <input type="text" id="name" placeholder="أدخل اسمك الكامل" />
+      <label for="memberId">رقم العضوية</label>
+      <input type="text" id="memberId" name="memberId" placeholder="رقم العضوية" required />
 
-      <label for="member-id">رقم العضوية</label>
-      <input type="text" id="member-id" placeholder="أدخل رقم العضوية" />
+      <label for="message">الشكوى</label>
+      <textarea id="message" name="message" placeholder="اكتب تفاصيل الشكوى" required></textarea>
 
-      <label for="complaint">الشكوى</label>
-      <textarea id="complaint" placeholder="اكتب تفاصيل الشكوى"></textarea>
-
-      <div class="actions">
-        <button class="btn" onclick="submitComplaint()">إرسال</button>
-        <button class="btn" onclick="closeModal()">إلغاء</button>
-      </div>
-    </div>
+      <button type="submit" class="submit-btn">إرسال الشكوى</button>
+    </form>
   </div>
 
   <footer>
@@ -221,42 +164,38 @@
   </footer>
 
   <script>
+    const form = document.getElementById('complaint-form');
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTi3nMmAUz_UEVeBtrHUSnUPgHVbGk2_zuZO8CVMeClTtY0ICt8xWkIgM9BzKJQrgXkg/exec';
 
-    function openModal() {
-      document.getElementById('modal-bg').style.display = 'flex';
-    }
-    function closeModal() {
-      document.getElementById('modal-bg').style.display = 'none';
-    }
-    function submitComplaint() {
-      const name = document.getElementById('name').value.trim();
-      const id = document.getElementById('member-id').value.trim();
-      const complaint = document.getElementById('complaint').value.trim();
+    form.addEventListener('submit', e => {
+      e.preventDefault();
 
-      if (!name || !id || !complaint) {
-        alert('يرجى ملء جميع الحقول');
+      const name = form.name.value.trim();
+      const memberId = form.memberId.value.trim();
+      const message = form.message.value.trim();
+
+      if (!name || !memberId || !message) {
+        alert("يرجى ملء جميع الحقول");
         return;
       }
 
       fetch(SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify({ name, memberId: id, message: complaint }),
-        headers: { 'Content-Type': 'application/json' }
+        body: JSON.stringify({ name, memberId, message }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
-      .then(res => res.text())
-      .then(txt => {
-        alert(txt);
-        closeModal();
-        document.getElementById('name').value = '';
-        document.getElementById('member-id').value = '';
-        document.getElementById('complaint').value = '';
-      })
-      .catch(err => {
-        console.error(err);
-        alert('حدث خطأ. حاول مرة أخرى.');
-      });
-    }
+        .then(res => res.text())
+        .then(response => {
+          alert(response);
+          form.reset();
+        })
+        .catch(error => {
+          console.error(error);
+          alert("حدث خطأ أثناء إرسال الشكوى. حاول مرة أخرى.");
+        });
+    });
   </script>
 
 </body>
