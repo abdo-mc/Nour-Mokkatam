@@ -11,6 +11,9 @@
       --card-dark: #1f1f1f;
       --text-dark: #eee;
       --accent: #007bff;
+      --btn-bg: var(--accent);
+      --btn-hover: #0056b3;
+      --btn-text: #fff;
     }
     body {
       font-family: 'Cairo', sans-serif;
@@ -39,7 +42,7 @@
     }
     section.contact-info {
       max-width: 500px;
-      margin: 0 auto;
+      margin: 0 auto 30px;
       background: var(--card-dark);
       padding: 30px 30px;
       border-radius: 10px;
@@ -50,6 +53,8 @@
     section.contact-info h2 {
       color: var(--accent);
       margin-bottom: 15px;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 8px;
     }
     section.contact-info p {
       margin: 10px 0;
@@ -61,35 +66,39 @@
       transition: color 0.3s;
     }
     section.contact-info a:hover {
-      color: #0056b3;
+      color: var(--btn-hover);
     }
     .contact-buttons {
-      margin-top: 25px;
+      margin-top: 20px;
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       justify-content: center;
     }
     .contact-buttons a {
-      background: var(--accent);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 6px;
-      font-weight: 600;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-weight: 700;
       text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: background 0.3s;
+      gap: 10px;
+      font-size: 1rem;
+      box-shadow: 0 3px 8px rgba(0,123,255,0.5);
+      transition: background 0.3s, box-shadow 0.3s;
     }
     .contact-buttons a:hover {
-      background: #0056b3;
+      background: var(--btn-hover);
+      box-shadow: 0 5px 12px rgba(0,86,179,0.7);
     }
     .contact-buttons img,
     .contact-buttons svg {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       filter: brightness(0) invert(1);
+      flex-shrink: 0;
     }
     .btn-back {
       background: var(--accent);
@@ -106,6 +115,12 @@
       font-size: 1rem;
       user-select: none;
       z-index: 100;
+      box-shadow: 0 2px 6px rgba(0,123,255,0.8);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    .btn-back:hover {
+      background: var(--btn-hover);
+      box-shadow: 0 4px 10px rgba(0,86,179,0.9);
     }
     .btn-back svg {
       width: 18px;
@@ -139,23 +154,41 @@
   <h2>بيانات الاتصال</h2>
   <p><strong>رقم التليفون:</strong> <a href="tel:+201234567890">+20 123 456 7890</a></p>
   <p><strong>البريد الإلكتروني:</strong> <a href="mailto:info@noormokatam.com">info@noormokatam.com</a></p>
+</section>
 
+<section class="contact-info" aria-label="تواصل واتساب">
+  <h2>تواصل واتساب فقط</h2>
   <div class="contact-buttons">
     <a href="https://wa.me/201234567891" target="_blank" rel="noopener" aria-label="واتساب مدير المركز">
       <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
-      واتساب - مدير المركز
+      مدير المركز
     </a>
 
-    <a href="https://wa.me/201234567892" target="_blank" rel="noopener" aria-label="واتساب موظف الدعم">
+    <a href="https://wa.me/201234567892" target="_blank" rel="noopener" aria-label="واتساب مسؤول العضوية">
       <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
-      واتساب - موظف الدعم
+      مسؤول العضوية
     </a>
 
+    <a href="https://wa.me/201234567893" target="_blank" rel="noopener" aria-label="واتساب مسؤول النشاط الاجتماعي">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
+      مسؤول النشاط الاجتماعي
+    </a>
+
+    <a href="https://wa.me/201234567894" target="_blank" rel="noopener" aria-label="واتساب مسؤول النشاط الرياضة">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="واتساب" />
+      مسؤول النشاط الرياضة
+    </a>
+  </div>
+</section>
+
+<section class="contact-info" aria-label="فيسبوك">
+  <h2>فيسبوك</h2>
+  <div class="contact-buttons" style="justify-content: center;">
     <a href="https://www.facebook.com/yourpage" target="_blank" rel="noopener" aria-label="فيسبوك نور المقطم">
       <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" >
         <path d="M22.675 0h-21.35C.6 0 0 .6 0 1.325v21.351C0 23.4.6 24 1.325 24h11.494v-9.294H9.69v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.466.099 2.797.143v3.24h-1.918c-1.504 0-1.796.715-1.796 1.763v2.313h3.59l-.467 3.622h-3.123V24h6.116C23.4 24 24 23.4 24 22.676V1.325C24 .6 23.4 0 22.675 0z"/>
       </svg>
-      الفيسبوك
+      نور المقطم
     </a>
   </div>
 </section>
