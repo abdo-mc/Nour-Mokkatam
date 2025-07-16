@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>تواصل معنا | نور المقطم</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --card-dark: #1f1f1f;
+      --text-dark: #eee;
+      --accent: #007bff;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0; padding: 20px;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text-dark);
+      background-color: var(--bg-dark);
+      min-height: 100vh;
+      box-sizing: border-box;
+      position: relative;
+      transition: background 0.3s, color 0.3s;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: -1;
+    }
+    h1 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 30px;
+      user-select: none;
+    }
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+      background: var(--card-dark);
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--accent);
+      user-select: none;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 6px;
+      background: #2a2a2a;
+      color: var(--text-dark);
+      font-size: 1rem;
+      resize: vertical;
+      box-sizing: border-box;
+      outline: none;
+      transition: background 0.3s;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+      background: #3a3a3a;
+    }
+    textarea {
+      min-height: 120px;
+    }
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      user-select: none;
+      width: 100%;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .btn-back {
+      background: var(--accent);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 25px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      user-select: none;
+      z-index: 100;
+    }
+    .btn-back svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+    footer {
+      text-align: center;
+      padding: 12px 0;
+      font-size: 0.9rem;
+      color: #999;
+      user-select: none;
+      margin-top: 30px;
+      background: rgba(0 0 0 / 0.6);
+      border-top: 1px solid #333;
+      position: relative;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+<button class="btn-back" onclick="location.href='Main.html'">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  العودة للصفحة الرئيسية
+</button>
+
+<h1>تواصل معنا</h1>
+
+<form id="contact-form" novalidate>
+  <label for="name">الاسم الكامل</label>
+  <input type="text" id="name" name="name" placeholder="اكتب اسمك الكامل" required aria-required="true" />
+
+  <label for="email">البريد الإلكتروني</label>
+  <input type="email" id="email" name="email" placeholder="example@example.com" required aria-required="true" />
+
+  <label for="message">رسالتك</label>
+  <textarea id="message" name="message" placeholder="اكتب رسالتك هنا..." required aria-required="true"></textarea>
+
+  <button type="submit">إرسال</button>
+</form>
+
+<footer>
+  جميع الحقوق محفوظة &copy; 2025
+</footer>
+
+<script>
+  const form = document.getElementById('contact-form');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    // تحقق بسيط من صحة البيانات
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    const message = form.message.value.trim();
+
+    if (!name || !email || !message) {
+      alert('يرجى ملء جميع الحقول!');
+      return;
+    }
+
+    // تحقق من البريد الإلكتروني بشكل بسيط
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      alert('يرجى إدخال بريد إلكتروني صالح!');
+      return;
+    }
+
+    // هنا ممكن تضيف إرسال البيانات إلى سيرفر أو API أو خدمة بريد إلكتروني
+
+    alert('شكرًا لتواصلك معنا! سنتواصل معك قريبًا.');
+    form.reset();
+  });
+</script>
+
+</body>
+</html>
