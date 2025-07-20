@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>صفحة بيانات العضو</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f0f4f8;
+      margin: 0; padding: 20px; color: #333;
+      text-align: center;
+    }
+    .member-info {
+      max-width: 450px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    table {
+      width: 100%;
+      font-size: 1.1rem;
+      border-collapse: collapse;
+      margin-top: 20px;
+      text-align: right;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      color: #004080;
+      font-weight: 700;
+      width: 40%;
+    }
+    img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 3px solid #004080;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>صفحة بيانات العضو</h1>
+  <div id="memberInfo" class="member-info">
+    جاري تحميل بيانات العضو...
+  </div>
+
+  <script>
+    const username = localStorage.getItem('username');
+    const memberDiv = document.getElementById('memberInfo');
+
+    if (!username) {
+      alert("يرجى تسجيل الدخول أولاً.");
+      window.location.href = 'login.html';
+    } else {
+      const apiUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+
+      fetch(`${apiUrl}?action=getProfile&username=${encodeURIComponent(username)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            memberDiv.innerHTML = `<div class="error">${data.error}</div>`;
+            return;
+          }
+
+          const imgSrc = data.photo || 'https://via.placeholder.com/120';
+          const img = `<img src="${imgSrc}" alt="صورة العضو">`;
+
+          const tableHTML = `
+            <table>
+              <tr><th>اسم المستخدم:</th><td>${data.username || '-'}</td></tr>
+              <tr><th>الاسم:</th><td>${data.name || '-'}</td></tr>
+              <tr><th>دور العضو:</th><td>${data.role || '-'}</td></tr>
+              <tr><th>رقم العضوية:</th><td>${data.membership_num || '-'}</td></tr>
+            </table>
+          `;
+
+          memberDiv.innerHTML = img + tableHTML;
+        })
+        .catch(() => {
+          memberDiv.innerHTML = `<div class="error">حدث خطأ أثناء جلب البيانات. حاول مرة أخرى لاحقًا.</div>`;
+        });
+    }
+  </script>
+</body>
+</html>
