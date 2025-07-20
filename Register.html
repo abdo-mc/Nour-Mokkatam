@@ -199,7 +199,17 @@
         return;
       }
 
-      fetch(`${apiUrl}?action=checkEmail&email=${encodeURIComponent(email)}`)
+      // التحقق من البريد الإلكتروني أولاً
+      fetch(apiUrl, {
+        method: 'POST',  // تغيير الطريقة إلى POST
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          action: 'checkEmail',
+          email: email  // إرسال البريد الإلكتروني في الجسم
+        })
+      })
         .then(res => res.json())
         .then(data => {
           if (data.success === false) {
@@ -208,9 +218,22 @@
             return;
           }
 
-          // تسجيل البيانات في Google Sheets
-          fetch(`${apiUrl}?action=register&fullName=${encodeURIComponent(fullName)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}&nationalID=${encodeURIComponent(nationalID)}&birthdate=${encodeURIComponent(birthdate)}&phone=${encodeURIComponent(phone)}`, {
-            method: 'POST'
+          // إذا لم يكن البريد الإلكتروني مسجل، قم بتسجيل العضو
+          fetch(apiUrl, {
+            method: 'POST',  // تغيير الطريقة إلى POST
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              action: 'register',
+              fullName: fullName,
+              username: username,
+              password: password,
+              email: email,
+              nationalID: nationalID,
+              birthdate: birthdate,
+              phone: phone
+            })
           })
             .then(res => res.json())
             .then(data => {
