@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>إنشاء حساب جديد</title>
   <style>
-    /* نفس الستايل اللي بعتهولك */
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
     body {
       font-family: 'Cairo', sans-serif;
@@ -134,7 +133,7 @@
     }
   </style>
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycby01F5WbeozWmyCeJ33kDNgd032YOJ54J2E6e3RPJl_MBsa9r3a0CtxM9p723sGxhzm4Q/exec";
+    const apiUrl = "https://script.google.com/macros/s/AKfycbydDes4iENI_Ndqc0pSpVBAE43Q-I07o054NEx3tZBAep77HxPmVKQmB8KxWwILjAPrzg/exec";
 
     function validateEmail(email) {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -179,25 +178,25 @@
         return;
       }
 
-      const params = new URLSearchParams({
-        action: 'register',
-        fullName: fullName,
-        username: username,
-        password: password,
-        email: email,
-        nationalID: nationalID,
-        birthdate: birthdate,
-        phone: phone
-      });
+      const formData = new FormData();
+      formData.append('action', 'register');
+      formData.append('fullName', fullName);
+      formData.append('username', username);
+      formData.append('password', password);
+      formData.append('email', email);
+      formData.append('nationalID', nationalID);
+      formData.append('birthdate', birthdate);
+      formData.append('phone', phone);
 
-      fetch(`${apiUrl}?${params.toString()}`, {
-        method: 'GET',
+      fetch(apiUrl, {
+        method: 'POST',
+        body: formData
       })
       .then(response => response.json())
       .then(data => {
         if (data.success) {
           alert(data.message);
-          window.location.href = "/login"; // لو عندك صفحة تسجيل دخول
+          window.location.href = "/login"; // غيّر الرابط لو عندك صفحة تسجيل دخول
         } else {
           msgError.textContent = data.error || "حدث خطأ أثناء التسجيل";
           msgError.style.display = "block";
