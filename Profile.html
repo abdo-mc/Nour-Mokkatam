@@ -2,95 +2,255 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>صفحة بيانات العضو</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ملف العضو</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2922/2922506.png" />
+
   <style>
     body {
       font-family: 'Cairo', sans-serif;
-      background: #f0f4f8;
-      margin: 0; padding: 20px; color: #333;
-      text-align: center;
+      background: #e0f7fa;
+      margin: 0;
+      padding: 0 15px 40px;
+      color: #222;
     }
-    .member-info {
-      max-width: 450px;
-      margin: auto;
+    header {
+      background: #00796b;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.9rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    header img {
+      width: 36px;
+      height: 36px;
+    }
+    main {
+      max-width: 480px;
+      margin: 30px auto;
       background: white;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      padding: 30px 25px;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+    .avatar {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #00796b;
+      margin-bottom: 25px;
+    }
+    h2 {
+      margin: 0 0 10px 0;
+      color: #004d40;
     }
     table {
-      width: 100%;
-      font-size: 1.1rem;
+      margin: 0 auto;
       border-collapse: collapse;
-      margin-top: 20px;
+      width: 100%;
+      max-width: 420px;
+      font-size: 1.1rem;
       text-align: right;
     }
     th, td {
-      padding: 10px;
+      padding: 12px 15px;
       border-bottom: 1px solid #ddd;
     }
     th {
-      color: #004080;
+      color: #00796b;
       font-weight: 700;
       width: 40%;
     }
-    img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 15px;
-      border: 3px solid #004080;
+    .status {
+      margin-top: 20px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      display: inline-block;
+    }
+    .active {
+      background-color: #c8e6c9;
+      color: #2e7d32;
+      border: 1px solid #388e3c;
+    }
+    .inactive {
+      background-color: #ffcdd2;
+      color: #c62828;
+      border: 1px solid #d32f2f;
+    }
+    .buttons {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background-color: #00796b;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 1rem;
+      box-shadow: 0 4px 10px rgba(0,121,107,0.4);
+      min-width: 140px;
+    }
+    .btn:hover {
+      background-color: #004d40;
     }
     .error {
-      color: red;
-      font-weight: bold;
-      margin-top: 30px;
+      color: #b00020;
+      font-weight: 700;
+      margin-top: 40px;
+      font-size: 1.1rem;
     }
+    /* Spinner */
+    .spinner {
+      border: 6px solid #eee;
+      border-top: 6px solid #00796b;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      margin: 60px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+
+    /* طباعة */
+    @media print {
+      body {
+        background: white;
+        margin: 0;
+        padding: 0;
+        color: black;
+        font-size: 14pt;
+      }
+      header, .buttons {
+        display: none !important;
+      }
+      main {
+        margin: 0;
+        box-shadow: none;
+        border-radius: 0;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+      table, th, td {
+        border: 1px solid black !important;
+      }
+      .status {
+        border: 1px solid black !important;
+      }
+      img.avatar, img.card-photo {
+        border: none;
+        max-width: 100%;
+        height: auto;
+        page-break-inside: avoid;
+      }
+    }
+
+    /* صورة الكارنيه */
+    .card-photo {
+      margin-top: 25px;
+      width: 100%;
+      max-width: 380px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      object-fit: contain;
+    }
+
   </style>
 </head>
 <body>
-  <h1>صفحة بيانات العضو</h1>
-  <div id="memberInfo" class="member-info">
-    جاري تحميل بيانات العضو...
-  </div>
 
-  <script>
-    const username = localStorage.getItem('username');
-    const memberDiv = document.getElementById('memberInfo');
+<header>
+  <img src="https://cdn-icons-png.flaticon.com/512/2922/2922506.png" alt="User Icon" />
+  ملف العضو
+</header>
 
-    if (!username) {
-      alert("يرجى تسجيل الدخول أولاً.");
-      window.location.href = 'login.html';
-    } else {
-      const apiUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+<main id="content">
+  <div class="spinner"></div>
+  <p style="text-align:center; margin-top: 10px; color:#555;">جاري تحميل بيانات العضو...</p>
+</main>
 
-      fetch(`${apiUrl}?action=getProfile&username=${encodeURIComponent(username)}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.error) {
-            memberDiv.innerHTML = `<div class="error">${data.error}</div>`;
-            return;
-          }
+<script>
+  const content = document.getElementById('content');
 
-          const imgSrc = data.photo || 'https://via.placeholder.com/120';
-          const img = `<img src="${imgSrc}" alt="صورة العضو">`;
+  // جلب اسم المستخدم من localStorage (بعد تسجيل الدخول)
+  const username = localStorage.getItem('username');
+  const name = localStorage.getItem('name');
 
-          const tableHTML = `
-            <table>
-              <tr><th>اسم المستخدم:</th><td>${data.username || '-'}</td></tr>
-              <tr><th>الاسم:</th><td>${data.name || '-'}</td></tr>
-              <tr><th>دور العضو:</th><td>${data.role || '-'}</td></tr>
-              <tr><th>رقم العضوية:</th><td>${data.membership_num || '-'}</td></tr>
-            </table>
-          `;
+  if (!username) {
+    alert("يرجى تسجيل الدخول أولاً.");
+    window.location.href = 'login.html';
+  } else {
+    // استدعاء API لجلب بيانات العضو
+    const apiUrl = 'https://YOUR_SCRIPT_ID_HERE/exec'; // استبدلها برابط السكريبت الخاص بك
 
-          memberDiv.innerHTML = img + tableHTML;
-        })
-        .catch(() => {
-          memberDiv.innerHTML = `<div class="error">حدث خطأ أثناء جلب البيانات. حاول مرة أخرى لاحقًا.</div>`;
-        });
-    }
-  </script>
+    fetch(`${apiUrl}?action=getMemberByUsername&username=${encodeURIComponent(username)}`)
+      .then(res => res.json())
+      .then(data => {
+        if(data.error) {
+          content.innerHTML = `<p class="error">❌ ${data.error}</p>`;
+          return;
+        }
+
+        const imgSrc = data["صورة العضو"] ? data["صورة العضو"].replace(/&amp;/g, '&') : 'https://via.placeholder.com/130';
+        const cardImgSrc = data["صورة الكارنيه"] ? data["صورة الكارنيه"].replace(/&amp;/g, '&') : '';
+
+        content.innerHTML = `
+          <img src="${imgSrc}" alt="صورة العضو" class="avatar" />
+          <h2>${data["الاسم"] || name}</h2>
+          <table>
+            <tr><th>رقم العضوية:</th><td>${data["رقم العضوية"] || '-'}</td></tr>
+            <tr><th>نوع العضوية:</th><td>${data["نوع العضوية"] || '-'}</td></tr>
+            <tr><th>النوع:</th><td>${data["النوع"] || '-'}</td></tr>
+            <tr><th>التجديد:</th><td>${data["التجديد"] || '-'}</td></tr>
+            <tr><th>حق حضور الجمعية العمومية:</th><td>${data["حق حضور الجمعية العمومية"] || '-'}</td></tr>
+          </table>
+          <div class="status ${data["التجديد"]?.trim() === "مجدد" ? "active" : "inactive"}">
+            ${data["التجديد"]?.trim() === "مجدد" ? "عضو نشط (مجدد)" : "عضو غير نشط (غير مجدد)"}
+          </div>
+
+          ${cardImgSrc ? `<img src="${cardImgSrc}" alt="صورة الكارنيه" class="card-photo" />` : ''}
+
+          <div class="buttons">
+            <button class="btn" onclick="logout()">تسجيل الخروج</button>
+            <button class="btn" onclick="window.print()">طباعة البيانات</button>
+            <button class="btn" onclick="goHome()">العودة للصفحة الرئيسية</button>
+          </div>
+        `;
+      })
+      .catch(() => {
+        content.innerHTML = `<p class="error">❌ حدث خطأ أثناء تحميل البيانات.</p>`;
+      });
+  }
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+
+  function goHome() {
+    window.location.href = 'Main.html'; // عدل لو اسم الصفحة الرئيسية مختلف
+  }
+</script>
+
 </body>
 </html>
