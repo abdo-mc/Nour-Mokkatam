@@ -75,9 +75,9 @@
 
     input[type="text"],
     input[type="email"],
+    input[type="password"],
     input[type="date"],
-    input[type="tel"],
-    input[type="password"] {
+    input[type="tel"] {
       width: 100%;
       padding: 12px 14px;
       margin: 0;
@@ -92,9 +92,9 @@
 
     input[type="text"]:focus,
     input[type="email"]:focus,
+    input[type="password"]:focus,
     input[type="date"]:focus,
-    input[type="tel"]:focus,
-    input[type="password"]:focus {
+    input[type="tel"]:focus {
       border-color: #007bff;
     }
 
@@ -158,9 +158,9 @@
 
       input[type="text"],
       input[type="email"],
+      input[type="password"],
       input[type="date"],
-      input[type="tel"],
-      input[type="password"] {
+      input[type="tel"] {
         font-size: 1rem;
       }
 
@@ -171,16 +171,15 @@
   </style>
 
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbz_EeUCPoJ8IO7iIPiLsRqZPlIF9IMXraQp-ZrVwXhRO5gpaqNz4-sPovRUAI686pCLdA/exec"; // رابط السكربت هنا
+    const apiUrl = "https://script.google.com/macros/s/AKfycbxAY16NKYAB3z-12ZZnuL5Aw60hPEgBZ4yHGr9BRaMhuTFEfCN1Qr3TWX5il379v3r5hg/exec"; // رابط السكربت هنا
 
-    // Function to check if email is valid
     function validateEmail(email) {
       const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       return emailPattern.test(email);
     }
 
-    // Function to register the user
     function register() {
+      const fullName = document.getElementById('fullName').value.trim();
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
       const email = document.getElementById('email').value.trim();
@@ -191,36 +190,32 @@
 
       msgError.style.display = "none";
 
-      if (!username || !password || !email || !nationalID || !birthdate || !phone) {
+      if (!fullName || !username || !password || !email || !nationalID || !birthdate || !phone) {
         msgError.textContent = "يرجى إدخال جميع البيانات";
         msgError.style.display = "block";
         return;
       }
 
-      // تحقق من صحة البريد الإلكتروني
       if (!validateEmail(email)) {
         msgError.textContent = "البريد الإلكتروني غير صالح";
         msgError.style.display = "block";
         return;
       }
 
-      // تحقق من صحة الرقم القومي
-      const nationalIDPattern = /^\d{14}$/;  // 14 رقم للرقم القومي
+      const nationalIDPattern = /^\d{14}$/;
       if (!nationalIDPattern.test(nationalID)) {
         msgError.textContent = "الرقم القومي يجب أن يتكون من 14 رقمًا";
         msgError.style.display = "block";
         return;
       }
 
-      // تحقق من صحة رقم الهاتف
-      const phonePattern = /^\d{11}$/;  // 11 رقم لرقم الهاتف
+      const phonePattern = /^\d{11}$/;
       if (!phonePattern.test(phone)) {
         msgError.textContent = "رقم الهاتف يجب أن يتكون من 11 رقمًا";
         msgError.style.display = "block";
         return;
       }
 
-      // ارسال البيانات إلى جوجل شيت للتحقق من عدم تكرار البريد الإلكتروني
       fetch(`${apiUrl}?action=checkEmail&email=${encodeURIComponent(email)}`)
         .then(res => res.json())
         .then(data => {
@@ -230,15 +225,14 @@
             return;
           }
 
-          // إرسال البيانات إلى Google Sheets لإنشاء الحساب
-          fetch(`${apiUrl}?action=register&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}&nationalID=${encodeURIComponent(nationalID)}&birthdate=${encodeURIComponent(birthdate)}&phone=${encodeURIComponent(phone)}`, {
+          fetch(`${apiUrl}?action=register&fullName=${encodeURIComponent(fullName)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}&nationalID=${encodeURIComponent(nationalID)}&birthdate=${encodeURIComponent(birthdate)}&phone=${encodeURIComponent(phone)}`, {
             method: 'POST'
           })
             .then(res => res.json())
             .then(data => {
               if (data.success) {
                 alert("تم تسجيل الحساب بنجاح! سيتم تحديد رقم العضوية لاحقًا.");
-                window.location.href = "Login.html"; // العودة إلى صفحة تسجيل الدخول
+                window.location.href = "Login.html";
               } else {
                 msgError.textContent = data.error || "حدث خطأ في التسجيل.";
                 msgError.style.display = "block";
@@ -262,8 +256,12 @@
     <div class="register-box">
       <h2>إنشاء حساب جديد</h2>
       <div class="form-group">
-        <label for="username">اسم العضو</label>
-        <input type="text" id="username" placeholder="اسم العضو" />
+        <label for="fullName">اسم العضو</label>
+        <input type="text" id="fullName" placeholder="اسم العضو" />
+      </div>
+      <div class="form-group">
+        <label for="username">اسم المستخدم</label>
+        <input type="text" id="username" placeholder="اسم المستخدم" />
       </div>
       <div class="form-group">
         <label for="password">كلمة السر</label>
