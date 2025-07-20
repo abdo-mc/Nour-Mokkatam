@@ -51,7 +51,8 @@
       letter-spacing: 1px;
     }
     input[type="text"],
-    input[type="password"] {
+    input[type="password"],
+    input[type="email"] {
       width: 100%;
       padding: 12px 14px;
       margin: 12px 0 18px 0;
@@ -64,7 +65,8 @@
       transition: border-color 0.3s ease;
     }
     input[type="text"]:focus,
-    input[type="password"]:focus {
+    input[type="password"]:focus,
+    input[type="email"]:focus {
       border-color: #007bff;
     }
     button.login-btn {
@@ -122,31 +124,37 @@
       font-size: 1rem;
       display: none;
     }
-  </style>
 
+    /* Styling for the register form */
+    .register-form-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .register-btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    button.register-btn {
+      background-color: #28a745;
+    }
+    button.register-btn:hover {
+      background-color: #218838;
+    }
+  </style>
   <script>
     // تأكد المستخدم مسجل دخول سابقًا
     if (localStorage.getItem("username")) {
       window.location.href = "Home.html";
     }
-  </script>
-</head>
-<body>
-  <header>مركز شباب نور المقطم</header>
-  <main>
-    <div class="login-box">
-      <h2>تسجيل دخول</h2>
-      <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="username" />
-      <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password" />
-      <button class="login-btn" onclick="login()">تسجيل دخول</button>
-      <button class="home-btn" onclick="goHome()">العودة إلى الصفحة الرئيسية</button>
-      <div class="forgot" onclick="forgotPassword()">نسيت كلمة المرور؟</div>
-      <div id="msgSuccess" class="message"></div>
-      <div id="msgError" class="error-message"></div>
-    </div>
-  </main>
 
-  <script>
     const apiUrl = "https://script.google.com/macros/s/AKfycbySD2R9nbJs1CJVFjgd5Pcqog2mdiCigMtwcSg9Xi3t3t3d4fB-6sVJagCj78pFXWNApg/exec";
 
     function login() {
@@ -199,6 +207,55 @@
       window.location.href = "Main.html";
     }
 
+    function showRegisterForm() {
+      document.getElementById('registerForm').style.display = 'flex';
+    }
+
+    function closeRegisterForm() {
+      document.getElementById('registerForm').style.display = 'none';
+    }
+
+    function register() {
+      const newUsername = document.getElementById('newUsername').value.trim();
+      const newEmail = document.getElementById('newEmail').value.trim();
+      const newPassword = document.getElementById('newPassword').value.trim();
+      const confirmPassword = document.getElementById('confirmPassword').value.trim();
+      const msgSuccess = document.getElementById('msgSuccess');
+      const msgError = document.getElementById('msgError');
+
+      msgSuccess.style.display = "none";
+      msgError.style.display = "none";
+
+      if (!newUsername || !newEmail || !newPassword || !confirmPassword) {
+        msgError.textContent = "يرجى إدخال جميع البيانات المطلوبة.";
+        msgError.style.display = "block";
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        msgError.textContent = "كلمة المرور غير متطابقة.";
+        msgError.style.display = "block";
+        return;
+      }
+
+      fetch(`${apiUrl}?action=register&username=${encodeURIComponent(newUsername)}&email=${encodeURIComponent(newEmail)}&password=${encodeURIComponent(newPassword)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            msgSuccess.textContent = `مرحبًا ${data.name}, تم إنشاء الحساب بنجاح!`;
+            msgSuccess.style.display = "block";
+            closeRegisterForm();
+          } else {
+            msgError.textContent = data.error;
+            msgError.style.display = "block";
+          }
+        })
+        .catch(() => {
+          msgError.textContent = "حدث خطأ في الاتصال. حاول مرة أخرى.";
+          msgError.style.display = "block";
+        });
+    }
+
     // تفعيل زر Enter لتسجيل الدخول
     document.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
@@ -206,5 +263,38 @@
       }
     });
   </script>
+</head>
+<body>
+  <header>مركز شباب نور المقطم</header>
+  <main>
+    <div class="login-box">
+      <h2>تسجيل دخول</h2>
+      <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="username" />
+      <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password" />
+      <button class="login-btn" onclick="login()">تسجيل دخول</button>
+      <button class="home-btn" onclick="goHome()">العودة إلى الصفحة الرئيسية</button>
+      <div class="forgot" onclick="forgotPassword()">نسيت كلمة المرور؟</div>
+      <div id="msgSuccess" class="message"></div>
+      <div id="msgError" class="error-message"></div>
+    </div>
+  </main>
+
+  <!-- زر إنشاء حساب جديد -->
+  <div class="register-btn-container">
+    <button class="register-btn" onclick="showRegisterForm()">إنشاء حساب جديد</button>
+  </div>
+
+  <!-- نموذج إنشاء حساب جديد -->
+  <div class="register-form-container" id="registerForm" style="display: none;">
+    <div class="login-box">
+      <h2>إنشاء حساب جديد</h2>
+      <input type="text" id="newUsername" placeholder="اسم المستخدم" autocomplete="username" />
+      <input type="email" id="newEmail" placeholder="البريد الإلكتروني" autocomplete="email" />
+      <input type="password" id="newPassword" placeholder="كلمة المرور" autocomplete="new-password" />
+      <input type="password" id="confirmPassword" placeholder="تأكيد كلمة المرور" />
+      <button class="login-btn" onclick="register()">إنشاء الحساب</button>
+      <button class="home-btn" onclick="closeRegisterForm()">إلغاء</button>
+    </div>
+  </div>
 </body>
 </html>
