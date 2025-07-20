@@ -136,28 +136,24 @@
       }
     }
 
-    /* الطباعة */
     @media print {
       @page {
         size: A4 portrait;
         margin: 1cm;
-        }
+      }
       .back-link, .print-btn {
         display: none;
       }
-
       body {
         margin: 0;
         padding: 0;
         background: white;
       }
-
       .member-info,
       .member-info table,
       .member-info tr {
         page-break-inside: avoid;
       }
-
       .member-info {
         box-shadow: none;
         border: none;
@@ -166,13 +162,11 @@
         padding: 0;
         margin: 0 auto;
       }
-
       .member-info img {
         display: block;
         margin: 0 auto 20px;
         page-break-inside: avoid;
       }
-
       h1, .user-info {
         text-align: center;
       }
@@ -197,12 +191,14 @@
 <script>
   const username = localStorage.getItem('username');
   const name = localStorage.getItem('name');
+  const role = localStorage.getItem('role');
   const userInfo = document.getElementById('userInfo');
   const memberDiv = document.getElementById('memberInfo');
 
-  if (!username || !name) {
-    alert("يرجى تسجيل الدخول أولاً.");
-    window.location.href = 'login.html';
+  // 🔒 التحقق من السماحية بالدخول
+  if (!username || !name || !role || !(role === 'admin' || role === 'user')) {
+    alert("غير مصرح لك بعرض هذه الصفحة. يرجى تسجيل الدخول بصلاحيات مناسبة.");
+    window.location.href = 'Main.html'; // أو login.html حسب ما تفضل
   } else {
     userInfo.textContent = `مرحبًا ${name}`;
   }
@@ -250,7 +246,7 @@
         statusDiv.className = `status ${statusClass}`;
         statusDiv.textContent = statusText;
 
-        memberDiv.innerHTML = ''; // Clear
+        memberDiv.innerHTML = '';
         memberDiv.appendChild(img);
         memberDiv.insertAdjacentHTML('beforeend', tableHTML);
         memberDiv.appendChild(statusDiv);
