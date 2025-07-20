@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إنشاء حساب جديد</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      background-color: #004080;
+      color: white;
+      padding: 30px 20px;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      margin-top: 0; /* إزالة المسافة الفارغة فوق الهيدر */
+    }
+    main {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 20px;
+    }
+    .register-box {
+      background: white;
+      padding: 35px 40px;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      position: relative;
+    }
+    .register-box h2 {
+      margin-bottom: 25px;
+      color: #004080;
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+    }
+
+    /* Label and input field styles */
+    .form-group {
+      margin-bottom: 20px;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #004080;
+      font-size: 1rem;
+      text-align: right;
+      transition: color 0.3s;
+    }
+
+    .form-group label:hover {
+      color: #007bff;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 0;
+      border: 3px solid #004080;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      outline: none;
+      box-sizing: border-box;
+      text-align: center;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="date"]:focus,
+    input[type="tel"]:focus {
+      border-color: #007bff;
+    }
+
+    button.register-btn {
+      width: 100%;
+      background-color: #0080ff;
+      border: none;
+      color: white;
+      padding: 12px 0;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button.register-btn:hover {
+      background-color: #005bb5;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* زر الرجوع لتسجيل الدخول */
+    button.login-btn {
+      width: 100%;
+      background-color: #6c757d;
+      border: none;
+      color: white;
+      padding: 12px 0;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color 0.3s ease;
+      margin-top: 15px;
+    }
+
+    button.login-btn:hover {
+      background-color: #495057;
+    }
+
+    .error-message {
+      margin-top: 15px;
+      color: red;
+      font-weight: 700;
+      font-size: 1rem;
+      display: none;
+    }
+
+    /* Responsiveness for smaller screens */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .register-box {
+        padding: 25px;
+      }
+
+      .form-group label {
+        font-size: 0.9rem;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="date"],
+      input[type="tel"] {
+        font-size: 1rem;
+      }
+
+      button.register-btn {
+        font-size: 1rem;
+      }
+    }
+  </style>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbxAY16NKYAB3z-12ZZnuL5Aw60hPEgBZ4yHGr9BRaMhuTFEfCN1Qr3TWX5il379v3r5hg/exec"; // رابط السكربت هنا
+
+    // Function to check if email is valid
+    function validateEmail(email) {
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailPattern.test(email);
+    }
+
+    // Function to register the user
+    function register() {
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const nationalID = document.getElementById('nationalID').value.trim();
+      const birthdate = document.getElementById('birthdate').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const msgError = document.getElementById('msgError');
+
+      msgError.style.display = "none";
+
+      if (!username || !email || !nationalID || !birthdate || !phone) {
+        msgError.textContent = "يرجى إدخال جميع البيانات";
+        msgError.style.display = "block";
+        return;
+      }
+
+      // تحقق من صحة البريد الإلكتروني
+      if (!validateEmail(email)) {
+        msgError.textContent = "البريد الإلكتروني غير صالح";
+        msgError.style.display = "block";
+        return;
+      }
+
+      // تحقق من صحة الرقم القومي
+      const nationalIDPattern = /^\d{14}$/;  // 14 رقم للرقم القومي
+      if (!nationalIDPattern.test(nationalID)) {
+        msgError.textContent = "الرقم القومي يجب أن يتكون من 14 رقمًا";
+        msgError.style.display = "block";
+        return;
+      }
+
+      // تحقق من صحة رقم الهاتف
+      const phonePattern = /^\d{11}$/;  // 11 رقم لرقم الهاتف
+      if (!phonePattern.test(phone)) {
+        msgError.textContent = "رقم الهاتف يجب أن يتكون من 11 رقمًا";
+        msgError.style.display = "block";
+        return;
+      }
+
+      // ارسال البيانات إلى جوجل شيت للتحقق من عدم تكرار البريد الإلكتروني
+      fetch(`${apiUrl}?action=checkEmail&email=${encodeURIComponent(email)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.exists) {
+            msgError.textContent = "البريد الإلكتروني مسجل بالفعل!";
+            msgError.style.display = "block";
+            return;
+          }
+
+          // إرسال البيانات إلى Google Sheets لإنشاء الحساب
+          fetch(`${apiUrl}?action=register&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&nationalID=${encodeURIComponent(nationalID)}&birthdate=${encodeURIComponent(birthdate)}&phone=${encodeURIComponent(phone)}`, {
+            method: 'POST'
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                alert("تم تسجيل الحساب بنجاح! سيتم تحديد رقم العضوية لاحقًا.");
+                window.location.href = "Login.html"; // العودة إلى صفحة تسجيل الدخول
+              } else {
+                msgError.textContent = data.error || "حدث خطأ في التسجيل.";
+                msgError.style.display = "block";
+              }
+            })
+            .catch(() => {
+              msgError.textContent = "حدث خطأ في الاتصال. حاول مرة أخرى.";
+              msgError.style.display = "block";
+            });
+        })
+        .catch(() => {
+          msgError.textContent = "حدث خطأ في الاتصال عند التحقق من البريد الإلكتروني.";
+          msgError.style.display = "block";
+        });
+    }
+  </script>
+</head>
+<body>
+  <header>مركز شباب نور المقطم</header>
+  <main>
+    <div class="register-box">
+      <h2>إنشاء حساب جديد</h2>
+      <div class="form-group">
+        <label for="username">اسم العضو</label>
+        <input type="text" id="username" placeholder="اسم العضو" />
+      </div>
+      <div class="form-group">
+        <label for="email">البريد الإلكتروني</label>
+        <input type="email" id="email" placeholder="البريد الإلكتروني" />
+      </div>
+      <div class="form-group">
+        <label for="nationalID">الرقم القومي</label>
+        <input type="text" id="nationalID" placeholder="الرقم القومي" />
+      </div>
+      <div class="form-group">
+        <label for="birthdate">تاريخ الميلاد</label>
+        <input type="date" id="birthdate" />
+      </div>
+      <div class="form-group">
+        <label for="phone">رقم الهاتف</label>
+        <input type="tel" id="phone" placeholder="رقم الهاتف" />
+      </div>
+      <button class="register-btn" onclick="register()">إنشاء الحساب</button>
+      <button class="login-btn" onclick="window.location.href='Login.html'">الرجوع إلى صفحة تسجيل الدخول</button>
+      <div id="msgError" class="error-message"></div>
+    </div>
+  </main>
+</body>
+</html>
