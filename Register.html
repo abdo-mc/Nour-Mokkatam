@@ -2,9 +2,10 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>إنشاء حساب جديد</title>
   <style>
+    /* نفس الستايل اللي بعتهولك */
     @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
     body {
       font-family: 'Cairo', sans-serif;
@@ -131,33 +132,12 @@
       font-size: 1rem;
       display: none;
     }
-    @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-      .register-box {
-        padding: 25px;
-      }
-      .form-group label {
-        font-size: 0.9rem;
-      }
-      input[type="text"],
-      input[type="email"],
-      input[type="password"],
-      input[type="date"],
-      input[type="tel"] {
-        font-size: 1rem;
-      }
-      button.register-btn {
-        font-size: 1rem;
-      }
-    }
   </style>
   <script>
     const apiUrl = "https://script.google.com/macros/s/AKfycby01F5WbeozWmyCeJ33kDNgd032YOJ54J2E6e3RPJl_MBsa9r3a0CtxM9p723sGxhzm4Q/exec";
 
     function validateEmail(email) {
-      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return emailPattern.test(email);
     }
 
@@ -199,30 +179,27 @@
         return;
       }
 
-      // مباشرة نرسل طلب التسجيل بدون التحقق من البريد الإلكتروني مسبقًا
-      fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          action: 'register',
-          fullName: fullName,
-          username: username,
-          password: password,
-          email: email,
-          nationalID: nationalID,
-          birthdate: birthdate,
-          phone: phone
-        })
+      const params = new URLSearchParams({
+        action: 'register',
+        fullName: fullName,
+        username: username,
+        password: password,
+        email: email,
+        nationalID: nationalID,
+        birthdate: birthdate,
+        phone: phone
+      });
+
+      fetch(`${apiUrl}?${params.toString()}`, {
+        method: 'GET',
       })
-      .then(res => res.json())
+      .then(response => response.json())
       .then(data => {
         if (data.success) {
-          alert("تم تسجيل الحساب بنجاح! سيتم تحديد رقم العضوية لاحقًا.");
-          window.location.href = "Login.html";
+          alert(data.message);
+          window.location.href = "/login"; // لو عندك صفحة تسجيل دخول
         } else {
-          msgError.textContent = data.error || "حدث خطأ في التسجيل.";
+          msgError.textContent = data.error || "حدث خطأ أثناء التسجيل";
           msgError.style.display = "block";
         }
       })
@@ -234,41 +211,41 @@
   </script>
 </head>
 <body>
-  <header>مركز شباب نور المقطم</header>
+  <header>إنشاء حساب جديد</header>
   <main>
     <div class="register-box">
-      <h2>إنشاء حساب جديد</h2>
+      <h2>سجل حسابك الآن</h2>
       <div class="form-group">
         <label for="fullName">اسم العضو</label>
-        <input type="text" id="fullName" placeholder="اسم العضو" />
+        <input type="text" id="fullName" name="fullName" placeholder="اسم العضو" />
       </div>
       <div class="form-group">
         <label for="username">اسم المستخدم</label>
-        <input type="text" id="username" placeholder="اسم المستخدم" />
+        <input type="text" id="username" name="username" placeholder="اسم المستخدم" />
       </div>
       <div class="form-group">
-        <label for="password">كلمة السر</label>
-        <input type="password" id="password" placeholder="كلمة السر" />
+        <label for="password">كلمة المرور</label>
+        <input type="password" id="password" name="password" placeholder="كلمة المرور" />
       </div>
       <div class="form-group">
         <label for="email">البريد الإلكتروني</label>
-        <input type="email" id="email" placeholder="البريد الإلكتروني" />
+        <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" />
       </div>
       <div class="form-group">
         <label for="nationalID">الرقم القومي</label>
-        <input type="text" id="nationalID" placeholder="الرقم القومي" />
+        <input type="text" id="nationalID" name="nationalID" placeholder="الرقم القومي" maxlength="14" />
       </div>
       <div class="form-group">
         <label for="birthdate">تاريخ الميلاد</label>
-        <input type="date" id="birthdate" />
+        <input type="date" id="birthdate" name="birthdate" />
       </div>
       <div class="form-group">
-        <label for="phone">رقم الهاتف</label>
-        <input type="tel" id="phone" placeholder="رقم الهاتف" />
+        <label for="phone">رقم التليفون</label>
+        <input type="tel" id="phone" name="phone" placeholder="رقم التليفون" maxlength="11" />
       </div>
-      <button class="register-btn" onclick="register()">إنشاء الحساب</button>
-      <button class="login-btn" onclick="window.location.href='Login.html'">الرجوع إلى صفحة تسجيل الدخول</button>
-      <div id="msgError" class="error-message"></div>
+      <button class="register-btn" onclick="register()">تسجيل</button>
+      <div class="error-message" id="msgError"></div>
+      <button class="login-btn" onclick="window.location.href='/login'">تسجيل دخول</button>
     </div>
   </main>
 </body>
