@@ -191,6 +191,16 @@
     z-index: 10;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
+
+  /* رسالة منع الدخول */
+  #accessDenied {
+    color: #cc0000;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 100px auto;
+    text-align: center;
+    user-select: none;
+  }
 </style>
 </head>
 <body>
@@ -205,7 +215,7 @@
   العضويات
 </header>
 
-<main>
+<main id="mainContent" style="display:none;">
 
   <aside class="filters">
     <h3>نوع العضوية</h3>
@@ -246,7 +256,24 @@
 
 </main>
 
+<div id="accessDenied" style="display:none;">
+  🚫 غير مصرح لك بالدخول إلى هذه الصفحة
+</div>
+
 <script>
+  // صلاحيات الدخول
+  const role = localStorage.getItem("role");
+  const allowedRoles = ["admin", "user"];
+
+  if (!role || !allowedRoles.includes(role)) {
+    // ممنوع الدخول - نعرض رسالة فقط
+    document.getElementById("accessDenied").style.display = "block";
+  } else {
+    // مسموح الدخول - نظهر المحتوى
+    document.getElementById("mainContent").style.display = "flex";
+    loadData(); // تحميل البيانات عند الدخول
+  }
+
   const apiUrl = "https://script.google.com/macros/s/AKfycbzEjXCNkR1dv7DGfaiaYdFMmMYXGIpLAZVLjGAJD-7lSTeEUe8cSSfnonnWvOUjExc5HA/exec";
   const filters = { membershipType: "الكل", gender: "الكل", renewal: "الكل", assembly: "الكل" };
   const resultDiv = document.getElementById("result");
@@ -344,8 +371,6 @@
 
     pageItems.forEach((m, idx) => {
       const serial = start + idx + 1;
-      console.log("رابط الصورة:", m["صورة العضو"]);
-
       html += `<tr>
         <td>${serial}</td>
         <td>${m["رقم العضوية"] || "-"}</td>
@@ -364,7 +389,7 @@
     const totalPages = Math.ceil(allResults.length / itemsPerPage);
     paginationDiv.innerHTML = `
       <button ${currentPage === 1 ? "disabled" : ""} onclick="changePage(${currentPage - 1})">السابق</button>
-      <span>صفحة ${currentPage} من ${totalPages}</span>
+      <span>الصفحة ${currentPage} من ${totalPages}</span>
       <button ${currentPage === totalPages ? "disabled" : ""} onclick="changePage(${currentPage + 1})">التالي</button>
     `;
   }
@@ -375,62 +400,64 @@
   }
 
   function printResults() {
-    const content = resultDiv.innerHTML;
-    const win = window.open('', '', 'width=900,height=700');
-    win.document.write(`<html dir="rtl"><head><title>طباعة النتائج</title></head><body>${content}</body></html>`);
-    win.document.close();
-    win.print();
-  }
-
-  function downloadExcel() {
-    if (!allResults || allResults.length === 0) {
-      return alert("لا توجد بيانات للتحميل.");
+    if (!allResults.length) {
+      alert("لا توجد بيانات للطباعة.");
+      return;
     }
-
-    // نجهز جدول كامل من كل النتائج (مش الصفحة فقط)
-    let excelHtml = `<table border="1"><thead>
-      <tr>
-        <th>مسلسل</th>
-        <th>رقم العضوية</th>
-        <th>الاسم</th>
-        <th>نوع العضوية</th>
-        <th>النوع</th>
-        <th>التجديد</th>
-        <th>الجمعية العمومية</th>
-        <th>صورة العضو</th>
-      </tr></thead><tbody>`;
-
+    const printWindow = window.open('', '', 'width=900,height=600');
+    printWindow.document.write('<html dir="rtl" lang="ar"><head><title>طباعة النتائج</title>');
+    printWindow.document.write('<style>table {width:100%;border-collapse:collapse;} th,td {border:1px solid #ddd;padding:8px;text-align:center;} th {background:#00529b;color:#fff;}</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write('<h2 style="text-align:center;">نتائج البحث في العضويات</h2>');
+    printWindow.document.write('<table><thead><tr><th>مسلسل</th><th>رقم العضوية</th><th>الاسم</th><th>نوع العضوية</th><th>النوع</th><th>التجديد</th><th>الجمعية العمومية</th></tr></thead><tbody>');
     allResults.forEach((m, idx) => {
-      const serial = idx + 1;
-      // صورة في الاكسل عادة غير مدعومة، سنعرض الرابط فقط
-      const imageLink = m["صورة العضو"] ? m["صورة العضو"] : '';
-      excelHtml += `<tr>
-        <td>${serial}</td>
+      printWindow.document.write(`<tr>
+        <td>${idx + 1}</td>
         <td>${m["رقم العضوية"] || "-"}</td>
         <td>${m["الاسم"] || "-"}</td>
         <td>${m["نوع العضوية"] || "-"}</td>
         <td>${m["النوع"] || "-"}</td>
         <td>${m["التجديد"] || "-"}</td>
         <td>${m["حق حضور الجمعية العمومية"] || "-"}</td>
-        <td>${imageLink}</td>
-      </tr>`;
+      </tr>`);
     });
-
-    excelHtml += "</tbody></table>";
-
-    const blob = new Blob(['\ufeff', excelHtml], { type: 'application/vnd.ms-excel' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "العضويات.xls";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    printWindow.document.write('</tbody></table>');
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
   }
 
-  // تحميل أول مرة تظهر صفحة تطلب إدخال بيانات أو فلتر
-  resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر.</p>";
+  function downloadExcel() {
+    if (!allResults.length) {
+      alert("لا توجد بيانات للتحميل.");
+      return;
+    }
+    const XLSX = window.XLSX; // Assuming XLSX.js library loaded (you need to include it)
+    if (!XLSX) {
+      alert("مكتبة XLSX غير محملة.");
+      return;
+    }
+
+    let ws_data = [
+      ["مسلسل","رقم العضوية","الاسم","نوع العضوية","النوع","التجديد","الجمعية العمومية"]
+    ];
+    allResults.forEach((m, idx) => {
+      ws_data.push([
+        idx + 1,
+        m["رقم العضوية"] || "",
+        m["الاسم"] || "",
+        m["نوع العضوية"] || "",
+        m["النوع"] || "",
+        m["التجديد"] || "",
+        m["حق حضور الجمعية العمومية"] || ""
+      ]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "العضويات");
+    XLSX.writeFile(wb, "عضويات.xlsx");
+  }
 </script>
 
 </body>
