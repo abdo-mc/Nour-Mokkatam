@@ -157,6 +157,7 @@
             localStorage.setItem('username', data.username);
             localStorage.setItem('role', data.role);
             localStorage.setItem('name', data.name);
+            localStorage.setItem('membershipId', data.membershipId); // حفظ رقم العضوية
 
             setTimeout(() => {
               window.location.href = "Home.html";
@@ -198,14 +199,12 @@
       <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="username" />
       <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password" />
       <button class="login-btn" onclick="login()">تسجيل دخول</button>
-            <!-- زر تسجيل حساب جديد -->
+      <!-- زر تسجيل حساب جديد -->
       <button class="login-btn" onclick="window.location.href='Register.html'">إنشاء حساب جديد</button>
       <button class="home-btn" onclick="goHome()">العودة إلى الصفحة الرئيسية</button>
       <div class="forgot" onclick="forgotPassword()">نسيت كلمة المرور؟</div>
       <div id="msgSuccess" class="message"></div>
       <div id="msgError" class="error-message"></div>
-
-
     </div>
   </main>
 </body>
