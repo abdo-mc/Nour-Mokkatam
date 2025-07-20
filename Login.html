@@ -142,11 +142,11 @@
       text-align: center;
       margin-top: 20px;
     }
-    button.register-btn {
-      background-color: #28a745;
+    button.login-btn {
+      background-color: #0080ff;
     }
-    button.register-btn:hover {
-      background-color: #218838;
+    button.login-btn:hover {
+      background-color: #005bb5;
     }
   </style>
   <script>
@@ -242,9 +242,12 @@
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            msgSuccess.textContent = `مرحبًا ${data.name}, تم إنشاء الحساب بنجاح!`;
+            msgSuccess.textContent = "تم إنشاء الحساب بنجاح.";
             msgSuccess.style.display = "block";
-            closeRegisterForm();
+
+            setTimeout(() => {
+              window.location.href = "Home.html";
+            }, 300);
           } else {
             msgError.textContent = data.error;
             msgError.style.display = "block";
@@ -255,13 +258,6 @@
           msgError.style.display = "block";
         });
     }
-
-    // تفعيل زر Enter لتسجيل الدخول
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Enter") {
-        login();
-      }
-    });
   </script>
 </head>
 <body>
@@ -281,7 +277,7 @@
 
   <!-- زر إنشاء حساب جديد -->
   <div class="register-btn-container">
-    <button class="register-btn" onclick="showRegisterForm()">إنشاء حساب جديد</button>
+    <button class="login-btn" onclick="showRegisterForm()">إنشاء حساب جديد</button>
   </div>
 
   <!-- نموذج إنشاء حساب جديد -->
