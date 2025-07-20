@@ -154,7 +154,7 @@
     }
   </style>
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycby01F5WbeozWmyCeJ33kDNgd032YOJ54J2E6e3RPJl_MBsa9r3a0CtxM9p723sGxhzm4Q/exec"; // رابط السكربت هنا
+    const apiUrl = "https://script.google.com/macros/s/AKfycby01F5WbeozWmyCeJ33kDNgd032YOJ54J2E6e3RPJl_MBsa9r3a0CtxM9p723sGxhzm4Q/exec";
 
     function validateEmail(email) {
       const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -199,61 +199,37 @@
         return;
       }
 
-      // التحقق من البريد الإلكتروني أولاً
+      // مباشرة نرسل طلب التسجيل بدون التحقق من البريد الإلكتروني مسبقًا
       fetch(apiUrl, {
-        method: 'POST',  // تغيير الطريقة إلى POST
+        method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams({
-          action: 'checkEmail',
-          email: email  // إرسال البريد الإلكتروني في الجسم
+          action: 'register',
+          fullName: fullName,
+          username: username,
+          password: password,
+          email: email,
+          nationalID: nationalID,
+          birthdate: birthdate,
+          phone: phone
         })
       })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success === false) {
-            msgError.textContent = "البريد الإلكتروني مسجل بالفعل!";
-            msgError.style.display = "block";
-            return;
-          }
-
-          // إذا لم يكن البريد الإلكتروني مسجل، قم بتسجيل العضو
-          fetch(apiUrl, {
-            method: 'POST',  // تغيير الطريقة إلى POST
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-              action: 'register',
-              fullName: fullName,
-              username: username,
-              password: password,
-              email: email,
-              nationalID: nationalID,
-              birthdate: birthdate,
-              phone: phone
-            })
-          })
-            .then(res => res.json())
-            .then(data => {
-              if (data.success) {
-                alert("تم تسجيل الحساب بنجاح! سيتم تحديد رقم العضوية لاحقًا.");
-                window.location.href = "Login.html";
-              } else {
-                msgError.textContent = data.error || "حدث خطأ في التسجيل.";
-                msgError.style.display = "block";
-              }
-            })
-            .catch(() => {
-              msgError.textContent = "حدث خطأ في الاتصال. حاول مرة أخرى.";
-              msgError.style.display = "block";
-            });
-        })
-        .catch(() => {
-          msgError.textContent = "حدث خطأ في الاتصال عند التحقق من البريد الإلكتروني.";
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("تم تسجيل الحساب بنجاح! سيتم تحديد رقم العضوية لاحقًا.");
+          window.location.href = "Login.html";
+        } else {
+          msgError.textContent = data.error || "حدث خطأ في التسجيل.";
           msgError.style.display = "block";
-        });
+        }
+      })
+      .catch(() => {
+        msgError.textContent = "حدث خطأ في الاتصال. حاول مرة أخرى.";
+        msgError.style.display = "block";
+      });
     }
   </script>
 </head>
