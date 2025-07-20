@@ -127,7 +127,6 @@
       width: 100%;
     }
 
-    /* ✅ ميديا كويري للموبايل */
     @media (max-width: 600px) {
       header {
         flex-direction: column;
@@ -182,11 +181,15 @@
     </div>
 
     <nav class="sections-nav">
-      <a href="membership.html"><i class="fa fa-id-card"></i> العضوية</a>
+      <span id="membershipLink" style="display:none;">
+        <a href="membership.html"><i class="fa fa-id-card"></i> العضوية</a>
+      </span>
+
       <a href="bus.html"><i class="fa fa-bus"></i> الرحلات</a>
       <a href="social.html"><i class="fa fa-people-group"></i> النشاط الاجتماعي</a>
       <a href="generalAssembly.html"><i class="fa fa-users"></i> الجمعية العمومية</a>
-      <span id="adminLink" style="display:none">
+
+      <span id="adminLink" style="display:none;">
         <a href="adminPanel.html"><i class="fa fa-lock"></i> لوحة التحكم</a>
       </span>
     </nav>
@@ -197,13 +200,19 @@
     const name = localStorage.getItem('name');
     const role = localStorage.getItem('role');
 
-    if (!username) {
+    if (!username || !name || !role) {
+      localStorage.clear();
       window.location.href = 'Main.html';
     } else {
       document.getElementById('welcomeUser').textContent = `مرحبًا بك يا ${name}`;
       document.title = `الصفحة الرئيسية - ${name}`;
+
       if (role === 'admin') {
         document.getElementById('adminLink').style.display = 'inline-block';
+      }
+
+      if (role === 'admin' || role === 'user') {
+        document.getElementById('membershipLink').style.display = 'inline-block';
       }
     }
 
