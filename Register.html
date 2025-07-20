@@ -245,4 +245,50 @@
               }
             })
             .catch(() => {
-              msgError.textContent = "حدث خطأ في الاتصال. حاول مرة أخرى
+              msgError.textContent = "حدث خطأ في الاتصال. حاول مرة أخرى.";
+              msgError.style.display = "block";
+            });
+        })
+        .catch(() => {
+          msgError.textContent = "حدث خطأ في الاتصال عند التحقق من البريد الإلكتروني.";
+          msgError.style.display = "block";
+        });
+    }
+  </script>
+</head>
+<body>
+  <header>مركز شباب نور المقطم</header>
+  <main>
+    <div class="register-box">
+      <h2>إنشاء حساب جديد</h2>
+      <div class="form-group">
+        <label for="username">اسم العضو</label>
+        <input type="text" id="username" placeholder="اسم العضو" />
+      </div>
+      <div class="form-group">
+        <label for="password">كلمة السر</label>
+        <input type="password" id="password" placeholder="كلمة السر" />
+      </div>
+      <div class="form-group">
+        <label for="email">البريد الإلكتروني</label>
+        <input type="email" id="email" placeholder="البريد الإلكتروني" />
+      </div>
+      <div class="form-group">
+        <label for="nationalID">الرقم القومي</label>
+        <input type="text" id="nationalID" placeholder="الرقم القومي" />
+      </div>
+      <div class="form-group">
+        <label for="birthdate">تاريخ الميلاد</label>
+        <input type="date" id="birthdate" />
+      </div>
+      <div class="form-group">
+        <label for="phone">رقم الهاتف</label>
+        <input type="tel" id="phone" placeholder="رقم الهاتف" />
+      </div>
+      <button class="register-btn" onclick="register()">إنشاء الحساب</button>
+      <button class="login-btn" onclick="window.location.href='Login.html'">الرجوع إلى صفحة تسجيل الدخول</button>
+      <div id="msgError" class="error-message"></div>
+    </div>
+  </main>
+</body>
+</html>
