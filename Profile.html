@@ -8,6 +8,7 @@
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2922/2922506.png" />
 
   <style>
+    /* [نفس الـ CSS الذي أرسلته سابقًا بدون تغيير] */
     body {
       font-family: 'Cairo', sans-serif;
       background: #e0f7fa;
@@ -117,7 +118,6 @@
       margin-top: 40px;
       font-size: 1.1rem;
     }
-    /* Spinner */
     .spinner {
       border: 6px solid #eee;
       border-top: 6px solid #00796b;
@@ -131,8 +131,6 @@
       0% { transform: rotate(0deg);}
       100% { transform: rotate(360deg);}
     }
-
-    /* طباعة */
     @media print {
       body {
         background: white;
@@ -164,8 +162,6 @@
         page-break-inside: avoid;
       }
     }
-
-    /* صورة الكارنيه */
     .card-photo {
       margin-top: 25px;
       width: 100%;
@@ -174,7 +170,6 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.15);
       object-fit: contain;
     }
-
   </style>
 </head>
 <body>
@@ -191,19 +186,16 @@
 
 <script>
   const content = document.getElementById('content');
-
-  // جلب اسم المستخدم من localStorage (بعد تسجيل الدخول)
-  const username = localStorage.getItem('username');
+  const membershipId = localStorage.getItem('membershipId');
   const name = localStorage.getItem('name');
 
-  if (!username) {
+  if (!membershipId) {
     alert("يرجى تسجيل الدخول أولاً.");
     window.location.href = 'login.html';
   } else {
-    // استدعاء API لجلب بيانات العضو
-    const apiUrl = 'https://YOUR_SCRIPT_ID_HERE/exec'; // استبدلها برابط السكريبت الخاص بك
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbyFsgAKVxOhHBAmugYJMa6VSDojD_iYiLyQIEAiGzbzuaE4i5RScTeXmr0WxEnjb2CY6Q/exec';
 
-    fetch(`${apiUrl}?action=getMemberByUsername&username=${encodeURIComponent(username)}`)
+    fetch(`${apiUrl}?action=getMemberByMembershipNum&membership_num=${encodeURIComponent(membershipId)}`)
       .then(res => res.json())
       .then(data => {
         if(data.error) {
@@ -248,7 +240,7 @@
   }
 
   function goHome() {
-    window.location.href = 'Main.html'; // عدل لو اسم الصفحة الرئيسية مختلف
+    window.location.href = 'Main.html';
   }
 </script>
 
