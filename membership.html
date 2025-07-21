@@ -1,207 +1,184 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>العضويات</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
-  body {
-    font-family: 'Cairo', sans-serif;
-    margin: 0; padding: 0;
-    background: #f9fafc;
-    color: #222;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  header {
-    background-color: #00529b;
-    color: white;
-    padding: 15px 20px;
-    font-size: 1.9rem;
-    font-weight: 700;
-    text-align: center;
-    position: relative;
-  }
-  header button.home-btn {
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: white;
-    font-weight: 700;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: color 0.3s ease;
-  }
-  header button.home-btn:hover {
-    color: #ffdc00;
-  }
-  header button.home-btn svg {
-    width: 22px; height: 22px;
-    fill: #ffdc00;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>العضويات</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0; padding: 0;
+      background: #f9fafc;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #00529b;
+      color: white;
+      padding: 15px 20px;
+      font-size: 1.9rem;
+      font-weight: 700;
+      text-align: center;
+      position: relative;
+    }
+    header button.home-btn {
+      position: absolute;
+      left: 20px; top: 50%;
+      transform: translateY(-50%);
+      background: transparent; border: none;
+      cursor: pointer;
+      color: white; font-weight: 700;
+      font-size: 1.1rem;
+      display: flex; align-items: center;
+      gap: 6px;
+      transition: color 0.3s ease;
+    }
+    header button.home-btn:hover { color: #ffdc00; }
+    header button.home-btn svg {
+      width: 22px; height: 22px;
+      fill: #ffdc00;
+    }
 
-  main {
-    flex: 1;
-    display: flex;
-    padding: 20px;
-    gap: 20px;
-  }
-  aside.filters {
-    width: 210px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
-    padding: 15px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    user-select: none;
-  }
-  aside.filters h3 {
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #00529b;
-    border-bottom: 2px solid #00529b;
-    padding-bottom: 5px;
-  }
-  aside.filters button {
-    background: #007bff;
-    border: none;
-    color: white;
-    padding: 10px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-  }
-  aside.filters button:hover,
-  aside.filters button.active {
-    background: #004a8b;
-  }
+    main {
+      flex: 1;
+      display: flex;
+      padding: 20px;
+      gap: 20px;
+    }
+    aside.filters {
+      width: 210px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 15px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      user-select: none;
+    }
+    aside.filters h3 {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #00529b;
+      border-bottom: 2px solid #00529b;
+      padding-bottom: 5px;
+    }
+    aside.filters button {
+      background: #007bff;
+      border: none;
+      color: white;
+      padding: 10px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    aside.filters button:hover,
+    aside.filters button.active { background: #004a8b; }
 
-  section.search-area {
-    flex: 1;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgb(0 0 0 / 0.07);
-    padding: 20px 25px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
+    section.search-area {
+      flex: 1;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.07);
+      padding: 20px 25px;
+      display: flex; flex-direction: column; gap: 15px;
+    }
 
-  .search-box {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .search-box input {
-    flex: 1;
-    font-size: 1.1rem;
-    padding: 12px 15px;
-    border: 2px solid #00529b;
-    border-radius: 8px;
-    outline: none;
-    transition: border-color 0.3s ease;
-  }
-  .search-box input:focus {
-    border-color: #007bff;
-  }
+    .search-box {
+      display: flex; gap: 15px; align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-box input {
+      flex: 1;
+      font-size: 1.1rem;
+      padding: 12px 15px;
+      border: 2px solid #00529b;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .search-box input:focus { border-color: #007bff; }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center;
-    font-size: 1.1rem;
-    margin-top: 15px;
-  }
-  thead {
-    background-color: #00529b;
-    color: white;
-    font-weight: 700;
-  }
-  th, td {
-    padding: 11px 10px;
-    border: 1px solid #ddd;
-  }
-  tbody tr:hover {
-    background-color: #f0f5ff;
-    cursor: pointer;
-  }
-  tbody tr td.name-cell a {
-    color: #00529b;
-    font-weight: 600;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  tbody tr td.name-cell a:hover {
-    color: #007bff;
-    text-decoration: underline;
-  }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 1.1rem;
+      margin-top: 15px;
+    }
+    thead {
+      background-color: #00529b;
+      color: white;
+      font-weight: 700;
+    }
+    th, td {
+      padding: 11px 10px;
+      border: 1px solid #ddd;
+    }
+    tbody tr:hover {
+      background-color: #f0f5ff;
+      cursor: pointer;
+    }
+    tbody tr td.name-cell a {
+      color: #00529b;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    tbody tr td.name-cell a:hover {
+      color: #007bff;
+      text-decoration: underline;
+    }
+    td.img-cell img {
+      width: 55px;
+      height: 55px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #00529b;
+    }
 
-  td.img-cell img {
-    width: 55px;
-    height: 55px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid #00529b;
-  }
+    .error-msg {
+      color: #cc0000;
+      font-weight: 600;
+      margin-top: 15px;
+      user-select: none;
+    }
 
-  .error-msg {
-    color: #cc0000;
-    font-weight: 600;
-    margin-top: 15px;
-    user-select: none;
-  }
+    .pagination {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .pagination button {
+      background: #00529b;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .pagination button:disabled {
+      background: #ccc; cursor: not-allowed;
+    }
 
-  .pagination {
-    margin-top: 15px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  .pagination button {
-    background: #00529b;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .pagination button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
+    /* رسالة منع الدخول */
+    #accessDenied {
+      color: #cc0000;
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin: 100px auto;
+      text-align: center;
+      user-select: none;
+    }
+  </style>
 
-  /* عنوان الجدول ثابت */
-  table thead th {
-    position: sticky;
-    top: 0;
-    background-color: #00529b;
-    color: white;
-    z-index: 10;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-
-  /* رسالة منع الدخول */
-  #accessDenied {
-    color: #cc0000;
-    font-weight: 700;
-    font-size: 1.5rem;
-    margin: 100px auto;
-    text-align: center;
-    user-select: none;
-  }
-</style>
+  <!-- مكتبة XLSX لإنتاج Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -216,7 +193,6 @@
 </header>
 
 <main id="mainContent" style="display:none;">
-
   <aside class="filters">
     <h3>نوع العضوية</h3>
     <button data-filter-type="membershipType" data-filter-value="الكل" class="active">الكل</button>
@@ -253,7 +229,6 @@
     <div id="result"></div>
     <div class="pagination" id="pagination"></div>
   </section>
-
 </main>
 
 <div id="accessDenied" style="display:none;">
@@ -264,199 +239,162 @@
   // صلاحيات الدخول
   const role = localStorage.getItem("role");
   const allowedRoles = ["admin", "user"];
-
   if (!role || !allowedRoles.includes(role)) {
-    // ممنوع الدخول - نعرض رسالة فقط
     document.getElementById("accessDenied").style.display = "block";
   } else {
-    // مسموح الدخول - نظهر المحتوى
     document.getElementById("mainContent").style.display = "flex";
-    loadData(); // تحميل البيانات عند الدخول
+    init(); // بدء التهيئة بعد element creation
   }
 
-  const apiUrl = "https://script.google.com/macros/s/AKfycbzEjXCNkR1dv7DGfaiaYdFMmMYXGIpLAZVLjGAJD-7lSTeEUe8cSSfnonnWvOUjExc5HA/exec";
-  const filters = { membershipType: "الكل", gender: "الكل", renewal: "الكل", assembly: "الكل" };
-  const resultDiv = document.getElementById("result");
-  const paginationDiv = document.getElementById("pagination");
-  const searchInput = document.getElementById("searchInput");
-  let allResults = [];
-  let currentPage = 1;
-  const itemsPerPage = 50;
+  function init() {
+    const apiUrl = "https://script.google.com/macros/s/AKfycbzEjXCNkR1dv7DGfaiaYdFMmMYXGIpLAZVLjGAJD-7lSTeEUe8cSSfnonnWvOUjExc5HA/exec";
+    const filters = { membershipType: "الكل", gender: "الكل", renewal: "الكل", assembly: "الكل" };
+    const resultDiv = document.getElementById("result");
+    const paginationDiv = document.getElementById("pagination");
+    const searchInput = document.getElementById("searchInput");
+    let allResults = [];
+    let currentPage = 1;
+    const itemsPerPage = 50;
+
+    document.querySelectorAll("aside.filters button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const type = btn.dataset.filterType;
+        const value = btn.dataset.filterValue;
+        document.querySelectorAll(`button[data-filter-type="${type}"]`).forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        filters[type] = value;
+        loadData();
+      });
+    });
+    searchInput.addEventListener("input", debounce(loadData, 600));
+
+    function loadData() {
+      const searchVal = searchInput.value.trim();
+      const hasFilter = Object.values(filters).some(v => v !== "الكل");
+
+      if (searchVal !== "" && searchVal.length < 3 && !/^\d+$/.test(searchVal)) {
+        resultDiv.innerHTML = "<p>اكتب على الأقل 3 حروف للبحث بالاسم.</p>";
+        return;
+      }
+      if (searchVal === "" && !hasFilter) {
+        resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر.</p>";
+        return;
+      }
+
+      let params = new URLSearchParams();
+      if (searchVal) {
+        /^\d+$/.test(searchVal) ? params.append("id", searchVal) : params.append("name", searchVal);
+      }
+      Object.keys(filters).forEach(key => {
+        if (filters[key] !== "الكل") params.append(key, filters[key]);
+      });
+
+      resultDiv.innerHTML = "جاري التحميل...";
+      fetch(apiUrl + "?" + params.toString())
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            resultDiv.innerHTML = `<div class="error-msg">❌ ${data.error}</div>`;
+            allResults = [];
+            paginationDiv.innerHTML = "";
+            return;
+          }
+          allResults = data.results || (data["رقم العضوية"] ? [data] : []);
+          currentPage = 1;
+          renderResults();
+        })
+        .catch(() => {
+          resultDiv.innerHTML = `<div class="error-msg">❌ حدث خطأ أثناء تحميل البيانات.</div>`;
+          allResults = [];
+          paginationDiv.innerHTML = "";
+        });
+    }
+
+    function renderResults() {
+      if (!allResults.length) {
+        resultDiv.innerHTML = "<p>لا توجد نتائج.</p>";
+        paginationDiv.innerHTML = "";
+        return;
+      }
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageItems = allResults.slice(start, end);
+
+      let html = `<p>عدد النتائج: ${allResults.length}</p><table><thead>
+        <tr>
+          <th>مسلسل</th><th>رقم العضوية</th><th>الاسم</th><th>نوع العضوية</th>
+          <th>النوع</th><th>التجديد</th><th>الجمعية العمومية</th><th>صورة العضو</th>
+        </tr></thead><tbody>`;
+      pageItems.forEach((m, idx) => {
+        html += `<tr>
+          <td>${start + idx + 1}</td>
+          <td>${m["رقم العضوية"]||"-"}</td>
+          <td class="name-cell"><a href="memberDetails.html?id=${encodeURIComponent(m["رقم العضوية"])}" target="_blank">${m["الاسم"]||"-"}</a></td>
+          <td>${m["نوع العضوية"]||"-"}</td>
+          <td>${m["النوع"]||"-"}</td>
+          <td>${m["التجديد"]||"-"}</td>
+          <td>${m["حق حضور الجمعية العمومية"]||"-"}</td>
+          <td class="img-cell"><img src="${m["صورة العضو"]||'https://via.placeholder.com/55'}" alt="صورة"/></td>
+        </tr>`;
+      });
+      html += "</tbody></table>";
+      resultDiv.innerHTML = html;
+
+      const totalPages = Math.ceil(allResults.length / itemsPerPage);
+      paginationDiv.innerHTML = `
+        <button ${currentPage===1?'disabled':''} onclick="changePage(${currentPage-1})">السابق</button>
+        <span>الصفحة ${currentPage} من ${totalPages}</span>
+        <button ${currentPage===totalPages?'disabled':''} onclick="changePage(${currentPage+1})">التالي</button>
+      `;
+
+      // ربط تغيير الصفحة بمعالجة داخلية
+      window.changePage = function(page) {
+        currentPage = page;
+        renderResults();
+      }
+    }
+
+    function printResults() {
+      if (!allResults.length) return alert("لا توجد بيانات للطباعة.");
+      const pw = window.open('', '', 'width=900,height=600');
+      pw.document.write(`<html dir="rtl"><head><title>طباعة النتائج</title>
+        <style>table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px;text-align:center}th{background:#00529b;color:#fff}</style>
+        </head><body><h2 style="text-align:center;">نتائج البحث في العضويات</h2><table><thead><tr><th>مسلسل</th><th>رقم العضوية</th><th>الاسم</th><th>نوع العضوية</th><th>النوع</th><th>التجديد</th><th>الجمعية العمومية</th></tr></thead><tbody>`);
+      allResults.forEach((m, idx) => {
+        pw.document.write(`<tr><td>${idx+1}</td><td>${m["رقم العضوية"]||"-"}</td><td>${m["الاسم"]||"-"}</td><td>${m["نوع العضوية"]||"-"}</td><td>${m["النوع"]||"-"}</td><td>${m["التجديد"]||"-"}</td><td>${m["حق حضور الجمعية العمومية"]||"-"}</td></tr>`);
+      });
+      pw.document.write(`</tbody></table></body></html>`);
+      pw.document.close();
+      pw.print();
+    }
+
+    function downloadExcel() {
+      if (!allResults.length) return alert("لا توجد بيانات للتحميل.");
+      const ws_data = [["مسلسل","رقم العضوية","الاسم","نوع العضوية","النوع","التجديد","الجمعية العمومية"]];
+      allResults.forEach((m, idx) => {
+        ws_data.push([
+          idx + 1,
+          m["رقم العضوية"] || "",
+          m["الاسم"] || "",
+          m["نوع العضوية"] || "",
+          m["النوع"] || "",
+          m["التجديد"] || "",
+          m["حق حضور الجمعية العمومية"] || ""
+        ]);
+      });
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "العضويات");
+      XLSX.writeFile(wb, "عضويات.xlsx");
+    }
+
+    function debounce(fn, ms) {
+      let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+    }
+  }
 
   function goHome() {
     window.location.href = "home.html";
-  }
-
-  document.querySelectorAll("aside.filters button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const type = btn.dataset.filterType;
-      const value = btn.dataset.filterValue;
-      document.querySelectorAll(`button[data-filter-type="${type}"]`).forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      filters[type] = value;
-      loadData();
-    });
-  });
-
-  let debounceTimer;
-  searchInput.addEventListener("input", () => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => loadData(), 600);
-  });
-
-  function loadData() {
-    const searchVal = searchInput.value.trim();
-    const hasFilter = Object.values(filters).some(v => v !== "الكل");
-
-    if (searchVal !== "" && searchVal.length < 3 && !/^\d+$/.test(searchVal)) {
-      resultDiv.innerHTML = "<p>اكتب على الأقل 3 حروف للبحث بالاسم.</p>";
-      return;
-    }
-    if (searchVal === "" && !hasFilter) {
-      resultDiv.innerHTML = "<p>من فضلك أدخل رقم العضوية أو الاسم الأول، أو اختر فلتر.</p>";
-      return;
-    }
-
-    let params = new URLSearchParams();
-    if (searchVal) {
-      /^\d+$/.test(searchVal) ? params.append("id", searchVal) : params.append("name", searchVal);
-    }
-    Object.keys(filters).forEach(key => {
-      if (filters[key] !== "الكل") params.append(key, filters[key]);
-    });
-
-    resultDiv.innerHTML = "جاري التحميل...";
-    fetch(apiUrl + "?" + params.toString())
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          resultDiv.innerHTML = `<div class="error-msg">❌ ${data.error}</div>`;
-          allResults = [];
-          paginationDiv.innerHTML = "";
-          return;
-        }
-        allResults = data.results || (data["رقم العضوية"] ? [data] : []);
-        currentPage = 1;
-        renderResults();
-      })
-      .catch(() => {
-        resultDiv.innerHTML = `<div class="error-msg">❌ حدث خطأ أثناء تحميل البيانات.</div>`;
-        allResults = [];
-        paginationDiv.innerHTML = "";
-      });
-  }
-
-  function renderResults() {
-    if (!allResults || allResults.length === 0) {
-      resultDiv.innerHTML = "<p>لا توجد نتائج.</p>";
-      paginationDiv.innerHTML = "";
-      return;
-    }
-
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const pageItems = allResults.slice(start, end);
-
-    let html = `<p>عدد النتائج: ${allResults.length}</p><table><thead>
-      <tr>
-        <th>مسلسل</th>
-        <th>رقم العضوية</th>
-        <th>الاسم</th>
-        <th>نوع العضوية</th>
-        <th>النوع</th>
-        <th>التجديد</th>
-        <th>الجمعية العمومية</th>
-        <th>صورة العضو</th>
-      </tr></thead><tbody>`;
-
-    pageItems.forEach((m, idx) => {
-      const serial = start + idx + 1;
-      html += `<tr>
-        <td>${serial}</td>
-        <td>${m["رقم العضوية"] || "-"}</td>
-        <td class="name-cell"><a href="memberDetails.html?id=${encodeURIComponent(m["رقم العضوية"])}" target="_blank">${m["الاسم"] || "-"}</a></td>
-        <td>${m["نوع العضوية"] || "-"}</td>
-        <td>${m["النوع"] || "-"}</td>
-        <td>${m["التجديد"] || "-"}</td>
-        <td>${m["حق حضور الجمعية العمومية"] || "-"}</td>
-        <td class="img-cell"><img src="${m["صورة العضو"] || 'https://via.placeholder.com/55'}" alt="صورة ${m["الاسم"] || 'عضو'}" /></td>
-      </tr>`;
-    });
-
-    html += "</tbody></table>";
-    resultDiv.innerHTML = html;
-
-    const totalPages = Math.ceil(allResults.length / itemsPerPage);
-    paginationDiv.innerHTML = `
-      <button ${currentPage === 1 ? "disabled" : ""} onclick="changePage(${currentPage - 1})">السابق</button>
-      <span>الصفحة ${currentPage} من ${totalPages}</span>
-      <button ${currentPage === totalPages ? "disabled" : ""} onclick="changePage(${currentPage + 1})">التالي</button>
-    `;
-  }
-
-  function changePage(page) {
-    currentPage = page;
-    renderResults();
-  }
-
-  function printResults() {
-    if (!allResults.length) {
-      alert("لا توجد بيانات للطباعة.");
-      return;
-    }
-    const printWindow = window.open('', '', 'width=900,height=600');
-    printWindow.document.write('<html dir="rtl" lang="ar"><head><title>طباعة النتائج</title>');
-    printWindow.document.write('<style>table {width:100%;border-collapse:collapse;} th,td {border:1px solid #ddd;padding:8px;text-align:center;} th {background:#00529b;color:#fff;}</style>');
-    printWindow.document.write('</head><body>');
-    printWindow.document.write('<h2 style="text-align:center;">نتائج البحث في العضويات</h2>');
-    printWindow.document.write('<table><thead><tr><th>مسلسل</th><th>رقم العضوية</th><th>الاسم</th><th>نوع العضوية</th><th>النوع</th><th>التجديد</th><th>الجمعية العمومية</th></tr></thead><tbody>');
-    allResults.forEach((m, idx) => {
-      printWindow.document.write(`<tr>
-        <td>${idx + 1}</td>
-        <td>${m["رقم العضوية"] || "-"}</td>
-        <td>${m["الاسم"] || "-"}</td>
-        <td>${m["نوع العضوية"] || "-"}</td>
-        <td>${m["النوع"] || "-"}</td>
-        <td>${m["التجديد"] || "-"}</td>
-        <td>${m["حق حضور الجمعية العمومية"] || "-"}</td>
-      </tr>`);
-    });
-    printWindow.document.write('</tbody></table>');
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    printWindow.print();
-  }
-
-  function downloadExcel() {
-    if (!allResults.length) {
-      alert("لا توجد بيانات للتحميل.");
-      return;
-    }
-    const XLSX = window.XLSX; // Assuming XLSX.js library loaded (you need to include it)
-    if (!XLSX) {
-      alert("مكتبة XLSX غير محملة.");
-      return;
-    }
-
-    let ws_data = [
-      ["مسلسل","رقم العضوية","الاسم","نوع العضوية","النوع","التجديد","الجمعية العمومية"]
-    ];
-    allResults.forEach((m, idx) => {
-      ws_data.push([
-        idx + 1,
-        m["رقم العضوية"] || "",
-        m["الاسم"] || "",
-        m["نوع العضوية"] || "",
-        m["النوع"] || "",
-        m["التجديد"] || "",
-        m["حق حضور الجمعية العمومية"] || ""
-      ]);
-    });
-
-    const ws = XLSX.utils.aoa_to_sheet(ws_data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "العضويات");
-    XLSX.writeFile(wb, "عضويات.xlsx");
   }
 </script>
 
